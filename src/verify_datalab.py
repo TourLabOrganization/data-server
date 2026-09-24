@@ -29,12 +29,17 @@ def app_places(region_key):
     if not os.path.exists(path):
         sys.exit(f"앱 파일을 찾을 수 없습니다: {path}\nAPP_REPO 환경변수로 경로를 주세요.")
     src = open(path, encoding="utf-8").read()
+    # 'seoul:' 'geoje:' 같은 키는 ORIGINS·REGION_HUB에도 있어서, DATA 밖에서 먼저
+    # 걸리면 엉뚱한 블록을 읽는다. 반드시 DATA 시작점 뒤에서만 찾는다.
+    data_at = src.find("const DATA")
+    if data_at < 0:
+        data_at = 0
 
     def block(key):
-        m = re.search(rf"\b{key}\s*:\s*\{{", src)
+        m = re.search(rf"\b{key}\s*:\s*\{{", src[data_at:])
         if not m:
             return []
-        s = src.index("places:[", m.end()) + len("places:[")
+        s = src.index("places:[", data_at + m.end()) + len("places:[")
         depth, i = 1, s
         while depth and i < len(src):
             if src[i] == "[":
