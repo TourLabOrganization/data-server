@@ -18,6 +18,7 @@ import json
 import os
 import sys
 import time
+import urllib.error
 import urllib.parse
 import urllib.request
 from collections import Counter, defaultdict
@@ -42,6 +43,15 @@ LOC_MIN_SIMILARITY = 0.60
 LOC_ENDPOINT = "https://apis.data.go.kr/B551011/KorService2/locationBasedList2"
 
 
+class QuotaExceeded(Exception):
+    """공공데이터포털 일일 호출 한도 초과.
+
+    개발계정은 하루 1,000회다. 장소 1,171곳에 검색어를 여러 개 시도하므로
+    한 번에 다 돌지 못한다. 한도에 걸리면 재시도해도 소용없으니 즉시 멈추고,
+    캐시된 것까지는 저장한 뒤 다음 날 이어받는다.
+    """
+
+
 # ── TourAPI 분류 → 앱 카테고리 ────────────────────────────────────────────
 # 중분류(lclsSystm2) 기준. 소분류로 갈라야 하는 것만 아래 OVERRIDE 에 둔다.
 # None 은 '앱이 다루지 않는 대상'(쇼핑시설·교통시설·축제)이라는 뜻이다.
@@ -58,7 +68,11 @@ CAT_BY_MID = {
     # 역사관광
     "HS01": "herit", "HS02": "herit", "HS03": "herit", "HS04": "herit",
     # 레저스포츠
-    "LS01": "activity", "LS02": "sea", "LS03": "activity", "LS04": "activity",
+    # LS02(수상레저)는 바다와 민물이 섞여 있다. 기본은 activity 로 두고
+    # 바다인 것만 소분류에서 sea 로 올린다. 통째로 sea 로 두면 대청호 민물낚시나
+    # 내린천 래프팅까지 바다가 된다.
+    "LS01": "activity", "LS02": "activity", "LS03": "activity",
+    "LS04": "activity",
     # 자연관광 — NA02 는 강·호수와 해변이 섞여 있어 소분류로 가른다
     "NA01": "heal", "NA02": "heal", "NA03": "heal", "NA04": "heal",
     "NA05": "heal",
@@ -86,6 +100,10 @@ CAT_BY_SUB = {
     "NA020900": "sea",    # 해변. 해수욕장
     "VE010800": "sea",    # 등대
     "VE010700": "heal",   # 댐
+    "LS020300": "sea",    # 요트
+    "LS020400": "sea",    # 스노쿨링/스킨스쿠버다이빙
+    "LS020600": "sea",    # 바다낚시
+    "LS021300": "sea",    # 패러세일
 }
 
 
@@ -159,12 +177,23 @@ def api_nearby(lng, lat):
     for attempt in range(3):
         try:
             with urllib.request.urlopen(LOC_ENDPOINT + "?" + q, timeout=25) as r:
-                body = json.load(r)["response"]["body"]
+                raw = r.read().decode("utf-8", "replace")
+            if "LIMITED_NUMBER_OF_SERVICE_REQUESTS" in raw:
+                raise QuotaExceeded()
+            body = json.loads(raw)["response"]["body"]
             it = body.get("items")
             if it:
                 it = it["item"]
                 items = it if isinstance(it, list) else [it]
             break
+        except QuotaExceeded:
+            raise
+        except urllib.error.HTTPError as e:
+            if e.code == 429:
+                raise QuotaExceeded()
+            if attempt == 2:
+                return None
+            time.sleep(1.5)
         except Exception:
             if attempt == 2:
                 return None
@@ -190,12 +219,23 @@ def api_search(keyword):
     for attempt in range(3):
         try:
             with urllib.request.urlopen(ENDPOINT + "?" + q, timeout=25) as r:
-                body = json.load(r)["response"]["body"]
+                raw = r.read().decode("utf-8", "replace")
+            if "LIMITED_NUMBER_OF_SERVICE_REQUESTS" in raw:
+                raise QuotaExceeded()
+            body = json.loads(raw)["response"]["body"]
             it = body.get("items")
             if it:
                 it = it["item"]
                 items = it if isinstance(it, list) else [it]
             break
+        except QuotaExceeded:
+            raise
+        except urllib.error.HTTPError as e:
+            if e.code == 429:
+                raise QuotaExceeded()
+            if attempt == 2:
+                return None               # 캐시하지 않는다. 다음 실행에서 재시도
+            time.sleep(1.5)
         except Exception:
             if attempt == 2:
                 return None               # 캐시하지 않는다. 다음 실행에서 재시도
@@ -248,53 +288,67 @@ def confidence(sim, d):
 
 # ── 본체 ─────────────────────────────────────────────────────────────────
 def classify(places, progress_every=100):
+    """전부 조회한다. 한도에 걸리면 거기까지의 결과와 중단 여부를 함께 돌려준다."""
     results, misses = [], 0
     regions = _region_names(places)
     for n, p in enumerate(places, 1):
-        if p["lat"] is None or p["lng"] is None:
-            results.append({**_blank(p), "note": "좌표 없음"})
-            continue
-        hit = None
-        for kw in keyword_candidates(p["nameKo"], regions):
-            items = api_search(kw)
-            if items is None:               # 호출 실패
-                results.append({**_blank(p), "note": "조회 실패"})
-                hit = "FAIL"
-                break
-            cand = best_candidate(p, items)
-            if cand:
-                hit = cand
-                break
-            time.sleep(0.05)
-        if hit == "FAIL":
-            continue
-        if not hit:                         # 이름으로 못 찾았으면 좌표로 한 번 더
-            near = api_nearby(p["lng"], p["lat"])
-            if near:
-                cand = best_candidate(p, near)
-                if cand and cand[1] >= LOC_MIN_SIMILARITY:
-                    hit = cand
-        if not hit:
+        try:
+            results.append(_classify_one(p, regions))
+        except QuotaExceeded:
+            done = len(results)
+            print(f"\n  일일 호출 한도 초과 — {done}/{len(places)}곳에서 중단합니다.",
+                  flush=True)
+            print("  받아둔 응답은 캐시에 남아 있습니다. 한도가 풀린 뒤 다시 돌리면"
+                  " 캐시부터 소진하고 그 다음부터 이어서 조회합니다.", flush=True)
+            for rest in places[done:]:
+                results.append({**_blank(rest), "note": "호출 한도로 미조회"})
+            return results, True
+        if results[-1]["note"] == "TourAPI 미매칭":
             misses += 1
-            results.append({**_blank(p), "note": "TourAPI 미매칭"})
-            continue
-        _, sim, d, item = hit
-        m1 = item.get("lclsSystm1") or ""
-        m2 = item.get("lclsSystm2") or ""
-        m3 = item.get("lclsSystm3") or ""
-        results.append({
-            **_blank(p),
-            "catOfficial": to_app_cat(m2, m3),
-            "lclsSystm1": m1, "lclsSystm2": m2, "lclsSystm3": m3,
-            "contentTypeId": str(item.get("contenttypeid") or ""),
-            "tourapiTitle": NFC(item.get("title") or ""),
-            "similarity": round(sim, 3),
-            "distanceKm": round(d, 3),
-            "confidence": confidence(sim, d),
-        })
         if n % progress_every == 0:
             print(f"  {n}/{len(places)} 조회… (미매칭 {misses})", flush=True)
-    return results
+    return results, False
+
+
+def _classify_one(p, regions):
+    """장소 하나를 분류한다. 한도 초과는 QuotaExceeded 로 위에 던진다."""
+    if p["lat"] is None or p["lng"] is None:
+        return {**_blank(p), "note": "좌표 없음"}
+
+    hit = None
+    for kw in keyword_candidates(p["nameKo"], regions):
+        items = api_search(kw)
+        if items is None:                   # 재시도까지 실패
+            return {**_blank(p), "note": "조회 실패"}
+        cand = best_candidate(p, items)
+        if cand:
+            hit = cand
+            break
+        time.sleep(0.05)
+
+    if not hit:                             # 이름으로 못 찾았으면 좌표로 한 번 더
+        near = api_nearby(p["lng"], p["lat"])
+        if near:
+            cand = best_candidate(p, near)
+            if cand and cand[1] >= LOC_MIN_SIMILARITY:
+                hit = cand
+    if not hit:
+        return {**_blank(p), "note": "TourAPI 미매칭"}
+
+    _, sim, d, item = hit
+    m2 = item.get("lclsSystm2") or ""
+    m3 = item.get("lclsSystm3") or ""
+    return {
+        **_blank(p),
+        "catOfficial": to_app_cat(m2, m3),
+        "lclsSystm1": item.get("lclsSystm1") or "",
+        "lclsSystm2": m2, "lclsSystm3": m3,
+        "contentTypeId": str(item.get("contenttypeid") or ""),
+        "tourapiTitle": NFC(item.get("title") or ""),
+        "similarity": round(sim, 3),
+        "distanceKm": round(d, 3),
+        "confidence": confidence(sim, d),
+    }
 
 
 def _blank(p):
@@ -331,8 +385,13 @@ def write_report(rows, codes):
              f"{len(changed)/len(rows)*100:.0f}% |")
     L.append(f"| └ 앱 대상 아님(쇼핑·교통) | {len(out_of_scope)} | "
              f"{len(out_of_scope)/len(rows)*100:.0f}% |")
-    L.append(f"| 미매칭 | {len(unmatched)} | "
+    L.append(f"| 미매칭·미조회 | {len(unmatched)} | "
              f"{len(unmatched)/len(rows)*100:.0f}% |\n")
+    pending = [r for r in unmatched if r["note"] == "호출 한도로 미조회"]
+    if pending:
+        L.append(f"> ⚠️ 이 실행은 공공데이터포털 일일 호출 한도로 중간에 멈췄다. "
+                 f"**{len(pending)}곳은 아직 조회하지 못했다.** 한도가 풀린 뒤 다시 "
+                 f"돌리면 캐시된 응답부터 소진하고 그 다음부터 이어서 조회한다.\n")
 
     flow = Counter((r["catApp"], r["catOfficial"]) for r in changed)
     L.append("## 어떤 변경이 일어나는가\n")
@@ -401,7 +460,7 @@ def main():
     places = extract()
     print(f"앱 장소 {len(places)}곳을 TourAPI 로 조회합니다. "
           f"(캐시: {os.path.join(CACHE, 'tourapi')})")
-    rows = classify(places)
+    rows, stopped = classify(places)
 
     os.makedirs(DERIVED, exist_ok=True)
     dst = os.path.join(DERIVED, "categories.json")
@@ -409,6 +468,9 @@ def main():
               open(dst, "w", encoding="utf-8"), ensure_ascii=False, indent=1)
 
     report, s = write_report(rows, codes)
+    if stopped:
+        print("\n  ⚠️ 일일 호출 한도로 중간에 멈췄습니다. 아래 수치는 조회된 부분만"
+              " 반영한 것입니다.")
     print(f"\n조회 성공 {s['matched'] + s['out_of_scope']}곳 "
           f"/ 미매칭 {s['unmatched']}곳")
     print(f"  분류 일치      {s['same']}곳")
