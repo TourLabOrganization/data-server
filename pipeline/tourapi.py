@@ -25,6 +25,7 @@ from collections import Counter, defaultdict
 from difflib import SequenceMatcher
 
 from .common import CACHE, DERIVED, NFC, REPORTS, norm_name
+from .taxonomy import to_app_cat
 from .places import extract
 
 KEY = os.environ.get("TOURAPI_KEY", "")
@@ -50,68 +51,6 @@ class QuotaExceeded(Exception):
     한 번에 다 돌지 못한다. 한도에 걸리면 재시도해도 소용없으니 즉시 멈추고,
     캐시된 것까지는 저장한 뒤 다음 날 이어받는다.
     """
-
-
-# ── TourAPI 분류 → 앱 카테고리 ────────────────────────────────────────────
-# 중분류(lclsSystm2) 기준. 소분류로 갈라야 하는 것만 아래 OVERRIDE 에 둔다.
-# None 은 '앱이 다루지 않는 대상'(쇼핑시설·교통시설·축제)이라는 뜻이다.
-CAT_BY_MID = {
-    # 숙박
-    "AC01": "stay", "AC02": "stay", "AC03": "stay", "AC04": "stay",
-    "AC05": "stay", "AC06": "stay",
-    # 체험관광 — 앱의 heal 은 '힐링·생태·체험'이라 웰니스·산사체험이 여기 붙는다
-    "EX01": "activity", "EX02": "activity", "EX03": "activity",
-    "EX04": "heal", "EX05": "heal", "EX06": "activity", "EX07": "activity",
-    # 음식
-    "FD01": "food", "FD02": "food", "FD03": "food", "FD04": "food",
-    "FD05": "food",
-    # 역사관광
-    "HS01": "herit", "HS02": "herit", "HS03": "herit", "HS04": "herit",
-    # 레저스포츠
-    # LS02(수상레저)는 바다와 민물이 섞여 있다. 기본은 activity 로 두고
-    # 바다인 것만 소분류에서 sea 로 올린다. 통째로 sea 로 두면 대청호 민물낚시나
-    # 내린천 래프팅까지 바다가 된다.
-    "LS01": "activity", "LS02": "activity", "LS03": "activity",
-    "LS04": "activity",
-    # 자연관광 — NA02 는 강·호수와 해변이 섞여 있어 소분류로 가른다
-    "NA01": "heal", "NA02": "heal", "NA03": "heal", "NA04": "heal",
-    "NA05": "heal",
-    # 쇼핑 — 앱에는 쇼핑 카테고리가 없다. 시장만 food 로 받는다
-    "SH01": None, "SH02": None, "SH03": None, "SH04": None,
-    "SH05": "activity", "SH06": "food", "SH07": None,
-    # 문화관광
-    "VE01": "activity", "VE02": "activity", "VE03": "heal", "VE04": "herit",
-    "VE05": "activity", "VE06": "activity", "VE07": "herit", "VE08": "activity",
-    "VE09": "herit", "VE10": "activity", "VE11": None, "VE12": "activity",
-}
-
-# 소분류(lclsSystm3)가 중분류와 다른 판정을 내려야 하는 경우.
-# 바다 관련이 핵심이다 — 앱의 sea 는 TourAPI 대분류에 대응물이 없고,
-# NA02(하천‧해양)와 VE01(랜드마크) 안에 흩어져 있다.
-CAT_BY_SUB = {
-    "NA020100": "heal",   # 강
-    "NA020200": "heal",   # 호수
-    "NA020300": "heal",   # 저수지
-    "NA020400": "heal",   # 연못·늪
-    "NA020500": "sea",    # 섬
-    "NA020600": "sea",    # 염전
-    "NA020700": "sea",    # 항구/포구
-    "NA020800": "sea",    # 해안절경
-    "NA020900": "sea",    # 해변. 해수욕장
-    "VE010800": "sea",    # 등대
-    "VE010700": "heal",   # 댐
-    "LS020300": "sea",    # 요트
-    "LS020400": "sea",    # 스노쿨링/스킨스쿠버다이빙
-    "LS020600": "sea",    # 바다낚시
-    "LS021300": "sea",    # 패러세일
-}
-
-
-def to_app_cat(m2, m3):
-    """TourAPI 중·소분류 → 앱 카테고리. 소분류가 있으면 그쪽을 우선한다."""
-    if m3 in CAT_BY_SUB:
-        return CAT_BY_SUB[m3]
-    return CAT_BY_MID.get(m2, None)
 
 
 # ── 조회 ─────────────────────────────────────────────────────────────────

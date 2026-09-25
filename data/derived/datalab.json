@@ -1,10 +1,16 @@
 {
  "themes": [
-  "미식",
-  "쇼핑",
-  "역사·문화유산",
-  "자연·힐링"
+  "herit",
+  "heal",
+  "activity",
+  "food"
  ],
+ "themeLabels": {
+  "herit": "역사·문화유산",
+  "heal": "자연·힐링",
+  "activity": "체험·활동",
+  "food": "미식"
+ },
  "regions": [
   "거제",
   "경주",
@@ -14,43 +20,56 @@
  ],
  "tfi": {
   "경주": {
-   "미식": 0.4208,
-   "쇼핑": 0.0,
-   "역사·문화유산": 1.0,
-   "자연·힐링": 0.1955
+   "herit": 1.0,
+   "heal": 0.0,
+   "activity": 0.7078,
+   "food": 0.4674
   },
   "거제": {
-   "미식": 1.0,
-   "쇼핑": 0.5432,
-   "역사·문화유산": 0.0,
-   "자연·힐링": 1.0
+   "herit": 0.0,
+   "heal": 1.0,
+   "activity": 0.6538,
+   "food": 0.0
   },
   "서울": {
-   "미식": 0.68,
-   "쇼핑": 0.7037,
-   "역사·문화유산": 0.2754,
-   "자연·힐링": 0.0
+   "herit": 0.5868,
+   "heal": 0.1409,
+   "activity": 1.0,
+   "food": 1.0
   },
   "제주": {
-   "미식": 0.4734,
-   "쇼핑": 0.5626,
-   "역사·문화유산": 0.2278,
-   "자연·힐링": 0.7767
+   "herit": 0.2038,
+   "heal": 1.0,
+   "activity": 0.2448,
+   "food": 0.2151
   },
   "부산": {
-   "미식": 0.0,
-   "쇼핑": 1.0,
-   "역사·문화유산": 0.2417,
-   "자연·힐링": 0.6748
+   "herit": 0.378,
+   "heal": 0.7767,
+   "activity": 0.0,
+   "food": 0.8796
   }
  },
  "detail": {
   "경주": {
-   "share_pct": {
-    "쇼핑": 20.2,
-    "미식": 32.6,
-    "역사·문화유산": 35.526315789473685,
-    "자연·힐링": 13.157894736842104
+   "spotShare": {
+    "herit": 46.55,
+    "heal": 17.24,
+    "activity": 27.59,
+    "food": 8.62
+   },
+   "spotCount": 58,
+   "golfExcluded": 12,
+   "consumptionShare": {
+    "shopping": 20.2,
+    "food": 32.6
+   },
+   "appCategoryShare": {
+    "herit": 65.9,
+    "activity": 18.2,
+    "sea": 6.8,
+    "food": 6.8,
+    "heal": 2.3
    },
    "age_consumption": {
     "80대": {
@@ -205,11 +224,24 @@
    ]
   },
   "거제": {
-   "share_pct": {
-    "쇼핑": 33.3,
-    "미식": 41.2,
-    "역사·문화유산": 7.142857142857142,
-    "자연·힐링": 45.714285714285715
+   "spotShare": {
+    "herit": 8.93,
+    "heal": 60.71,
+    "activity": 26.79,
+    "food": 3.57
+   },
+   "spotCount": 56,
+   "golfExcluded": 2,
+   "consumptionShare": {
+    "shopping": 33.3,
+    "food": 41.2
+   },
+   "appCategoryShare": {
+    "sea": 29.6,
+    "heal": 18.5,
+    "food": 22.2,
+    "activity": 18.5,
+    "herit": 11.1
    },
    "age_consumption": {
     "80대": {
@@ -359,11 +391,23 @@
    ]
   },
   "서울": {
-   "share_pct": {
-    "쇼핑": 38.6,
-    "미식": 36.2,
-    "역사·문화유산": 11.11111111111111,
-    "자연·힐링": 9.722222222222223
+   "spotShare": {
+    "herit": 23.53,
+    "heal": 20.59,
+    "activity": 32.35,
+    "food": 23.53
+   },
+   "spotCount": 34,
+   "golfExcluded": 0,
+   "consumptionShare": {
+    "shopping": 38.6,
+    "food": 36.2
+   },
+   "appCategoryShare": {
+    "heal": 19.8,
+    "herit": 35.6,
+    "activity": 27.7,
+    "food": 16.8
    },
    "age_consumption": {
     "80대": {
@@ -566,11 +610,24 @@
    ]
   },
   "제주": {
-   "share_pct": {
-    "쇼핑": 33.9,
-    "미식": 33.3,
-    "역사·문화유산": 10.294117647058822,
-    "자연·힐링": 32.35294117647059
+   "spotShare": {
+    "herit": 12.5,
+    "heal": 60.71,
+    "activity": 21.43,
+    "food": 5.36
+   },
+   "spotCount": 56,
+   "golfExcluded": 1,
+   "consumptionShare": {
+    "shopping": 33.9,
+    "food": 33.3
+   },
+   "appCategoryShare": {
+    "heal": 48.5,
+    "activity": 9.9,
+    "herit": 17.8,
+    "sea": 19.8,
+    "food": 4.0
    },
    "age_consumption": {
     "80대": {
@@ -639,11 +696,24 @@
    ]
   },
   "부산": {
-   "share_pct": {
-    "쇼핑": 50.7,
-    "미식": 27.5,
-    "역사·문화유산": 10.526315789473683,
-    "자연·힐링": 27.631578947368425
+   "spotShare": {
+    "herit": 16.67,
+    "heal": 45.83,
+    "activity": 18.75,
+    "food": 18.75
+   },
+   "spotCount": 48,
+   "golfExcluded": 5,
+   "consumptionShare": {
+    "shopping": 50.7,
+    "food": 27.5
+   },
+   "appCategoryShare": {
+    "heal": 25.9,
+    "sea": 12.3,
+    "activity": 27.2,
+    "herit": 19.8,
+    "food": 14.8
    },
    "age_consumption": {
     "80대": {
