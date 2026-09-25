@@ -158,3 +158,34 @@ def datalab_rows(region_raw, suffix):
             if NFC(f).endswith(suffix):
                 return read_csv(os.path.join(p, f))
     return []
+
+
+# ── 통계 ─────────────────────────────────────────────────────────────────
+def spearman(a, b):
+    """순위상관. 동점은 평균순위로 처리한다.
+
+    동점을 {값: 위치} dict로 처리하면 같은 값이 여러 개일 때 하나만 남고
+    나머지가 사라져서, 상관계수가 실제보다 크게 나온다.
+    """
+    n = len(a)
+    if n < 3:
+        return 0.0
+
+    def rank(xs):
+        order = sorted(range(n), key=lambda i: xs[i])
+        r, i = [0.0] * n, 0
+        while i < n:
+            j = i
+            while j + 1 < n and xs[order[j + 1]] == xs[order[i]]:
+                j += 1
+            avg = (i + j) / 2 + 1            # 동점 구간은 평균순위를 나눠 갖는다
+            for k in range(i, j + 1):
+                r[order[k]] = avg
+            i = j + 1
+        return r
+
+    A, B = rank(a), rank(b)
+    ma, mb = sum(A) / n, sum(B) / n
+    num = sum((x - ma) * (y - mb) for x, y in zip(A, B))
+    den = (sum((x - ma) ** 2 for x in A) * sum((y - mb) ** 2 for y in B)) ** .5
+    return num / den if den else 0.0
