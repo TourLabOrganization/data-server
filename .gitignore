@@ -1,0 +1,9 @@
+__pycache__/
+*.pyc
+.env
+.venv/
+venv/
+.DS_Store
+
+# TourAPI 응답 캐시 — 재현 가능하므로 커밋하지 않는다
+data/cache/
