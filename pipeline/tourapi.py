@@ -217,6 +217,30 @@ def best_candidate(place, items):
     return best
 
 
+def apply_decision(row):
+    """이 변경을 앱에 그대로 반영해도 되는가. (적용여부, 사유)
+
+    분류 자체(catOfficial)는 TourAPI 판정을 그대로 남긴다. 여기서 정하는 것은
+    **앱에 반영할지**뿐이다. 둘을 섞으면 나중에 판단 근거를 못 되짚는다.
+    """
+    if not row["catOfficial"] or row["catOfficial"] == row["catApp"]:
+        return False, ""
+    if row["confidence"] != "high":
+        return False, "신뢰도 부족 — 사람이 확인"
+    # 관광지가 옆 숙박시설에 걸리는 일이 잦다(용봉산→용봉산캠핑장,
+    # 합천호→합천호 스마일펜션). stay 로 바꾸면 추천에서 통째로 빠지므로,
+    # 앱이 이미 stay 로 본 곳이 아니면 반영하지 않는다.
+    if row["catOfficial"] == "stay":
+        return False, "숙박시설 오매칭 위험"
+    # 먹자골목(황리단길·명동 닭갈비골목)을 TourAPI 는 VE04(문화거리)로 본다.
+    # 형태를 본 분류이고, 앱의 food 는 목적을 본 분류다. 여행 앱에서는 후자가
+    # 쓸모 있으므로 앱 값을 지킨다.
+    if (row["catApp"] == "food" and row["catOfficial"] == "herit"
+            and row["lclsSystm2"] == "VE04"):
+        return False, "먹자골목 — 앱의 food 가 더 적절"
+    return True, ""
+
+
 def confidence(sim, d):
     if sim >= 0.85 and d <= 1.0:
         return "high"
@@ -341,6 +365,18 @@ def write_report(rows, codes):
     L.append("")
 
     L.append("## 신뢰도별\n")
+    applied = [r for r in changed if r.get("apply")]
+    held = Counter(r.get("applyNote") for r in changed if not r.get("apply"))
+    L.append("## 앱에 반영할 것 / 보류할 것\n")
+    L.append(f"변경 대상 {len(changed)}곳 중 **{len(applied)}곳을 앱에 반영**하고, "
+             f"{len(changed) - len(applied)}곳은 보류한다.\n")
+    L.append("| 판정 | 곳 |")
+    L.append("|---|---:|")
+    L.append(f"| **반영** | {len(applied)} |")
+    for note, c in held.most_common():
+        L.append(f"| 보류 — {note} | {c} |")
+    L.append("")
+
     conf = Counter(r["confidence"] for r in changed)
     L.append("| 신뢰도 | 곳 | 기준 |")
     L.append("|---|---:|---|")
@@ -385,7 +421,8 @@ def write_report(rows, codes):
     open(dst, "w", encoding="utf-8").write("\n".join(L))
     return dst, dict(total=len(rows), matched=len(matched), same=len(same),
                      changed=len(changed), out_of_scope=len(out_of_scope),
-                     unmatched=len(unmatched), sea=len(sea))
+                     unmatched=len(unmatched), sea=len(sea),
+                     applied=len(applied))
 
 
 def main():
@@ -401,6 +438,9 @@ def main():
           f"(캐시: {os.path.join(CACHE, 'tourapi')})")
     rows, stopped = classify(places)
 
+    for r in rows:
+        r["apply"], r["applyNote"] = apply_decision(r)
+
     os.makedirs(DERIVED, exist_ok=True)
     dst = os.path.join(DERIVED, "categories.json")
     json.dump({"count": len(rows), "places": rows},
@@ -414,6 +454,7 @@ def main():
           f"/ 미매칭 {s['unmatched']}곳")
     print(f"  분류 일치      {s['same']}곳")
     print(f"  분류 변경 대상  {s['changed']}곳  (그중 바다로 {s['sea']}곳)")
+    print(f"     └ 앱 반영 {s['applied']}곳 / 보류 {s['changed'] - s['applied']}곳")
     print(f"  앱 대상 아님    {s['out_of_scope']}곳")
     print(f"\n완료 → {dst}\n       {report}")
 
