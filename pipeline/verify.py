@@ -1,18 +1,17 @@
 # -*- coding: utf-8 -*-
 """데이터랩 데이터가 앱과 실제로 맞물리는지 검증하고 지표 3개를 찍는다.
 
-    python src/verify_datalab.py
+    python -m pipeline.verify
 
 새 지역 CSV를 받을 때마다 돌리면 매칭률이 어떻게 변하는지 바로 보인다.
+앱의 .dc.html 을 읽으므로, 앱 레포가 옆에 없으면 APP_REPO 환경변수로 경로를 준다.
 """
-import csv, os, re, sys, unicodedata
-from collections import defaultdict
+import os
+import re
+import sys
 
-ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-RAW = os.path.join(ROOT, "data", "datalab_raw")
-APP = os.environ.get("APP_REPO") or os.path.dirname(ROOT)
+from .common import APP_HTML, NFC, RAW, datalab_rows, find_match, norm_name
 
-NFC = lambda s: unicodedata.normalize("NFC", s or "")
 # 데이터랩 '인기관광지'는 통신·카드 기반 방문지라 관광지가 아닌 것이 섞여 있다.
 # 모수를 3단으로 나눠서 매칭률을 정직하게 보고한다.
 NOT_TOURISM = {"호텔", "콘도미니엄", "교통시설", "모텔", "펜션", "펜션/민박",
@@ -25,68 +24,20 @@ OUT_OF_SCOPE = {"백화점", "쇼핑몰", "대형마트", "면세점"}
 # 순위상관을 낼 최소 표본. 이보다 적으면 수치가 우연에 휘둘려 의미가 없다.
 MIN_PAIRS = 5
 
-# 데이터랩은 지역명을 앞에 붙여 표기한다('경주불국사경내'). 앱은 안 붙인다.
-REGION_PREFIX = ("경주", "거제", "서울", "제주", "부산", "영월", "서귀포")
-# 데이터랩 쪽에만 붙는 꼬리표. 같은 장소를 다른 이름으로 만든다.
-NAME_TAIL = ("경내", "관광지", "유원지", "일원", "지구")
-
-
-def norm_name(s):
-    """장소명 비교용. 괄호·공백·기호와 지역 접두사·꼬리표를 떼어 맞춘다.
-
-    '경주불국사경내'(데이터랩)와 '불국사'(앱)가 같은 곳으로 잡혀야 한다.
-    """
-    s = re.sub(r"\(.*?\)|\[.*?\]", "", NFC(s))
-    s = re.sub(r"[^가-힣A-Za-z0-9]", "", s).lower()
-    for p in REGION_PREFIX:                 # 접두 지역명은 한 번만 뗀다
-        if s.startswith(p) and len(s) > len(p) + 1:
-            s = s[len(p):]
-            break
-    for t in NAME_TAIL:
-        if s.endswith(t) and len(s) > len(t) + 1:
-            s = s[: -len(t)]
-            break
-    return s
-
-
-# 포함관계여도 다른 장소인 경우. '산방산'과 '산방산탄산온천'은 별개다.
-# 이름이 짧은 쪽에 이 단어들이 덧붙어 길어졌다면 시설이 바뀐 것으로 본다.
-DIFFERENT_PLACE = ("온천", "호텔", "리조트", "컨벤션", "터미널", "골프",
-                   "cc", "아울렛", "백화점", "휴게소")
-
-
-def find_match(dl_name, idx):
-    """데이터랩 장소명 → 앱 장소. 정확 매칭 후 포함관계까지 본다.
-
-    '신선대전망대'(데이터랩) ↔ '신선대'(앱) 같은 쌍을 잡기 위한 것이다.
-    2글자 이하로는 포함 매칭을 하지 않는다('산'이 아무 데나 붙는다).
-    """
-    n = norm_name(dl_name)
-    if n in idx:
-        return idx[n], "exact"
-    for an, p in idx.items():
-        if len(an) < 3 or not (an in n or n in an):
-            continue
-        # 긴 쪽에서 짧은 쪽을 뺀 나머지가 '다른 시설'을 가리키면 버린다
-        rest = (n if len(n) > len(an) else an).replace(
-            an if len(n) > len(an) else n, "")
-        if any(w in rest for w in DIFFERENT_PLACE):
-            continue
-        return p, "partial"
-    return None, None
+# (다운로드 폴더명에 쓰이는 표기, 앱 DATA의 블록 키)
+TARGETS = [("경주", "gyeongju"), ("거제", "geoje"), ("서울", "seoul"),
+           ("부산", "busan"), ("제주", "jeju"), ("영월", "yeongwol")]
 
 
 def app_places(region_key):
     """앱의 .dc.html에서 해당 지역 장소를 뽑는다. 줄번호에 의존하지 않는다."""
-    path = os.path.join(APP, "Tour Planner.dc.html")
-    if not os.path.exists(path):
-        sys.exit(f"앱 파일을 찾을 수 없습니다: {path}\nAPP_REPO 환경변수로 경로를 주세요.")
-    src = open(path, encoding="utf-8").read()
+    if not os.path.exists(APP_HTML):
+        sys.exit(f"앱 파일을 찾을 수 없습니다: {APP_HTML}\n"
+                 f"APP_REPO 환경변수로 앱 레포 경로를 주세요.")
+    src = open(APP_HTML, encoding="utf-8").read()
     # 'seoul:' 'geoje:' 같은 키는 ORIGINS·REGION_HUB에도 있어서, DATA 밖에서 먼저
     # 걸리면 엉뚱한 블록을 읽는다. 반드시 DATA 시작점 뒤에서만 찾는다.
-    data_at = src.find("const DATA")
-    if data_at < 0:
-        data_at = 0
+    data_at = max(src.find("const DATA"), 0)
 
     def block(key):
         m = re.search(rf"\b{key}\s*:\s*\{{", src[data_at:])
@@ -113,24 +64,13 @@ def app_places(region_key):
     return named + nation
 
 
-def datalab_rows(region_raw, suffix):
-    for d in sorted(os.listdir(RAW)):
-        p = os.path.join(RAW, d)
-        if not os.path.isdir(p) or region_raw not in NFC(d):
-            continue
-        for f in os.listdir(p):
-            if NFC(f).endswith(suffix):
-                return list(csv.DictReader(open(os.path.join(p, f), encoding="utf-8-sig")))
-    return []
-
-
 def spearman(a, b):
     """순위상관. 동점은 평균순위로 처리한다.
 
-    예전 구현은 순위표를 {값: 위치} dict로 만들어서 같은 값이 여러 개면
-    마지막 하나만 남고 나머지가 사라졌다. 미매칭 장소에 전부 같은 더미 순위를
-    주는 구조라 동점이 대량으로 생기는데, 그게 상관계수를 실제보다 크게
-    보이게 만들었다(서울 -0.52는 더미값 9개가 만든 숫자였다).
+    예전 구현은 순위표를 {값: 위치} dict로 만들어서, 같은 값이 여러 개면 마지막
+    하나만 남고 나머지가 사라졌다. 미매칭 장소에 전부 같은 더미 순위를 주는
+    구조라 동점이 대량으로 생기는데, 그게 상관계수를 실제보다 크게 보이게
+    만들었다(서울 -0.52는 더미값 9개가 만든 숫자였다).
     """
     n = len(a)
     if n < 3:
@@ -175,7 +115,7 @@ def check(region_raw, block_key):
              and NFC(r["분류"]) not in OUT_OF_SCOPE]
 
     exact = partial = 0
-    matched = {}                             # 데이터랩 순위 → 앱 장소
+    matched = {}                             # 앱 장소 → 데이터랩 순위
     for r in scope:
         hit, how = find_match(r["관광지명"], idx)
         if not hit:
@@ -199,8 +139,8 @@ def check(region_raw, block_key):
     rho = spearman(xs, ys) if len(xs) >= MIN_PAIRS else None
 
     top5 = sum(1 for r in scope[:5]
-               if find_match(r["관광지명"], {norm_name(p["ko"]): p
-                                          for p in ordered[:5]})[0])
+               if find_match(r["관광지명"],
+                             {norm_name(p["ko"]): p for p in ordered[:5]})[0])
 
     print(f"\n── {block_key} ──")
     print(f"  앱 장소 {len(app)}곳 / 데이터랩 인기관광지 {len(pop)}곳")
@@ -222,13 +162,10 @@ def check(region_raw, block_key):
 def main():
     if not os.path.isdir(RAW):
         sys.exit(f"{RAW} 가 없습니다. 데이터랩 다운로드 폴더를 먼저 넣어 주세요.")
-    # (다운로드 폴더명에 쓰이는 표기, 앱 DATA의 블록 키)
-    targets = [("경주", "gyeongju"), ("거제", "geoje"), ("서울", "seoul"),
-               ("부산", "busan"), ("제주", "jeju"), ("영월", "yeongwol")]
     print("=" * 56)
     print("데이터랩 ↔ 앱 연결 검증")
     print("=" * 56)
-    done = [r for t, k in targets if (r := check(t, k))]
+    done = [r for t, k in TARGETS if (r := check(t, k))]
     if not done:
         print("\n검증할 지역이 없습니다.")
         return
