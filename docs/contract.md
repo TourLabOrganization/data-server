@@ -20,6 +20,9 @@
       "nameEn": "Jjoksaem Tomb No. 44",
       "region": "경주",
       "catApp": "herit",
+      "catFinal": "herit",
+      "catFinalKo": "역사·문화",
+      "catSource": "app",
       "lat": 35.8397,
       "lng": 129.2163,
       "stayMin": 40,
@@ -37,7 +40,10 @@
 | `block` | string | 앱 DATA의 소속 블록 (`gyeongju`·`jeju`·`nation` 등) |
 | `nameKo` / `nameEn` | string | 장소명 |
 | `region` | string \| null | 시군 단위 지역명. 109종 |
-| `catApp` | string | 앱 카테고리. `heal` `herit` `activity` `food` `sea` `stay` |
+| `catApp` | string | 앱 HTML의 **원본** 값. 손으로 넣은 값이라 신뢰도가 낮다 |
+| `catFinal` | string | **백엔드는 이 값을 쓴다.** 교정이 있으면 교정본 |
+| `catFinalKo` | string | `catFinal` 의 한글명. 팀원 추천 코드와 맞춘 이름 |
+| `catSource` | string | `app`(원본 유지) 또는 `tourapi`(교정됨) |
 | `lat` / `lng` | number | WGS84 좌표 |
 | `stayMin` | int \| null | 권장 체류시간(분) |
 | `hours` | string \| null | 운영시간. 자유 형식 문자열이라 파싱하지 말 것 |
@@ -46,11 +52,15 @@
 
 ### 주의
 
-- **`catApp` 은 지금 신뢰할 수 없다.** 손으로 넣은 값이라 지역별로 기준이
-  다르다. 예를 들어 제주·부산의 해변이 `sea` 가 아니라 `heal` 로 들어가 있다.
-  교정된 값은 `categories.json` 의 `catOfficial` 에 있다 (재분류 완료,
-  1,171곳 중 918곳 매칭 · 287곳 변경 대상). 어느 쪽을 앱에 반영할지는
-  `reports/reclassify.md` 의 신뢰도를 보고 정한다
+- **`catApp` 을 그대로 쓰지 말 것. `catFinal` 을 쓴다.** `catApp` 은 앱 HTML에
+  손으로 넣은 값이라 지역별로 기준이 다르다(제주·부산의 해변이 `sea` 가 아니라
+  `heal` 로 들어가 있었다). `catFinal` 은 TourAPI 공식 분류로 교정한 값이다
+- **앱 HTML은 고치지 않는다.** 교정은 이 파이프라인 안에서만 덧씌운다. 그래서
+  무엇을 왜 바꿨는지 `categories.json` 과 `reports/reclassify.md` 로 되짚을 수
+  있고, 앱 레포와 충돌하지 않는다
+- 교정 규모: 1,171곳 중 918곳 TourAPI 매칭 · 287곳이 변경 대상 · 그중
+  **168곳만 반영**했다. 나머지 119곳은 신뢰도가 낮거나 계통 오류(숙박시설
+  오매칭·먹자골목)가 있어 보류했다 — `reports/reclassify.md` 참고
 - **`stayMin` 은 추정값이다.** 고유값이 21개뿐이고 99.9%가 10분 배수라,
   근거 있는 측정치가 아니다. 일정 길이 계산에 쓰되 정확도를 주장하지 말 것
 - `region` 이 `null` 인 장소가 있을 수 있다. `nation` 블록에서 `locKo` 가
