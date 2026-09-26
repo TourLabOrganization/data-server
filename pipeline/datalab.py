@@ -174,6 +174,10 @@ def main():
 
     shares, detail, unknown_all = {}, {}, defaultdict(list)
     for region_raw, files in found.items():
+        # '전국' 다운로드는 지역이 아니라 비교 기준값 소스다. 구조도 다르다
+        # (시도명/시군구명 컬럼). staytime.py 가 쓰고, TFI 지역 루프에서는 뺀다.
+        if NFC(region_raw).startswith("전국"):
+            continue
         loc = norm_region(region_raw, table)
         spot, unknown, n_spot, n_golf = spot_shares(files)
         consumption = consumption_shares(files)
@@ -202,6 +206,9 @@ def main():
         got = [t for t in THEMES if t in spot]
         print(f"  {loc}: 관광지 {n_spot}곳 분류 → 테마 {len(got)}/{len(THEMES)}개"
               + (f"  (골프장 {n_golf}곳 제외)" if n_golf else ""))
+        if not n_spot:
+            print(f"     ⚠️ '인기관광지_전체.csv' 가 없어 테마를 못 냅니다. "
+                  f"데이터랩 '관광지' 탭을 받아 주세요.")
 
     tfi = to_tfi(shares)
     os.makedirs(DERIVED, exist_ok=True)

@@ -39,14 +39,53 @@ def tier_of(code):
     return "광역" if len(str(code).strip()) <= 2 else "기초"
 
 
+def load_national_stay():
+    """'전국' 다운로드의 방문자 체류특성 → 시군구 단위 전수, 연도별.
+
+    전국 파일이 지역별 파일보다 낫다. 이유가 두 가지다.
+      - 전국 229개 시군구를 한 번에 준다 (지역별 파일은 그 시도만)
+      - `시도명` 컬럼이 있어 **동명이인을 가른다**. '고성군'이 강원과 경남에
+        각각 있는데, 지역별 파일에는 시도명이 없어 구분할 수 없었다.
+
+    폴더명에 기간이 박혀 있다: 20260926132215_전국_202501-202512_…
+    """
+    out = defaultdict(dict)          # {(시도, 시군구): {연도: (체류, 숙박일)}}
+    if not os.path.isdir(RAW):
+        return out
+    for d in sorted(os.listdir(RAW)):
+        p = os.path.join(RAW, d)
+        parts = NFC(d).split("_")
+        if not os.path.isdir(p) or len(parts) < 3 or parts[1] != "전국":
+            continue
+        year = parts[2][:4]
+        for f in os.listdir(p):
+            if not NFC(f).endswith("방문자 체류특성.csv"):
+                continue
+            for r in read_csv(os.path.join(p, f)):
+                try:
+                    key = (NFC(r["시도명"]).strip(), NFC(r["시군구명"]).strip())
+                    out[key][year] = (float(r["평균 체류시간"]),
+                                      float(r["평균 숙박일수"]))
+                except (ValueError, KeyError):
+                    continue
+    return out
+
+
 def load_stay_profile():
-    """방문자 체류특성 → {지역명: (tier, 체류시간, 숙박일수)}."""
+    """지역별 다운로드의 방문자 체류특성 → {지역명: (tier, 체류, 숙박일)}.
+
+    전국 파일이 없을 때의 폴백이다. 시도명이 없어 동명이인을 가르지 못한다.
+    """
     out = {}
     for root, _, files in os.walk(RAW):
+        if "전국" in NFC(os.path.basename(root)).split("_")[1:2]:
+            continue
         for f in files:
             if not NFC(f).endswith("방문자 체류특성.csv"):
                 continue
             for r in read_csv(os.path.join(root, f)):
+                if "지역명" not in r:
+                    continue
                 name = NFC(r["지역명"]).strip()
                 try:
                     out[name] = (tier_of(r["지역코드"]),
@@ -107,6 +146,24 @@ def simplify(name):
     return re.sub(r"(특별자치|특별|광역)?[시군구도]$", "", n) or n
 
 
+# 앱이 광역 단위로 다루는 지역. 시군구가 아니라 시도명으로 묶는다.
+WIDE = ("서울", "부산", "대구", "인천", "광주", "대전", "울산", "세종", "제주")
+# 같은 이름의 군이 두 시도에 있어 앱이 따로 표기하는 것.
+DISAMBIG = {("강원특별자치도", "고성군"): "고성(강원)",
+            ("강원도", "고성군"): "고성(강원)"}
+
+
+def to_loc(sido, sigungu):
+    """(시도명, 시군구명) → 앱 locKo. 동명이인은 시도명으로 가른다."""
+    key = (NFC(sido).strip(), NFC(sigungu).strip())
+    if key in DISAMBIG:
+        return DISAMBIG[key]
+    wide = simplify(sido)
+    if wide in WIDE:                     # 서울 종로구 → '서울'
+        return wide
+    return simplify(sigungu)
+
+
 def merge_subdistricts(profile):
     """구 단위로 쪼개진 지역을 시 단위로 합친다.
 
@@ -144,7 +201,7 @@ def main():
     profile = load_stay_profile()
     national, regional = load_trend()
     lodging = load_lodging_ratio()
-    if not profile:
+    if not profile and not load_national_stay():
         sys.exit("체류시간 CSV가 없습니다. 데이터랩 '방문자 체류특성' 탭을 받아 주세요.")
 
     # 앱 장소를 지역별로 묶는다. 체류시간이 없는 장소는 평균에서 뺀다.
@@ -155,7 +212,32 @@ def main():
 
     latest_year = max((y for d in national.values() for y in d), default=None)
 
-    merged = merge_subdistricts(profile)
+    national_stay = load_national_stay()
+    if national_stay:
+        # 전국 파일이 있으면 그쪽을 쓴다. 시군구 전수 + 시도명으로 동명이인 해소.
+        latest_year = max(y for v in national_stay.values() for y in v)
+        agg = defaultdict(list)
+        for (sido, sigungu), years in national_stay.items():
+            if latest_year not in years:
+                continue
+            agg[to_loc(sido, sigungu)].append(years[latest_year])
+        merged = {}
+        for loc, vals in agg.items():
+            merged[loc] = {
+                "tier": "기초",
+                # 서울·부산처럼 앱이 광역으로 묶는 곳은 자치구 평균이다.
+                # 방문자 수 가중치가 없어 단순 평균을 쓴다.
+                "stayMinutes": round(sum(v[0] for v in vals) / len(vals), 1),
+                "lodgingDays": round(sum(v[1] for v in vals) / len(vals), 2),
+                "subUnits": len(vals), "subUnitNames": [],
+            }
+        base_all = [m["stayMinutes"] for m in merged.values()]
+        national.setdefault("기초", {})[latest_year] = round(
+            sum(base_all) / len(base_all), 1)
+        source = f"전국 다운로드 ({latest_year}년, 시군구 {len(national_stay)}개)"
+    else:
+        merged = merge_subdistricts(profile)
+        source = "지역별 다운로드"
 
     rows = []
     for loc, m in sorted(merged.items()):
@@ -183,6 +265,7 @@ def main():
     dst = os.path.join(DERIVED, "staytime.json")
     json.dump({
         "latestYear": latest_year,
+        "source": source,
         "nationalAverage": {t: national.get(t, {}) for t in TIERS},
         "lodgingRatio": lodging,
         "trend": {k: v for k, v in regional.items()},
@@ -192,6 +275,7 @@ def main():
     report = write_report(rows, national, regional, lodging, latest_year)
 
     matched = [r for r in rows if r["appPlaces"]]
+    print(f"출처: {source}")
     print(f"데이터랩 체류시간 지역 {len(rows)}곳 "
           f"(광역 {sum(1 for r in rows if r['tier']=='광역')} / "
           f"기초 {sum(1 for r in rows if r['tier']=='기초')})")
