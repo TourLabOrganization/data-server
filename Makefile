@@ -37,3 +37,6 @@ clean:    ## 다시 만들 수 있는 산출물만 지운다
 
 clean-cache: ## TourAPI 캐시까지 지운다 (재조회에 호출 한도가 든다)
 	rm -rf data/cache/*
+
+serve:    ## API 서버를 로컬에서 띄운다 (개발용)
+	$(PY) -m uvicorn api.main:app --reload --port 8000

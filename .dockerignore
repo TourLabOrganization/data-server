@@ -1,0 +1,11 @@
+data/datalab_raw/
+data/cache/
+.git/
+.env
+__pycache__/
+*.pyc
+reports/
+docs/
+pipeline/
+recommend/src/
+recommend/data/raw/

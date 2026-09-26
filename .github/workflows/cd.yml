@@ -1,0 +1,123 @@
+name: CD
+
+on:
+  push:
+    branches: [ develop ]
+
+concurrency:
+  group: cd-develop
+  cancel-in-progress: false
+
+env:
+  DEPLOY_DIR: data-server
+
+jobs:
+  deploy:
+    name: build-and-deploy
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+
+    steps:
+      - name: 이미지 이름 결정
+        # ghcr 태그는 소문자만 허용한다 (조직명에 대문자가 있다)
+        run: echo "IMAGE_NAME=ghcr.io/${GITHUB_REPOSITORY,,}" >> "$GITHUB_ENV"
+
+      - name: 체크아웃
+        uses: actions/checkout@v7
+
+      - name: 파이썬 설치
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: 산출물이 커밋돼 있는지 확인
+        # 이미지에 JSON 을 구워 넣으므로, 없으면 빈 서버가 뜬다. 여기서 막는다.
+        run: |
+          set -e
+          for f in data/derived/places.json data/derived/datalab.json \
+                   data/derived/staytime.json; do
+            [ -s "$f" ] || { echo "산출물 없음: $f — make all 후 커밋하세요"; exit 1; }
+          done
+
+      - name: API 기동 검증
+        run: |
+          pip install -q -r requirements-api.txt
+          python - <<'PY'
+          from fastapi.testclient import TestClient
+          from api.main import app
+          with TestClient(app) as c:
+              assert c.get("/health").json()["status"] == "ok"
+              assert c.get("/v1/tfi").status_code == 200
+              assert c.get("/v1/places").json()["count"] > 1000
+          print("기동 검증 통과")
+          PY
+
+      - name: Buildx 설치
+        uses: docker/setup-buildx-action@v4
+
+      - name: GHCR 로그인
+        uses: docker/login-action@v4
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ github.token }}
+
+      - name: 이미지 빌드 및 푸시
+        uses: docker/build-push-action@v7
+        with:
+          context: .
+          # 인스턴스 아키텍처와 맞춰야 한다. t4g(Graviton)=arm64, t3=amd64
+          platforms: ${{ vars.TARGET_PLATFORM || 'linux/arm64' }}
+          push: true
+          tags: ${{ env.IMAGE_NAME }}:develop
+          labels: |
+            org.opencontainers.image.source=${{ github.server_url }}/${{ github.repository }}
+
+      - name: 배포 파일 전송
+        uses: appleboy/scp-action@v1
+        with:
+          host: ${{ secrets.EC2_HOST }}
+          username: ${{ secrets.EC2_USER }}
+          key: ${{ secrets.EC2_SSH_KEY }}
+          source: docker-compose.yml
+          target: ~/${{ env.DEPLOY_DIR }}
+          overwrite: true
+
+      - name: EC2 배포 및 헬스체크
+        uses: appleboy/ssh-action@v1
+        env:
+          IMAGE: ${{ env.IMAGE_NAME }}:develop
+          DEPLOY_DIR: ${{ env.DEPLOY_DIR }}
+          REGISTRY_USER: ${{ github.actor }}
+          REGISTRY_TOKEN: ${{ github.token }}
+        with:
+          host: ${{ secrets.EC2_HOST }}
+          username: ${{ secrets.EC2_USER }}
+          key: ${{ secrets.EC2_SSH_KEY }}
+          envs: IMAGE,DEPLOY_DIR,REGISTRY_USER,REGISTRY_TOKEN
+          script_stop: true
+          script: |
+            set -e
+            export IMAGE
+            cd "$HOME/$DEPLOY_DIR"
+
+            if ! docker compose version > /dev/null 2>&1; then
+              echo "docker compose 플러그인이 없습니다"; exit 1
+            fi
+
+            echo "$REGISTRY_TOKEN" | docker login ghcr.io -u "$REGISTRY_USER" --password-stdin
+            docker compose pull
+            docker logout ghcr.io
+            docker compose up -d
+
+            for i in $(seq 1 30); do
+              if curl -fsS http://127.0.0.1:8000/health | grep -q '"status":"ok"'; then
+                echo "헬스체크 통과 (${i}회째)"
+                docker image prune -f || true
+                exit 0
+              fi
+              sleep 2
+            done
+            echo "헬스체크 실패"; docker compose logs --tail 50 api; exit 1

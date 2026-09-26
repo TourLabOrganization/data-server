@@ -19,9 +19,13 @@ data/derived/*.json  ← 백엔드와의 계약. 이것만 커밋된다
 backend (Spring Boot) → frontend
 ```
 
-**이 레포는 상시 기동하는 서버가 아니다.** 파이프라인을 돌려 JSON을 만들고,
-그 JSON을 커밋해 두면 백엔드는 파이프라인을 다시 돌리지 않고 읽기만 한다.
-추천 계산을 실시간으로 서빙해야 할 때가 되면 `api/` 를 여기에 추가한다.
+이 레포는 두 부분이다.
+
+- **`pipeline/`** — 가끔 손으로 돌리는 배치. CSV·TourAPI 를 읽어 JSON 을 만든다
+- **`api/`** — 그 JSON 을 백엔드에 넘기는 FastAPI 서버. 무거운 계산은 하지 않는다
+
+무거운 것(ETL·재분류·군집 학습)은 전부 배치로 끝나 있고, API 에서 도는 것은
+요청마다 바뀌는 점수 정렬뿐이다.
 
 ## 빠른 시작
 
@@ -79,7 +83,6 @@ python -m pipeline.tourapi    # TourAPI 공식 분류로 재분류 (키 필요, 
 
 - TourAPI 재분류 잔여 414곳 (호출 한도 해제 후 이어서 실행)
 - 재분류 결과를 반영한 TFI 재계산
-- 추천 API 서빙 (`api/`)
 
 ## 문서
 
@@ -88,4 +91,5 @@ python -m pipeline.tourapi    # TourAPI 공식 분류로 재분류 (키 필요, 
 | 파이프라인이 무엇을 어떻게 계산하나 | `docs/pipeline.md` |
 | 산출 JSON 스키마 (백엔드가 읽을 것) | `docs/contract.md` |
 | 데이터랩의 어떤 탭을 왜 썼나 | `docs/datalab.md` |
+| 배포·EC2 구성 | `docs/deploy.md` |
 | 브랜치·커밋 규칙 | `CLAUDE.md` |

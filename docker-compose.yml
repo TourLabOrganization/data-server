@@ -1,0 +1,24 @@
+# data-server 는 백엔드만 호출한다. 외부에 열지 않으므로 nginx·certbot·도메인이
+# 필요 없다 — 백엔드가 사설 IP 로 직접 부른다. 보안그룹에서 8000 을 API 서버의
+# 보안그룹에만 열어 둘 것 (docs/deploy.md).
+services:
+  api:
+    image: ${IMAGE:?배포 스크립트가 IMAGE 를 넘겨야 한다}
+    container_name: data-server
+    restart: unless-stopped
+    ports:
+      - "8000:8000"
+    mem_limit: 400m
+    memswap_limit: 400m
+    healthcheck:
+      test: ["CMD", "python", "-c",
+             "import urllib.request,sys; sys.exit(0 if urllib.request.urlopen('http://127.0.0.1:8000/health',timeout=3).status==200 else 1)"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 10s
+    logging:
+      driver: json-file
+      options:
+        max-size: 10m
+        max-file: "3"
