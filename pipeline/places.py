@@ -23,6 +23,12 @@ from .common import APP_HTML, DERIVED, NFC
 # 앱이 쓰는 카테고리. 재분류 전 원본 값이다.
 APP_CATS = ("heal", "herit", "activity", "food", "sea", "stay")
 
+# 팀원 추천 코드(테마 추천 알고리즘/src/classify.py)가 쓰는 한글 카테고리명.
+# 1:1로 대응되므로 양쪽이 같은 장소를 가리킬 수 있다.
+CAT_KO = {"herit": "역사·문화", "heal": "힐링·생태",
+          "activity": "테마파크·액티비티", "food": "로컬·먹거리",
+          "sea": "해양·자연", "stay": "숙박"}
+
 # 앱 포맷이 바뀌어 파싱이 깨지면 알아차려야 한다. 이보다 적게 나오면 실패시킨다.
 MIN_EXPECTED = 1000
 
@@ -51,6 +57,21 @@ def _blocks(src):
             i += 1
         out[m.group(1)] = (NFC(m.group(2)), src[s:i - 1])
     return out
+
+
+def corrections():
+    """TourAPI 재분류에서 '반영' 판정이 난 것만 {장소id: 카테고리} 로.
+
+    앱 HTML은 건드리지 않고 여기서 덧씌운다. 교정 근거가 data-server 안에만
+    있으므로, 무엇을 왜 바꿨는지 되짚을 수 있다.
+
+    categories.json 이 없어도(재분류 전) 정상 동작해야 하므로 빈 값을 돌려준다.
+    """
+    path = os.path.join(DERIVED, "categories.json")
+    if not os.path.exists(path):
+        return {}
+    rows = json.load(open(path, encoding="utf-8"))["places"]
+    return {r["id"]: r["catOfficial"] for r in rows if r.get("apply")}
 
 
 def extract():
@@ -97,6 +118,15 @@ def extract():
 def main():
     places = extract()
 
+    fix = corrections()
+    for p in places:
+        official = fix.get(p["id"])
+        # catApp   앱 HTML 원본값 (손으로 넣은 값)
+        # catFinal 백엔드가 써야 할 값 — 교정이 있으면 교정본
+        p["catFinal"] = official or p["catApp"]
+        p["catSource"] = "tourapi" if official else "app"
+        p["catFinalKo"] = CAT_KO.get(p["catFinal"], p["catFinal"])
+
     bad_cat = sorted({p["catApp"] for p in places} - set(APP_CATS) - {None})
     no_coord = [p for p in places if p["lat"] is None or p["lng"] is None]
     no_region = [p for p in places if not p["region"]]
@@ -107,11 +137,19 @@ def main():
               open(dst, "w", encoding="utf-8"), ensure_ascii=False, indent=1)
 
     regions = {p["region"] for p in places if p["region"]}
+    n_fix = sum(1 for p in places if p["catSource"] == "tourapi")
     print(f"장소 {len(places)}곳 / 지역 {len(regions)}곳")
-    cats = {}
-    for p in places:
-        cats[p["catApp"]] = cats.get(p["catApp"], 0) + 1
-    print("  앱 카테고리:", dict(sorted(cats.items(), key=lambda x: -x[1])))
+    for label, field in (("앱 원본", "catApp"), ("교정 후", "catFinal")):
+        cats = {}
+        for p in places:
+            cats[p[field]] = cats.get(p[field], 0) + 1
+        print(f"  {label}: " + str(dict(sorted(cats.items(), key=lambda x: -x[1]))))
+    print(f"  TourAPI 교정 적용 {n_fix}곳")
+    if not fix:
+        print("  ⚠️ data/derived/categories.json 이 없습니다. catFinal 이 앱 원본값"
+              " 그대로입니다.\n"
+              "     교정을 반영하려면 `make tourapi` 를 먼저 돌리세요"
+              " (TOURAPI_KEY 필요).")
     if bad_cat:
         print(f"  ⚠️ 모르는 카테고리 값: {bad_cat}")
     if no_coord:

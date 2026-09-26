@@ -10,7 +10,8 @@ import os
 import re
 import sys
 
-from .common import APP_HTML, NFC, RAW, datalab_rows, find_match, norm_name
+from .common import (APP_HTML, NFC, RAW, datalab_rows, find_match,
+                     norm_name, spearman)
 
 # 데이터랩 '인기관광지'는 통신·카드 기반 방문지라 관광지가 아닌 것이 섞여 있다.
 # 모수를 3단으로 나눠서 매칭률을 정직하게 보고한다.
@@ -62,38 +63,6 @@ def app_places(region_key):
     named = block(region_key)
     nation = [p for p in block("nation") if p.get("locKo") == NFC(region_key)]
     return named + nation
-
-
-def spearman(a, b):
-    """순위상관. 동점은 평균순위로 처리한다.
-
-    예전 구현은 순위표를 {값: 위치} dict로 만들어서, 같은 값이 여러 개면 마지막
-    하나만 남고 나머지가 사라졌다. 미매칭 장소에 전부 같은 더미 순위를 주는
-    구조라 동점이 대량으로 생기는데, 그게 상관계수를 실제보다 크게 보이게
-    만들었다(서울 -0.52는 더미값 9개가 만든 숫자였다).
-    """
-    n = len(a)
-    if n < 3:
-        return 0.0
-
-    def rank(xs):
-        order = sorted(range(n), key=lambda i: xs[i])
-        r, i = [0.0] * n, 0
-        while i < n:
-            j = i
-            while j + 1 < n and xs[order[j + 1]] == xs[order[i]]:
-                j += 1
-            avg = (i + j) / 2 + 1            # 동점 구간은 평균순위를 나눠 갖는다
-            for k in range(i, j + 1):
-                r[order[k]] = avg
-            i = j + 1
-        return r
-
-    A, B = rank(a), rank(b)
-    ma, mb = sum(A) / n, sum(B) / n
-    num = sum((x - ma) * (y - mb) for x, y in zip(A, B))
-    den = (sum((x - ma) ** 2 for x in A) * sum((y - mb) ** 2 for y in B)) ** .5
-    return num / den if den else 0.0
 
 
 def check(region_raw, block_key):

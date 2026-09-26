@@ -12,29 +12,31 @@ import json
 import math
 import os
 import sys
-from collections import defaultdict
+from collections import Counter, defaultdict
 
 from .common import (DERIVED, NFC, RAW, load_region_map, norm_region, pick,
                      read_csv, scan_downloads)
+from .taxonomy import (DATALAB_ALIAS, datalab_class_to_mid, is_golf,
+                       to_app_cat)
 
-# 데이터랩 '인기관광지'는 통신·내비 기반 방문지라 숙박·교통·골프장이 섞여 있다.
-# 관광 테마 비중을 계산할 때는 빼야 한다.
-NOT_TOURISM = {"호텔", "콘도미니엄", "교통시설", "모텔", "펜션", "게스트하우스"}
+# TFI 축은 **앱 카테고리**를 쓴다. 앱·TourAPI·데이터랩이 같은 분류체계 위에
+# 놓이도록 재분류한 결과를 살리기 위해서다 (pipeline/taxonomy.py).
+#
+# sea 가 빠져 있는 이유: 데이터랩 인기관광지는 분류를 **중분류까지만** 준다.
+# NA02(자연경관 하천‧해양)에 강·호수와 해변이 같이 들어 있어서 바다만 뗄 수 없다.
+# 앱 쪽은 TourAPI 소분류를 받아오므로 sea 를 나눌 수 있지만, 지역 단위 TFI 는
+# 데이터랩이 줄 수 있는 해상도까지만 만든다. 없는 정보를 지어내지 않는다.
+THEMES = ["herit", "heal", "activity", "food"]
+THEME_KO = {"herit": "역사·문화유산", "heal": "자연·힐링",
+            "activity": "체험·활동", "food": "미식"}
 
-# 인기관광지 '분류' → 표준 테마
-SPOT_THEME = {
-    "역사유적지": "역사·문화유산", "종교성지": "역사·문화유산",
-    "전시시설": "역사·문화유산", "역사유물": "역사·문화유산",
-    "자연경관(하천/해양)": "자연·힐링", "자연생태": "자연·힐링", "도시공원": "자연·힐링",
-}
-# 관광소비 '업종대분류' → 표준 테마
-BIZ_THEME = {"식음료업": "미식", "쇼핑업": "쇼핑"}
-
-THEMES = ["미식", "쇼핑", "역사·문화유산", "자연·힐링"]
+# 관광소비 '업종대분류' → 소비 축. 장소 개수 축과 **단위가 다르다**(소비액 비중).
+# 같은 표에 나란히 두면 오해하므로 산출물에서 키를 따로 둔다.
+BIZ_THEME = {"식음료업": "food", "쇼핑업": "shopping"}
 
 
 def consumption_shares(files):
-    """관광소비 업종 비중 → 미식·쇼핑 원시 비중(%)."""
+    """관광소비 업종 비중 → 소비 축(%). 장소 개수 축과 단위가 다르다."""
     path = pick(files, "관광소비_내국인.csv")
     if not path:
         return {}
@@ -51,19 +53,44 @@ def consumption_shares(files):
 
 
 def spot_shares(files):
-    """인기관광지 분류 구성 → 역사·자연 테마 비중(%). 숙박·교통은 모수에서 제외."""
+    """인기관광지 분류 구성 → 앱 카테고리별 장소 비중(%).
+
+    예전 구현은 분류 29종 중 7종만 테마로 매핑하면서 **분모에는 전부** 넣었다.
+    테마공원·랜드마크관광·자연공원 같은 것이 분자에서 통째로 빠져서 역사·자연
+    비중이 실제보다 낮게 나왔다. 이제 taxonomy 의 매핑을 써서 전부 분류하고,
+    모르는 값은 조용히 넘기지 않고 돌려준다.
+
+    모수에서 빼는 것:
+      - 숙박(stay)·교통 등 앱이 다루지 않는 대상
+      - 별칭 표에서 의도적으로 제외한 것('데이트코스'·'기타관광')
+    """
     path = pick(files, "인기관광지_전체.csv")
     if not path:
-        return {}
-    rows = [r for r in read_csv(path) if NFC(r.get("분류")) not in NOT_TOURISM]
-    if not rows:
-        return {}
-    cnt = defaultdict(int)
-    for r in rows:
-        t = SPOT_THEME.get(NFC(r.get("분류")))
-        if t:
-            cnt[t] += 1
-    return {t: cnt[t] / len(rows) * 100 for t in ("역사·문화유산", "자연·힐링")}
+        return {}, [], 0, 0, 0.0
+    cnt, unknown, total, golf = defaultdict(int), [], 0, 0
+    camping, n_rows = 0, 0
+    for r in read_csv(path):
+        raw = NFC(r.get("분류"))
+        n_rows += 1
+        camping += raw == "캠핑"
+        if is_golf(r.get("관광지명")):
+            golf += 1                        # 앱이 다루지 않는 대상. 모수에서 뺀다
+            continue
+        mid = datalab_class_to_mid(raw)
+        if mid is None:
+            if raw not in DATALAB_ALIAS:
+                unknown.append(raw)          # 모르는 값. 호출한 쪽이 보고한다
+            continue                         # 별칭 표의 None 은 의도적 제외
+        cat = to_app_cat(mid)
+        if cat not in THEMES:                # stay·쇼핑시설·교통시설
+            continue
+        cnt[cat] += 1
+        total += 1
+    camp_pct = round(camping / n_rows * 100, 1) if n_rows else 0.0
+    if not total:
+        return {}, unknown, 0, golf, camp_pct
+    return ({t: cnt[t] / total * 100 for t in THEMES},
+            unknown, total, golf, camp_pct)
 
 
 def age_profile(files):
@@ -122,32 +149,94 @@ def to_tfi(shares_by_region):
     return tfi
 
 
+def app_category_share(region):
+    """앱 장소의 카테고리 분포(%). 재분류 결과(catOfficial)를 우선 쓴다.
+
+    데이터랩과 달리 여기에는 sea 가 있다. TourAPI 소분류를 받아왔기 때문이다.
+    categories.json 이 없으면 빈 값을 돌려준다(재분류 전에도 돌아가야 한다).
+    """
+    path = os.path.join(DERIVED, "categories.json")
+    if not os.path.exists(path):
+        return {}
+    rows = json.load(open(path, encoding="utf-8"))["places"]
+    cnt, total = defaultdict(int), 0
+    for r in rows:
+        if r.get("region") != region:
+            continue
+        cat = r.get("catOfficial") or r.get("catApp")
+        if not cat or cat == "stay":
+            continue
+        cnt[cat] += 1
+        total += 1
+    return {k: round(v / total * 100, 1) for k, v in cnt.items()} if total else {}
+
+
 def main():
     table = load_region_map()
     found = scan_downloads()
     if not found:
         sys.exit(f"{RAW} 에 데이터랩 다운로드 폴더가 없습니다.")
 
-    shares, detail = {}, {}
+    shares, detail, unknown_all = {}, {}, defaultdict(list)
     for region_raw, files in found.items():
+        # '전국' 다운로드는 지역이 아니라 비교 기준값 소스다. 구조도 다르다
+        # (시도명/시군구명 컬럼). staytime.py 가 쓰고, TFI 지역 루프에서는 뺀다.
+        if NFC(region_raw).startswith("전국"):
+            continue
         loc = norm_region(region_raw, table)
-        s = {}
-        s.update(consumption_shares(files))
-        s.update(spot_shares(files))
-        shares[loc] = s
-        detail[loc] = {"share_pct": s,
-                       "age_consumption": age_profile(files),
-                       "flows": flows(files, table),
-                       "source_files": sorted(files)}
-        got = [t for t in THEMES if t in s]
-        print(f"  {loc}: 테마 {len(got)}/{len(THEMES)}개 계산 {got}")
+        spot, unknown, n_spot, n_golf, camp_pct = spot_shares(files)
+        consumption = consumption_shares(files)
+        if unknown:
+            unknown_all[loc].extend(unknown)
+
+        # 장소 개수 축만 TFI 로 간다. 소비 축(소비액 비중)은 단위가 달라
+        # 절대 섞지 않는다. 한 지역만 소비액으로 채우면 그 지역이 그 테마
+        # 1위로 튀어 오른다 — 관광지 탭을 못 받은 영월이 소비액 33%로
+        # '미식 1위'가 되는 식이다. 관광지 데이터가 없으면 테마도 없다.
+        shares[loc] = dict(spot)
+
+        detail[loc] = {
+            # 장소 개수 기준(%) — 인기관광지 분류 구성
+            "spotShare": {k: round(v, 2) for k, v in spot.items()},
+            "spotCount": n_spot,
+            "golfExcluded": n_golf,
+            # 캠핑장은 TourAPI 분류상 숙박(AC05)이라 테마 모수에서 빠진다.
+            # 그런데 영월은 인기관광지의 37%가 캠핑장이라, 빼고 나면 그 지역의
+            # 가장 큰 관광 성격이 통째로 사라진다. 4개 축에 억지로 끼워 넣으면
+            # (heal 로 보내면) 캠핑장이 모수의 절반을 먹어 다른 테마를 희석하므로,
+            # 축은 그대로 두고 비중만 따로 남긴다.
+            "campingShare": camp_pct,
+            # 소비액 기준(%) — 관광소비 업종 비중. 위와 단위가 다르다
+            "consumptionShare": {k: round(v, 2) for k, v in consumption.items()},
+            # 앱 장소의 분포. 재분류 결과라 sea 가 따로 있다
+            "appCategoryShare": app_category_share(loc),
+            "age_consumption": age_profile(files),
+            "flows": flows(files, table),
+            "source_files": sorted(files),
+        }
+        got = [t for t in THEMES if t in spot]
+        print(f"  {loc}: 관광지 {n_spot}곳 분류 → 테마 {len(got)}/{len(THEMES)}개"
+              + (f"  (골프장 {n_golf}곳 제외)" if n_golf else ""))
+        if camp_pct >= 15:
+            print(f"     ℹ️ 인기관광지의 {camp_pct}%가 캠핑장입니다. "
+                  f"숙박으로 분류돼 테마 모수에서 빠집니다(campingShare 참고).")
+        if not n_spot:
+            print(f"     ⚠️ '인기관광지_전체.csv' 가 없어 테마를 못 냅니다. "
+                  f"데이터랩 '관광지' 탭을 받아 주세요.")
 
     tfi = to_tfi(shares)
     os.makedirs(DERIVED, exist_ok=True)
-    out = {"themes": THEMES, "regions": sorted(shares), "tfi": tfi, "detail": detail}
+    out = {"themes": THEMES, "themeLabels": THEME_KO,
+           "regions": sorted(shares), "tfi": tfi, "detail": detail}
     dst = os.path.join(DERIVED, "datalab.json")
     json.dump(out, open(dst, "w", encoding="utf-8"), ensure_ascii=False, indent=1)
 
+    if unknown_all:
+        print("\n  ⚠️ 매핑하지 못한 데이터랩 분류값이 있습니다:")
+        for loc, vals in unknown_all.items():
+            for v, c in sorted(Counter(vals).items()):
+                print(f"     {loc}: '{v}' {c}건")
+        print("     pipeline/taxonomy.py 의 DATALAB_ALIAS 에 추가해 주세요.")
     if len(shares) < 2:
         print("\n  ⚠️ 지역이 1곳뿐이라 TFI(상대 비교)는 계산하지 못했습니다.")
         print("     비교 기준이 생기려면 지역이 2곳 이상 필요합니다.")

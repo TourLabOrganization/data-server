@@ -37,7 +37,9 @@ make all
 ```bash
 python -m pipeline.places     # 앱 HTML → 장소 마스터
 python -m pipeline.datalab    # 데이터랩 CSV → 지역×테마 강도(TFI)
+python -m pipeline.staytime   # 체류시간으로 일정 길이 검증
 python -m pipeline.verify     # 데이터랩 ↔ 앱 매칭 검증
+python -m pipeline.tourapi    # TourAPI 공식 분류로 재분류 (키 필요, make all 에는 없음)
 ```
 
 ## 산출물
@@ -49,6 +51,10 @@ python -m pipeline.verify     # 데이터랩 ↔ 앱 매칭 검증
 |---|---|---|
 | `places.json` | 장소 1,171곳 (좌표·카테고리·체류시간) | 백엔드 DB 적재 |
 | `datalab.json` | 지역×테마 강도 지수(TFI) 5개 지역 | 추천 가중치 |
+| `categories.json` | TourAPI 공식 분류 재분류 결과 | 카테고리 교정 |
+| `staytime.json` | 지역별 체류시간·전국 대비 지수 | 일정 길이 조절 |
+
+검증 리포트는 `reports/` 에 마크다운으로 쌓인다.
 
 ## 원본 데이터
 
@@ -65,11 +71,13 @@ python -m pipeline.verify     # 데이터랩 ↔ 앱 매칭 검증
 | 장소 마스터 추출 | 1,171곳 / 109개 지역 |
 | 데이터랩 TFI | 경주·거제·서울·제주·부산 5개 지역 |
 | 앱 ↔ 데이터랩 검증 | 매칭률 38%, 순위상관 평균 +0.43 |
+| 체류시간 검증 | 38개 지역 (기초 30 · 광역 8) |
+| TourAPI 재분류 | 757/1,171곳 — 일일 호출 한도로 중단, 이어받기 가능 |
 
 ## 아직 없는 것
 
-- TourAPI 공식 분류로 장소 카테고리 재분류 (`pipeline/tourapi.py`)
-- 데이터랩 체류시간 기반 일정 길이 검증 (`pipeline/staytime.py`)
+- TourAPI 재분류 잔여 414곳 (호출 한도 해제 후 이어서 실행)
+- 재분류 결과를 반영한 TFI 재계산
 - 팀원 추천 알고리즘 (`recommend/`)
 - 추천 API 서빙 (`api/`)
 
