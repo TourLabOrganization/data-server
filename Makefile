@@ -11,10 +11,13 @@ PY ?= python3
 .PHONY: all places datalab staytime verify tourapi clean
 
 # tourapi 는 API 키와 호출 한도가 필요해서 all 에 넣지 않는다. 따로 돌린다.
-all: places datalab staytime verify
+all: places courses datalab staytime verify
 
 places:   ## 앱 HTML → 장소 마스터
 	$(PY) -m pipeline.places
+
+courses:  ## 코스 .dc.html → 순서가 있는 장소 목록
+	$(PY) -m pipeline.courses
 
 datalab:  ## 데이터랩 CSV → 지역×테마 강도(TFI)
 	$(PY) -m pipeline.datalab

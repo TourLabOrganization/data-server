@@ -186,3 +186,143 @@
 | `note` | 미매칭 사유 |
 
 사람이 읽을 요약은 `reports/reclassify.md` 에 있다.
+
+## courses.json — 영상 IP 코스와 순서
+
+앱의 핵심 화면("영상 속 장소를 순서대로 따라 걷기")이 쓰는 데이터. 코스별
+`.dc.html` 5개에서 뽑는다 — 장소 마스터(`Tour Planner.dc.html`)에는 **순서가 없다.**
+
+```json
+{
+ "count": 5,
+ "courses": [
+  {
+   "courseId": "jeju-k-drama-route",
+   "title": "제주 K-Drama",
+   "regions": ["제주"],
+   "count": 11,
+   "stayMinSum": 970,
+   "places": [
+    {"seq": 1, "coursePlaceId": "jd1", "placeId": "jd1",
+     "nameKo": "성산일출봉", "region": "제주",
+     "catFinal": "heal", "stayMin": 110,
+     "youtubeId": "ps1", "videoTitle": "폭싹 속았수다 (2025)",
+     "sceneKo": "애순이네 동네"}
+   ]
+  }
+ ]
+}
+```
+
+| 필드 | 설명 |
+|---|---|
+| `courseId` | 코스 식별자. `/v1/courses?courseId=` 와 `/v1/places?course=` 에 쓴다 |
+| `regions` | 그 코스가 지나는 지역. 여러 곳일 수 있다(RESCENE 은 7곳) |
+| `stayMinSum` | 코스 전체 체류시간 합(분). 이동시간은 포함하지 않는다 |
+| `places[].seq` | **코스 안에서의 순번.** 이 순서대로 걷는다 |
+| `places[].placeId` | 장소 마스터(`places.json`)의 `id` |
+| `places[].catFinal` | 마스터의 교정 카테고리를 그대로 쓴다 |
+| `places[].videoTitle` · `sceneKo` | 영상 제목과 장면. **코스 파일에만 있다** |
+
+### 주의
+
+- **한 장소가 여러 코스에 나올 수 있다.** `places.json` 쪽에는 `courses` 배열로
+  붙는다 (`[{courseId, title, seq}, …]`)
+- 순서대로 보여 주는 화면은 `/v1/courses` 를 쓴다. `/v1/places` 는 지역·카테고리
+  기준이라 코스 순서가 없다
+- `stayMinSum` 은 **체류시간만** 더한 값이다. 이동시간을 더한 실제 일정은
+  `POST /v1/itinerary` 가 계산한다
+
+## POST /v1/recommend — 데이터랩이 추천에 들어가는 지점
+
+```
+점수 = fit + interest + region
+       │     │          └ 그 지역의 테마 강도 TFI   ← 한국관광 데이터랩
+       │     └ 관심 카테고리 보너스                  (사용자 입력)
+       └ 군집 선호 × 코스 구성                      (국민여행조사·외래관광객조사)
+```
+
+앞의 두 항은 **우리가 만든 것**(코스 구성)과 **사용자가 고른 것**이라 외부 근거가
+없다. `region` 만이 카드소비·통신 방문 실측이다.
+
+```
+region = 0.1 × (가중 TFI − 0.5)          범위 ±0.05
+가중 TFI = Σ(코스 구성 비중 × 지역 TFI) / Σ(비중)
+```
+
+**`region` 을 주지 않으면 데이터랩이 점수에 들어가지 않는다.** 응답의
+`regionApplied` 와 `sources` 로 확인한다.
+
+```json
+{
+ "regionApplied": true,
+ "sources": ["국민여행조사", "외래관광객조사", "한국관광 데이터랩 (지역×테마 강도 TFI)"],
+ "themes": [
+  {"theme": "왕과 사는 남자", "fit": 0.3133, "interest": 0.3556,
+   "region": 0.0091, "score": 0.678, "regionCoverage": 1.0}
+ ]
+}
+```
+
+### 주의
+
+- **`GET /v1/personas` 에는 데이터랩이 들어가지 않는다.** 그쪽은 `calc2.py` 가
+  배치로 미리 계산해 둔 결과를 그대로 돌려주는데, 그 계산은 데이터랩을 읽지 않는다.
+  데이터랩을 반영하려면 `POST /v1/recommend` 에 `region` 을 실어야 한다
+- `regionCoverage` 는 코스 구성 중 TFI 로 덮인 비율이다. **`해양·자연` 은 데이터랩에
+  대응 축이 없어**(인기관광지 분류가 중분류까지만이라 NA02 에서 바다를 못 뗌)
+  분모에서 빠진다. 해양 비중이 큰 코스는 이 값이 낮다
+- TFI 가 없는 지역을 주면 **400** 이다. 조용히 0으로 넘어가지 않는다
+
+## POST /v1/itinerary — 일자별 도착·출발 시각
+
+장소 순서 + 여행 조건 → `"09:00–10:50"` 형태의 일정. 프론트의 일정 화면이 쓴다.
+
+```
+요청  {"courseId": "jeju-k-drama-route", "days": 2, "mode": "transit"}
+      {"placeIds": ["gj1","gj2",…], "days": 1}        ← 준 순서가 곧 동선
+```
+
+```json
+{
+ "dayWindows": [720, 600],
+ "placed": 7, "dropped": 4,
+ "totals": {"stayMin": 550, "moveMin": 466, "waitMin": 0, "totalMin": 1016},
+ "schedule": [
+  {"day": 1, "order": 1, "placeId": "jd1", "nameKo": "성산일출봉",
+   "arrive": "09:00", "leave": "10:50",
+   "moveMin": 0, "waitMin": 0, "stayMin": 110, "closesBefore": false}
+ ]
+}
+```
+
+| 필드 | 설명 |
+|---|---|
+| `dayWindows` | 날짜별 활동 가능 분. 중간일 720(09:00–21:00), 첫날·마지막날은 짧아진다 |
+| `placed` / `dropped` | 일정에 담긴 수 / 창이 모자라 잘린 수 |
+| `moveMin` · `waitMin` | 앞 장소에서의 이동, 개장까지 기다린 시간 |
+| `closesBefore` | 폐장 후까지 머무는 일정인가. **막지는 않고 알리기만 한다** |
+
+### 계산 근거
+
+`api/schedule.py` — 앱 레포의 `체류시간 산정/stay_schedule.js` 를 옮긴 것이고,
+원본과 같은 값이 나오는 것을 14개 항목 대조로 확인했다.
+
+| | 근거 |
+|---|---|
+| 자가용 | 한국도로공사 고속도로 표정속도 92km/h · 2시간마다 휴게소 15분 |
+| KTX·SRT | 200km/h + 승하차 18분 + 발권·대기 35분 |
+| 고속버스 | 110km/h + 발권·대기 35분 |
+| 대중교통(시내) | 3km 이내 11분/km · 그 밖은 대기 15분 + 3.6분/km |
+| 거리 보정 | 직선거리 × 1.35 (자가용 1.30) |
+| **장소별 체류시간** | **근거 없음 — 편집 추정치** (`reports/staytime.md`) |
+
+### 주의
+
+- **체류시간이 0인 장소(숙소 등)는 일정에서 빠진다.** 앱과 같은 규칙이다
+- 창을 넘기는 경유지는 다음 날로 넘어가고, 마지막 날에도 못 들어가면 잘린다.
+  `dropped` 가 0보다 크면 일수를 늘리거나 장소를 줄여야 한다
+- 실측 이동시간(구글 길찾기)이 있으면 그쪽이 우선이다. 이 API 는 **추정식만**
+  구현한다 — 앱 PoC 와 같은 값이다
+- 자동 코스 생성(`autoCourse`)은 아직 옮기지 않았다. 이 API 는 **순서가 정해진**
+  장소를 받아 시각을 매긴다
