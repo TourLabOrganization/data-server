@@ -43,7 +43,9 @@ jobs:
 
       - name: API 기동 검증
         run: |
-          pip install -q -r requirements-api.txt
+          # httpx2 는 런타임이 아니라 TestClient 가 쓴다. 그래서 requirements-api.txt
+          # 에는 넣지 않고 여기서만 설치한다 — 배포 이미지를 무겁게 만들 이유가 없다.
+          pip install -q -r requirements-api.txt httpx2
           python - <<'PY'
           from fastapi.testclient import TestClient
           from api.main import app
