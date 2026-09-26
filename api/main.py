@@ -183,6 +183,21 @@ def personas():
 
 @app.post("/v1/recommend", summary="설문 응답 → 테마 추천 순위")
 def recommend(req: RecommendRequest):
+    """점수 = fit + interest + region.
+
+    **`region` 항이 한국관광 데이터랩이 추천에 들어가는 지점이다.**
+
+      fit       군집 선호 × 코스 구성      (국민여행조사·외래관광객조사 기반)
+      interest  관심 카테고리 보너스        (사용자 입력)
+      region    그 지역의 테마 강도 TFI     ← 데이터랩 (카드소비·통신 방문 실측)
+
+    앞의 둘은 "우리가 코스에 무엇을 넣었나"와 "사용자가 무엇을 골랐나"라서 외부
+    근거가 없다. `region` 만이 외부 실측이다 — "이 코스가 역사 40%인데 그 지역이
+    실제로 역사 강세인가"를 데이터랩으로 확인해 ±0.05 를 더한다.
+
+    **`region` 을 주지 않으면 데이터랩이 점수에 들어가지 않는다.** 응답의
+    `regionApplied` 와 `sources` 로 확인할 수 있다.
+    """
     c = _store["calc2"]
     if not c:
         raise HTTPException(503, "calc2.json 이 없습니다. recommend/run_all.py 를 돌려 주세요.")
@@ -209,7 +224,15 @@ def recommend(req: RecommendRequest):
         for t in themes:
             # 코스 구성 중 TFI로 덮인 비율. 해양·자연은 TFI 축이 없어 빠진다.
             t["regionCoverage"] = coverage[t["theme"]]
+
+    # 이 점수에 무엇이 들어갔는지 응답에 남긴다. 호출하는 쪽이 "데이터랩이
+    # 반영됐나"를 되묻지 않아도 되고, 심사 때 근거로도 쓸 수 있다.
+    sources = ["국민여행조사", "외래관광객조사"]
+    if region_adj is not None:
+        sources.append("한국관광 데이터랩 (지역×테마 강도 TFI)")
+
     return {"cluster": req.cluster, "cats": c["cats"],
             "region": req.region,
             "regionApplied": region_adj is not None,
+            "sources": sources,
             "themes": themes}
