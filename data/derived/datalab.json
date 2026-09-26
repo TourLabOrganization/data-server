@@ -51,10 +51,10 @@
    "food": 0.8796
   },
   "영월": {
-   "herit": null,
-   "heal": null,
-   "activity": null,
-   "food": null
+   "herit": 0.8633,
+   "heal": 0.1179,
+   "activity": 0.9469,
+   "food": 0.617
   }
  },
  "detail": {
@@ -67,6 +67,7 @@
    },
    "spotCount": 58,
    "golfExcluded": 12,
+   "campingShare": 0.0,
    "consumptionShare": {
     "shopping": 20.2,
     "food": 32.6
@@ -239,6 +240,7 @@
    },
    "spotCount": 56,
    "golfExcluded": 2,
+   "campingShare": 1.0,
    "consumptionShare": {
     "shopping": 33.3,
     "food": 41.2
@@ -406,6 +408,7 @@
    },
    "spotCount": 34,
    "golfExcluded": 0,
+   "campingShare": 0.0,
    "consumptionShare": {
     "shopping": 38.6,
     "food": 36.2
@@ -625,6 +628,7 @@
    },
    "spotCount": 56,
    "golfExcluded": 1,
+   "campingShare": 0.0,
    "consumptionShare": {
     "shopping": 33.9,
     "food": 33.3
@@ -711,6 +715,7 @@
    },
    "spotCount": 48,
    "golfExcluded": 5,
+   "campingShare": 0.0,
    "consumptionShare": {
     "shopping": 50.7,
     "food": 27.5
@@ -788,9 +793,15 @@
    ]
   },
   "영월": {
-   "spotShare": {},
-   "spotCount": 0,
-   "golfExcluded": 0,
+   "spotShare": {
+    "herit": 37.14,
+    "heal": 20.0,
+    "activity": 31.43,
+    "food": 11.43
+   },
+   "spotCount": 35,
+   "golfExcluded": 1,
+   "campingShare": 37.0,
    "consumptionShare": {
     "shopping": 28.0,
     "food": 33.0
@@ -845,10 +856,25 @@
     "관광소비 추이_현지인.csv",
     "관광소비_내국인.csv",
     "관광소비_외국인.csv",
+    "내국인 관심 관광지.csv",
     "성연령별 내국인 관광소비 분포.csv",
+    "외국인 관심 관광지_영어권.csv",
+    "외국인 관심 관광지_일본어.csv",
+    "외국인 관심 관광지_중간체.csv",
+    "외국인 관심 관광지_중번체.csv",
+    "인기관광지_외지인.csv",
+    "인기관광지_전체.csv",
+    "인기관광지_현지인.csv",
     "전국 대비 관광소비 추이_내국인.csv",
     "전국 대비 관광소비 추이_외지인.csv",
     "전국 대비 관광소비 추이_현지인.csv",
+    "주요 유료관광지점 입장객 수_내국인 .csv",
+    "주요 유료관광지점 입장객 수_외국인.csv",
+    "주요 유료관광지점 입장객 수_전체.csv",
+    "중심 관광지.csv",
+    "지역_맛집_외지인.csv",
+    "지역_맛집_전체.csv",
+    "지역맛집_현지인.csv",
     "지역화폐 관광소비 추이.csv"
    ]
   }

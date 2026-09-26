@@ -66,10 +66,13 @@ def spot_shares(files):
     """
     path = pick(files, "인기관광지_전체.csv")
     if not path:
-        return {}, [], 0, 0
+        return {}, [], 0, 0, 0.0
     cnt, unknown, total, golf = defaultdict(int), [], 0, 0
+    camping, n_rows = 0, 0
     for r in read_csv(path):
         raw = NFC(r.get("분류"))
+        n_rows += 1
+        camping += raw == "캠핑"
         if is_golf(r.get("관광지명")):
             golf += 1                        # 앱이 다루지 않는 대상. 모수에서 뺀다
             continue
@@ -83,9 +86,11 @@ def spot_shares(files):
             continue
         cnt[cat] += 1
         total += 1
+    camp_pct = round(camping / n_rows * 100, 1) if n_rows else 0.0
     if not total:
-        return {}, unknown, 0, golf
-    return ({t: cnt[t] / total * 100 for t in THEMES}, unknown, total, golf)
+        return {}, unknown, 0, golf, camp_pct
+    return ({t: cnt[t] / total * 100 for t in THEMES},
+            unknown, total, golf, camp_pct)
 
 
 def age_profile(files):
@@ -179,7 +184,7 @@ def main():
         if NFC(region_raw).startswith("전국"):
             continue
         loc = norm_region(region_raw, table)
-        spot, unknown, n_spot, n_golf = spot_shares(files)
+        spot, unknown, n_spot, n_golf, camp_pct = spot_shares(files)
         consumption = consumption_shares(files)
         if unknown:
             unknown_all[loc].extend(unknown)
@@ -195,6 +200,12 @@ def main():
             "spotShare": {k: round(v, 2) for k, v in spot.items()},
             "spotCount": n_spot,
             "golfExcluded": n_golf,
+            # 캠핑장은 TourAPI 분류상 숙박(AC05)이라 테마 모수에서 빠진다.
+            # 그런데 영월은 인기관광지의 37%가 캠핑장이라, 빼고 나면 그 지역의
+            # 가장 큰 관광 성격이 통째로 사라진다. 4개 축에 억지로 끼워 넣으면
+            # (heal 로 보내면) 캠핑장이 모수의 절반을 먹어 다른 테마를 희석하므로,
+            # 축은 그대로 두고 비중만 따로 남긴다.
+            "campingShare": camp_pct,
             # 소비액 기준(%) — 관광소비 업종 비중. 위와 단위가 다르다
             "consumptionShare": {k: round(v, 2) for k, v in consumption.items()},
             # 앱 장소의 분포. 재분류 결과라 sea 가 따로 있다
@@ -206,6 +217,9 @@ def main():
         got = [t for t in THEMES if t in spot]
         print(f"  {loc}: 관광지 {n_spot}곳 분류 → 테마 {len(got)}/{len(THEMES)}개"
               + (f"  (골프장 {n_golf}곳 제외)" if n_golf else ""))
+        if camp_pct >= 15:
+            print(f"     ℹ️ 인기관광지의 {camp_pct}%가 캠핑장입니다. "
+                  f"숙박으로 분류돼 테마 모수에서 빠집니다(campingShare 참고).")
         if not n_spot:
             print(f"     ⚠️ '인기관광지_전체.csv' 가 없어 테마를 못 냅니다. "
                   f"데이터랩 '관광지' 탭을 받아 주세요.")
