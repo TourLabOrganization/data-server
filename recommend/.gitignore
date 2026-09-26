@@ -1,0 +1,6 @@
+# 원자료는 올리지 않음 (재배포 제한 가능)
+data/raw/*
+!data/raw/README.md
+*.pkl
+__pycache__/
+.DS_Store

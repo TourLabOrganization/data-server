@@ -9,6 +9,7 @@ Tour Navigator의 데이터 파이프라인. Python 3.9+, 외부 의존성 없�
 | 파이프라인 스크립트 추가·수정 | `docs/pipeline.md` |
 | 산출 JSON 스키마 변경 | `docs/contract.md` |
 | 데이터랩 CSV 새 탭 쓰기 | `docs/datalab.md` |
+| 추천 계산(군집·테마 적합도) 수정 | `recommend/CLAUDE.md` |
 
 문서 간에 같은 규칙이 다르게 적혀 있으면 이 파일을 기준으로 한다.
 
