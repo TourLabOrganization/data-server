@@ -67,7 +67,27 @@ def norm_region(name, table):
 
 # ── 장소명 ────────────────────────────────────────────────────────────────
 # 데이터랩은 지역명을 앞에 붙여 표기한다('경주불국사경내'). 앱은 안 붙인다.
-REGION_PREFIX = ("경주", "거제", "서울", "제주", "부산", "영월", "서귀포")
+# 목록을 코드에 박아두면 새 지역을 추가할 때마다 손대야 하고, 잊으면 매칭률만
+# 조용히 떨어진다. 앱 장소 마스터의 지역명(109개)에서 읽어 자동으로 늘어나게 한다.
+_FALLBACK_PREFIX = ("경주", "거제", "서울", "제주", "부산", "영월", "서귀포")
+_REGION_PREFIX = None
+
+
+def region_prefixes():
+    """접두사로 떼어낼 지역명. places.json 이 있으면 거기서, 없으면 기본값."""
+    global _REGION_PREFIX
+    if _REGION_PREFIX is None:
+        path = os.path.join(DERIVED, "places.json")
+        names = set(_FALLBACK_PREFIX)
+        if os.path.exists(path):
+            import json
+            for p in json.load(open(path, encoding="utf-8"))["places"]:
+                r = NFC(p.get("region") or "")
+                if len(r) >= 2 and "(" not in r:   # '고성(강원)' 같은 표기는 뺀다
+                    names.add(r)
+        # 긴 이름부터 시도해야 '서귀포'가 '서귀'로 잘리지 않는다
+        _REGION_PREFIX = tuple(sorted(names, key=len, reverse=True))
+    return _REGION_PREFIX
 # 데이터랩 쪽에만 붙는 꼬리표. 같은 장소를 다른 이름으로 만든다.
 NAME_TAIL = ("경내", "관광지", "유원지", "일원", "지구")
 # 포함관계여도 다른 장소인 경우. '산방산'과 '산방산탄산온천'은 별개다.
@@ -82,7 +102,7 @@ def norm_name(s):
     """
     s = re.sub(r"\(.*?\)|\[.*?\]", "", NFC(s))
     s = re.sub(r"[^가-힣A-Za-z0-9]", "", s).lower()
-    for p in REGION_PREFIX:                 # 접두 지역명은 한 번만 뗀다
+    for p in region_prefixes():             # 접두 지역명은 한 번만 뗀다
         if s.startswith(p) and len(s) > len(p) + 1:
             s = s[len(p):]
             break
@@ -114,9 +134,14 @@ def find_match(dl_name, idx):
 
 
 # ── 데이터랩 원본 읽기 ─────────────────────────────────────────────────────
-def scan_downloads():
-    """다운로드 폴더들을 훑어 {지역: {파일종류: 경로}} 로 정리."""
+def scan_downloads(warn=True):
+    """다운로드 폴더들을 훑어 {지역: {파일종류: 경로}} 로 정리.
+
+    같은 지역에 같은 종류의 파일이 두 번 오면 나중 것이 이긴다. 기간을 달리해
+    같은 탭을 다시 받으면 조용히 예전 것이 사라지므로, 겹치면 알려 준다.
+    """
     found = defaultdict(dict)
+    dup = []
     if not os.path.isdir(RAW):
         return found
     for d in sorted(os.listdir(RAW)):
@@ -130,7 +155,15 @@ def scan_downloads():
             if f.lower().endswith(".csv"):
                 # 앞의 타임스탬프만 떼고 나머지는 그대로 둔다. 탭에 따라
                 # 'AI 관광 분석_연관지역.csv'처럼 중간 접두사가 더 붙기도 한다.
-                found[region][NFC(f).split("_", 1)[-1]] = os.path.join(p, f)
+                kind = NFC(f).split("_", 1)[-1]
+                if kind in found[region]:
+                    dup.append((region, kind))
+                found[region][kind] = os.path.join(p, f)
+    if warn and dup:
+        seen = sorted({f"{r} / {k}" for r, k in dup})
+        print(f"  ℹ️ 같은 파일이 여러 폴더에 있어 마지막 것만 씁니다 "
+              f"({len(seen)}건): {', '.join(seen[:3])}"
+              + (" …" if len(seen) > 3 else ""))
     return found
 
 

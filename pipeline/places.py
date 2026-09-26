@@ -107,6 +107,8 @@ def extract():
                 "hours": s("hrs"),
                 "youtubeId": s("yt"),
                 "sourceKo": s("srcKo"),
+                # 앱이 목록에서 내려둔 장소. 추천 순서 계산에서 뒤로 민다
+                "inactive": "off:true" in rec,
             })
 
     if len(places) < MIN_EXPECTED:
