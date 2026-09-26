@@ -675,10 +675,136 @@
     }
    },
    "flows": {
-    "in": [],
-    "out": []
+    "in": [
+     {
+      "region": "서울",
+      "ratio": 45.2
+     },
+     {
+      "region": "전남광주통합특별",
+      "ratio": 12.9
+     },
+     {
+      "region": "경기",
+      "ratio": 10.3
+     },
+     {
+      "region": "충북",
+      "ratio": 8.5
+     },
+     {
+      "region": "부산",
+      "ratio": 7.8
+     },
+     {
+      "region": "대구",
+      "ratio": 4.8
+     },
+     {
+      "region": "인천",
+      "ratio": 2.8
+     },
+     {
+      "region": "경남",
+      "ratio": 1.7
+     },
+     {
+      "region": "경북",
+      "ratio": 1.3
+     },
+     {
+      "region": "전북",
+      "ratio": 1.1
+     },
+     {
+      "region": "충남",
+      "ratio": 1.0
+     },
+     {
+      "region": "강원",
+      "ratio": 1.0
+     },
+     {
+      "region": "울산",
+      "ratio": 0.8
+     },
+     {
+      "region": "대전",
+      "ratio": 0.6
+     },
+     {
+      "region": "세종",
+      "ratio": 0.3
+     }
+    ],
+    "out": [
+     {
+      "region": "경기",
+      "ratio": 19.4
+     },
+     {
+      "region": "전남광주통합특별",
+      "ratio": 19.3
+     },
+     {
+      "region": "서울",
+      "ratio": 17.1
+     },
+     {
+      "region": "부산",
+      "ratio": 7.2
+     },
+     {
+      "region": "충북",
+      "ratio": 7.2
+     },
+     {
+      "region": "경남",
+      "ratio": 5.2
+     },
+     {
+      "region": "인천",
+      "ratio": 5.0
+     },
+     {
+      "region": "대구",
+      "ratio": 4.5
+     },
+     {
+      "region": "전북",
+      "ratio": 3.0
+     },
+     {
+      "region": "충남",
+      "ratio": 2.8
+     },
+     {
+      "region": "경북",
+      "ratio": 2.8
+     },
+     {
+      "region": "강원",
+      "ratio": 2.1
+     },
+     {
+      "region": "대전",
+      "ratio": 1.7
+     },
+     {
+      "region": "울산",
+      "ratio": 1.4
+     },
+     {
+      "region": "세종",
+      "ratio": 1.3
+     }
+    ]
    },
    "source_files": [
+    "AI 관광 분석_방문자.csv",
+    "AI 관광 분석_숙박_체류시간.csv",
+    "AI 관광 분석_연관지역.csv",
+    "AI 관광 분석_유사지역.csv",
     "관광소비 추이_내국인.csv",
     "관광소비 추이_외지인.csv",
     "관광소비 추이_현지인.csv",
@@ -762,10 +888,136 @@
     }
    },
    "flows": {
-    "in": [],
-    "out": []
+    "in": [
+     {
+      "region": "경남",
+      "ratio": 65.7
+     },
+     {
+      "region": "울산",
+      "ratio": 16.4
+     },
+     {
+      "region": "경북",
+      "ratio": 7.5
+     },
+     {
+      "region": "대구",
+      "ratio": 4.3
+     },
+     {
+      "region": "경기",
+      "ratio": 1.6
+     },
+     {
+      "region": "전남광주통합특별",
+      "ratio": 1.3
+     },
+     {
+      "region": "서울",
+      "ratio": 0.9
+     },
+     {
+      "region": "충북",
+      "ratio": 0.7
+     },
+     {
+      "region": "충남",
+      "ratio": 0.4
+     },
+     {
+      "region": "전북",
+      "ratio": 0.4
+     },
+     {
+      "region": "대전",
+      "ratio": 0.4
+     },
+     {
+      "region": "강원",
+      "ratio": 0.2
+     },
+     {
+      "region": "인천",
+      "ratio": 0.2
+     },
+     {
+      "region": "세종",
+      "ratio": 0.1
+     },
+     {
+      "region": "제주",
+      "ratio": 0.0
+     }
+    ],
+    "out": [
+     {
+      "region": "경남",
+      "ratio": 71.1
+     },
+     {
+      "region": "울산",
+      "ratio": 14.8
+     },
+     {
+      "region": "경북",
+      "ratio": 7.7
+     },
+     {
+      "region": "대구",
+      "ratio": 2.3
+     },
+     {
+      "region": "전남광주통합특별",
+      "ratio": 1.5
+     },
+     {
+      "region": "경기",
+      "ratio": 0.5
+     },
+     {
+      "region": "전북",
+      "ratio": 0.4
+     },
+     {
+      "region": "강원",
+      "ratio": 0.4
+     },
+     {
+      "region": "서울",
+      "ratio": 0.3
+     },
+     {
+      "region": "충북",
+      "ratio": 0.3
+     },
+     {
+      "region": "대전",
+      "ratio": 0.3
+     },
+     {
+      "region": "충남",
+      "ratio": 0.2
+     },
+     {
+      "region": "제주",
+      "ratio": 0.1
+     },
+     {
+      "region": "인천",
+      "ratio": 0.1
+     },
+     {
+      "region": "세종",
+      "ratio": 0.0
+     }
+    ]
    },
    "source_files": [
+    "AI 관광 분석_방문자.csv",
+    "AI 관광 분석_숙박_체류시간.csv",
+    "AI 관광 분석_연관지역.csv",
+    "AI 관광 분석_유사지역.csv",
     "관광소비 추이_내국인.csv",
     "관광소비 추이_외지인.csv",
     "관광소비 추이_현지인.csv",
@@ -847,10 +1099,176 @@
     }
    },
    "flows": {
-    "in": [],
-    "out": []
+    "in": [
+     {
+      "region": "제천",
+      "ratio": 22.1
+     },
+     {
+      "region": "정선",
+      "ratio": 13.6
+     },
+     {
+      "region": "원주",
+      "ratio": 12.2
+     },
+     {
+      "region": "단양",
+      "ratio": 5.0
+     },
+     {
+      "region": "평창",
+      "ratio": 4.4
+     },
+     {
+      "region": "태백",
+      "ratio": 2.8
+     },
+     {
+      "region": "충주",
+      "ratio": 2.3
+     },
+     {
+      "region": "경기광주",
+      "ratio": 1.5
+     },
+     {
+      "region": "여주",
+      "ratio": 1.4
+     },
+     {
+      "region": "이천",
+      "ratio": 1.2
+     },
+     {
+      "region": "화성",
+      "ratio": 1.2
+     },
+     {
+      "region": "양평",
+      "ratio": 1.1
+     },
+     {
+      "region": "영주",
+      "ratio": 1.1
+     },
+     {
+      "region": "횡성",
+      "ratio": 1.0
+     },
+     {
+      "region": "남양주",
+      "ratio": 0.9
+     },
+     {
+      "region": "용인",
+      "ratio": 0.8
+     },
+     {
+      "region": "강릉",
+      "ratio": 0.8
+     },
+     {
+      "region": "삼척",
+      "ratio": 0.8
+     },
+     {
+      "region": "춘천",
+      "ratio": 0.8
+     },
+     {
+      "region": "평택",
+      "ratio": 0.7
+     }
+    ],
+    "out": [
+     {
+      "region": "제천",
+      "ratio": 34.7
+     },
+     {
+      "region": "정선",
+      "ratio": 17.3
+     },
+     {
+      "region": "원주",
+      "ratio": 10.5
+     },
+     {
+      "region": "태백",
+      "ratio": 5.7
+     },
+     {
+      "region": "평창",
+      "ratio": 4.9
+     },
+     {
+      "region": "단양",
+      "ratio": 3.8
+     },
+     {
+      "region": "강릉",
+      "ratio": 1.9
+     },
+     {
+      "region": "충주",
+      "ratio": 1.5
+     },
+     {
+      "region": "삼척",
+      "ratio": 1.5
+     },
+     {
+      "region": "횡성",
+      "ratio": 1.5
+     },
+     {
+      "region": "춘천",
+      "ratio": 1.0
+     },
+     {
+      "region": "영주",
+      "ratio": 0.9
+     },
+     {
+      "region": "여주",
+      "ratio": 0.8
+     },
+     {
+      "region": "속초",
+      "ratio": 0.7
+     },
+     {
+      "region": "이천",
+      "ratio": 0.6
+     },
+     {
+      "region": "봉화",
+      "ratio": 0.6
+     },
+     {
+      "region": "동해",
+      "ratio": 0.6
+     },
+     {
+      "region": "홍천",
+      "ratio": 0.6
+     },
+     {
+      "region": "양평",
+      "ratio": 0.5
+     },
+     {
+      "region": "경기광주",
+      "ratio": 0.4
+     }
+    ]
    },
    "source_files": [
+    "AI 관광 분석_방문자.csv",
+    "AI 관광 분석_숙박_체류시간.csv",
+    "AI 관광 분석_연관지역.csv",
+    "AI 관광 분석_유사지역.csv",
     "관광소비 추이_내국인.csv",
     "관광소비 추이_외지인.csv",
     "관광소비 추이_현지인.csv",
