@@ -54,6 +54,9 @@ jobs:
               assert c.get("/v1/tfi").status_code == 200
               assert c.get("/v1/places").json()["count"] > 1000
               assert c.get("/v1/courses").json()["count"] == 5
+              it = c.post("/v1/itinerary",
+                          json={"courseId": "jeju-k-drama-route", "days": 2})
+              assert it.json()["placed"] > 0
           print("기동 검증 통과")
           PY
 

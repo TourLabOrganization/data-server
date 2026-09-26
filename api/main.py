@@ -19,6 +19,8 @@ from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel, Field
 
 from .scoring import CLUSTERS, rank_themes, region_adjust
+from pipeline.schedule import (access_min, assign_days, day_windows, leg_info,
+                               stay_min, timeline)
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 DERIVED = os.path.join(ROOT, "data", "derived")
@@ -155,6 +157,74 @@ def staytime(region: Optional[str] = None):
             raise HTTPException(404, f"체류시간 데이터가 없는 지역입니다: {region}")
     return {"latestYear": _store["staytime"]["latestYear"],
             "source": _store["staytime"]["source"], "regions": rows}
+
+
+# ── 일정 ─────────────────────────────────────────────────────────────────
+class ItineraryRequest(BaseModel):
+    courseId: Optional[str] = Field(
+        None, description="코스 id. 주면 그 코스의 장소를 seq 순서로 쓴다",
+        examples=["jeju-k-drama-route"])
+    placeIds: Optional[List[str]] = Field(
+        None, description="장소 id 목록. courseId 대신 쓴다. **주는 순서가 곧 동선**")
+    days: int = Field(1, ge=1, le=10, description="여행 일수")
+    mode: str = Field("transit", description="이동수단: transit · driving · own")
+    depTime: str = Field("08:00", description="출발지 출발 시각")
+    retTime: str = Field("19:00", description="여행지 출발(귀가) 시각")
+    accessMin: int = Field(
+        0, ge=0, description="출발지→지역 관문 광역 이동(분). 첫날 창을 줄인다")
+
+
+@app.post("/v1/itinerary", summary="코스 → 일자별 도착·출발 시각")
+def itinerary(req: ItineraryRequest):
+    """장소 순서 + 여행 조건 → "09:00–10:10" 형태의 일정.
+
+    계산은 `pipeline/schedule.py` 가 한다. 앱 레포의 `체류시간 산정/stay_schedule.js`
+    를 옮긴 것이고, 원본과 같은 값이 나오는 것을 대조로 확인했다.
+
+    **근거가 있는 것은 이동시간 쪽이다** — 한국도로공사 고속도로 표정속도 92km/h,
+    KTX 200km/h, 고속버스 110km/h. 장소별 체류시간은 편집 추정치다.
+
+    창(하루 720분)을 넘기는 경유지는 다음 날로 넘어가고, 마지막 날에도 못 들어가면
+    잘린다(`dropped`).
+    """
+    if not req.courseId and not req.placeIds:
+        raise HTTPException(400, "courseId 또는 placeIds 중 하나는 있어야 합니다.")
+
+    if req.courseId:
+        hit = [c for c in _store["courses"]["courses"]
+               if c["courseId"] == req.courseId]
+        if not hit:
+            raise HTTPException(404, f"없는 코스입니다: {req.courseId}")
+        items = list(hit[0]["places"])          # 이미 seq 순
+    else:
+        master = {p["id"]: p for p in _store["places"]["places"]}
+        missing = [i for i in req.placeIds if i not in master]
+        if missing:
+            raise HTTPException(404, f"없는 장소 id: {', '.join(missing[:5])}")
+        items = [master[i] for i in req.placeIds]   # 준 순서가 곧 동선
+
+    # 체류시간이 0인 장소(숙소 등)는 일정에 넣지 않는다 — 앱과 같은 규칙
+    items = [p for p in items if stay_min(p) > 0]
+    if not items:
+        raise HTTPException(400, "체류시간이 있는 장소가 없습니다.")
+
+    windows = day_windows(req.days, req.depTime, req.retTime, req.accessMin)
+    leg = lambda a, b: leg_info(a, b, req.mode)
+    buckets, keep = assign_days(items, windows, leg)
+    rows = timeline(items, buckets, leg, req.depTime, req.accessMin)
+
+    move_sum = sum(r["moveMin"] for r in rows)
+    stay_sum = sum(r["stayMin"] for r in rows)
+    return {
+        "courseId": req.courseId,
+        "days": req.days, "mode": req.mode,
+        "dayWindows": windows,
+        "placed": keep, "dropped": len(items) - keep,
+        "totals": {"stayMin": stay_sum, "moveMin": move_sum,
+                   "waitMin": sum(r["waitMin"] for r in rows),
+                   "totalMin": stay_sum + move_sum},
+        "schedule": rows,
+    }
 
 
 # ── 추천 ─────────────────────────────────────────────────────────────────
