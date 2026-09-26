@@ -10,6 +10,7 @@ Tour Navigator의 데이터 파이프라인. Python 3.9+, 외부 의존성 없�
 | 산출 JSON 스키마 변경 | `docs/contract.md` |
 | 데이터랩 CSV 새 탭 쓰기 | `docs/datalab.md` |
 | 추천 계산(군집·테마 적합도) 수정 | `recommend/CLAUDE.md` |
+| API 엔드포인트 추가, 배포 | `docs/deploy.md` |
 
 문서 간에 같은 규칙이 다르게 적혀 있으면 이 파일을 기준으로 한다.
 
@@ -62,5 +63,7 @@ Tour Navigator의 데이터 파이프라인. Python 3.9+, 외부 의존성 없�
 ## 커밋 전
 
 파이프라인을 고쳤으면 `make all` 이 끝까지 도는지 확인한다.
+**산출물(`data/derived/`)은 이미지에 함께 구워진다.** 커밋하지 않으면 빈 서버가
+뜨므로, 코드와 결과를 항상 같이 커밋한다 (`docs/deploy.md`).
 산출물(`data/derived/`)이 바뀌었으면 함께 커밋한다 — 백엔드가 읽는 계약이라
 코드와 결과가 어긋나면 안 된다.
