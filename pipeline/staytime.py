@@ -231,13 +231,24 @@ def main():
                 "lodgingDays": round(sum(v[1] for v in vals) / len(vals), 2),
                 "subUnits": len(vals), "subUnitNames": [],
             }
-        base_all = [m["stayMinutes"] for m in merged.values()]
-        national.setdefault("기초", {})[latest_year] = round(
-            sum(base_all) / len(base_all), 1)
+        # 기준값은 **합치기 전** 시군구 전체의 평균을 쓴다. 앱 지역으로 합친 뒤
+        # 평균을 내면 서울 25개 자치구(도심이라 체류가 짧다)가 1개로 줄면서
+        # 전국 평균이 100분쯤 올라가 버린다 — 원본과 같은 모집단을 써야 한다.
+        #
+        # 연도를 섞지 않는다. 받은 전국 파일이 있는 모든 연도를 같은 방법으로
+        # 다시 계산해서, 표 안에 공표값과 자체계산값이 섞이지 않게 한다.
+        official = dict(national.get("기초", {}))
+        years = sorted({y for v in national_stay.values() for y in v})
+        national["기초"] = {}
+        for y in years:
+            raw = [v[y][0] for v in national_stay.values() if y in v]
+            national["기초"][y] = round(sum(raw) / len(raw), 1)
+        official_note = {y: official[y] for y in years if y in official}
         source = f"전국 다운로드 ({latest_year}년, 시군구 {len(national_stay)}개)"
     else:
         merged = merge_subdistricts(profile)
         source = "지역별 다운로드"
+        official_note = None
 
     rows = []
     for loc, m in sorted(merged.items()):
@@ -272,7 +283,8 @@ def main():
         "regions": rows,
     }, open(dst, "w", encoding="utf-8"), ensure_ascii=False, indent=1)
 
-    report = write_report(rows, national, regional, lodging, latest_year)
+    report = write_report(rows, national, regional, lodging, latest_year,
+                          official_note)
 
     matched = [r for r in rows if r["appPlaces"]]
     print(f"출처: {source}")
@@ -283,7 +295,7 @@ def main():
     print(f"\n완료 → {dst}\n       {report}")
 
 
-def write_report(rows, national, regional, lodging, year):
+def write_report(rows, national, regional, lodging, year, official=None):
     L = ["# 체류시간 지역 검증\n"]
     L.append("데이터랩의 지역 체류시간으로 앱의 일정 길이가 현실적인지 확인한다.\n")
 
@@ -309,6 +321,14 @@ def write_report(rows, national, regional, lodging, year):
             L.append(f"| 전국 {t} 평균 | "
                      + " | ".join(f"{d[y]:,.0f}분" for y in sorted(d)) + " |")
     L.append("")
+
+    if official:
+        cmp = ", ".join(f"{y}년 {v:,.0f}분" for y, v in sorted(official.items()))
+        L.append(f"> 위 기초 평균은 '전국' 다운로드의 시군구 전체를 **단순평균**한 "
+                 f"값이다. 데이터랩이 공표하는 '전국 기초지자체별 평균'은 {cmp} 으로 "
+                 f"다른데, 공표값은 방문자 수로 가중한 것으로 보이고 그 가중치를 받을 "
+                 f"수 없다. 그래서 지역별 값과 **같은 모집단·같은 방법**으로 다시 "
+                 f"계산했다. 지역 간 상대 비교에는 영향이 없다.\n")
 
     for tier in ("기초", "광역"):
         sel = [r for r in rows if r["tier"] == tier and r["appPlaces"]]

@@ -120,3 +120,59 @@
   골프장인 지역이 있는데(경주 28곳 중 12곳), 앱은 골프장을 다루지 않는다.
   빼지 않으면 "경주는 체험·활동 강세"라는 잘못된 결론이 나온다. 이름으로
   거르므로 완벽하지 않다 — `golfExcluded` 수치로 영향을 확인할 수 있다
+
+## staytime.json — 지역 체류시간
+
+데이터랩 '전국' 다운로드의 시군구 체류시간을 앱 지역 단위로 묶은 것.
+
+```json
+{
+ "latestYear": "2025",
+ "source": "전국 다운로드 (2025년, 시군구 229개)",
+ "nationalAverage": {"기초": {"2023": 1304.0, "2025": 1209.0}, "광역": {}},
+ "lodgingRatio": {"경주시": ["2025", 16.3]},
+ "regions": [
+  {"region": "경주", "tier": "기초", "subUnits": 1,
+   "stayMinutes": 1222.0, "lodgingDays": 2.44, "index": 1.011,
+   "appPlaces": 45, "appStayMinSum": 3200, "appStayMinMean": 71.1,
+   "visitsToSeeAll": 2.62}
+ ]
+}
+```
+
+| 필드 | 설명 |
+|---|---|
+| `stayMinutes` | 그 지역 **1회 방문 총 체류시간(분)**. 이동·식사·숙박 포함 |
+| `lodgingDays` | 평균 숙박일수 |
+| `index` | 전국 평균 대비 배수. **추천 일정 길이를 지역마다 다르게 잡는 값** |
+| `subUnits` | 합친 시군구 수 (서울 25, 부산 16 등). 1이면 단일 |
+| `appPlaces` / `appStayMinSum` / `appStayMinMean` | 그 지역 앱 장소의 수·시간합·평균 |
+| `visitsToSeeAll` | 앱 장소를 다 보려면 몇 번 방문해야 하는가 |
+
+### 주의
+
+- **`stayMinutes` 와 `places.json` 의 `stayMin` 은 단위가 다르다.** 전자는
+  지역 1회 방문 총량(1,000~4,300분), 후자는 장소당 관람시간(40~90분)이다.
+  나누거나 빼지 말 것
+- **`index` 만 쓰는 것을 권한다.** 일정 길이에 곱하면 지역 특성이 반영된다
+- `visitsToSeeAll` 이 1을 크게 넘는 지역(서울 3.9 · 제주 3.8 · 부산 2.6)은
+  앱이 1회 방문에 담을 수 없는 분량을 들고 있다는 뜻이다. 추천은 그보다
+  적게 골라야 한다
+- `nationalAverage` 는 시군구 **단순평균**이다. 데이터랩 공표값(가중평균)과
+  다르며, 이유는 `reports/staytime.md` 에 적혀 있다
+
+## categories.json — TourAPI 재분류 원장
+
+`places.json` 의 `catFinal` 을 만든 근거다. **백엔드가 직접 읽을 필요는 없고**,
+무엇을 왜 바꿨는지 되짚을 때 본다.
+
+| 필드 | 설명 |
+|---|---|
+| `catApp` / `catOfficial` | 앱 원본 / TourAPI 판정 |
+| `lclsSystm1/2/3` | TourAPI 대·중·소분류 코드 |
+| `similarity` / `distanceKm` | 이름 유사도, 앱 좌표와의 거리 |
+| `confidence` | `high` / `medium` / `low` |
+| `apply` / `applyNote` | 앱에 반영했는지, 안 했다면 이유 |
+| `note` | 미매칭 사유 |
+
+사람이 읽을 요약은 `reports/reclassify.md` 에 있다.

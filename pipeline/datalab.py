@@ -184,11 +184,11 @@ def main():
         if unknown:
             unknown_all[loc].extend(unknown)
 
-        # 장소 개수 축만 TFI 로 간다. 소비 축은 단위가 달라 섞지 않는다.
-        merged = dict(spot)
-        if "food" in consumption and "food" not in merged:
-            merged["food"] = consumption["food"]
-        shares[loc] = merged
+        # 장소 개수 축만 TFI 로 간다. 소비 축(소비액 비중)은 단위가 달라
+        # 절대 섞지 않는다. 한 지역만 소비액으로 채우면 그 지역이 그 테마
+        # 1위로 튀어 오른다 — 관광지 탭을 못 받은 영월이 소비액 33%로
+        # '미식 1위'가 되는 식이다. 관광지 데이터가 없으면 테마도 없다.
+        shares[loc] = dict(spot)
 
         detail[loc] = {
             # 장소 개수 기준(%) — 인기관광지 분류 구성

@@ -24,7 +24,7 @@
    "herit": 1.0,
    "heal": 0.0,
    "activity": 0.7078,
-   "food": 0.3963
+   "food": 0.4674
   },
   "거제": {
    "herit": 0.0,
@@ -36,25 +36,25 @@
    "herit": 0.5868,
    "heal": 0.1409,
    "activity": 1.0,
-   "food": 0.8479
+   "food": 1.0
   },
   "제주": {
    "herit": 0.2038,
    "heal": 1.0,
    "activity": 0.2448,
-   "food": 0.1824
+   "food": 0.2151
   },
   "부산": {
    "herit": 0.378,
    "heal": 0.7767,
    "activity": 0.0,
-   "food": 0.7458
+   "food": 0.8796
   },
   "영월": {
    "herit": null,
    "heal": null,
    "activity": null,
-   "food": 1.0
+   "food": null
   }
  },
  "detail": {

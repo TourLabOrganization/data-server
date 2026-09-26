@@ -144,8 +144,12 @@ def main():
         for p in places:
             cats[p[field]] = cats.get(p[field], 0) + 1
         print(f"  {label}: " + str(dict(sorted(cats.items(), key=lambda x: -x[1]))))
-    print(f"  TourAPI 교정 적용 {n_fix}곳"
-          + ("  (categories.json 이 없어 교정 없음)" if not fix else ""))
+    print(f"  TourAPI 교정 적용 {n_fix}곳")
+    if not fix:
+        print("  ⚠️ data/derived/categories.json 이 없습니다. catFinal 이 앱 원본값"
+              " 그대로입니다.\n"
+              "     교정을 반영하려면 `make tourapi` 를 먼저 돌리세요"
+              " (TOURAPI_KEY 필요).")
     if bad_cat:
         print(f"  ⚠️ 모르는 카테고리 값: {bad_cat}")
     if no_coord:

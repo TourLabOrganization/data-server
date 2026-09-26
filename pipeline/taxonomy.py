@@ -139,14 +139,3 @@ def datalab_class_to_mid(name):
     if _MID_INDEX is None:
         _MID_INDEX = _load_mid_index()
     return _MID_INDEX.get(_norm(n))
-
-
-def datalab_class_to_cat(name):
-    """데이터랩 '분류' 값 → 앱 카테고리.
-
-    데이터랩은 **중분류까지만** 준다. 그래서 NA02(자연경관 하천‧해양)를
-    바다와 내륙으로 가를 수 없고, 전부 heal 로 떨어진다. 앱 쪽은 TourAPI 에서
-    소분류를 받아오므로 sea 를 따로 뗄 수 있다 — 이 비대칭을 기억해야 한다.
-    """
-    mid = datalab_class_to_mid(name)
-    return to_app_cat(mid) if mid else None

@@ -21,7 +21,7 @@ import time
 import urllib.error
 import urllib.parse
 import urllib.request
-from collections import Counter, defaultdict
+from collections import Counter
 from difflib import SequenceMatcher
 
 from .common import CACHE, DERIVED, NFC, REPORTS, norm_name
