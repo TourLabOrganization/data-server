@@ -28,7 +28,8 @@
       "stayMin": 40,
       "hours": "09:00–18:00",
       "youtubeId": "4m9eLr-NofA",
-      "sourceKo": "쪽샘길 60 지오코딩 확인"
+      "sourceKo": "쪽샘길 60 지오코딩 확인",
+      "inactive": false
     }
   ]
 }
@@ -49,6 +50,7 @@
 | `hours` | string \| null | 운영시간. 자유 형식 문자열이라 파싱하지 말 것 |
 | `youtubeId` | string \| null | 연결된 영상 ID. 없으면 영상 없는 장소 |
 | `sourceKo` | string \| null | 좌표 근거 |
+| `inactive` | bool | 앱이 목록에서 내려둔 장소. 추천 순서에서 뒤로 민다 |
 
 ### 주의
 

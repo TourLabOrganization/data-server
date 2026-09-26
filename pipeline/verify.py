@@ -7,11 +7,12 @@
 앱의 .dc.html 을 읽으므로, 앱 레포가 옆에 없으면 APP_REPO 환경변수로 경로를 준다.
 """
 import os
-import re
 import sys
+from collections import defaultdict
 
-from .common import (APP_HTML, NFC, RAW, datalab_rows, find_match,
-                     norm_name, spearman)
+from .common import (NFC, RAW, datalab_rows, find_match, load_region_map,
+                     norm_name, norm_region, spearman)
+from .places import extract
 
 # 데이터랩 '인기관광지'는 통신·카드 기반 방문지라 관광지가 아닌 것이 섞여 있다.
 # 모수를 3단으로 나눠서 매칭률을 정직하게 보고한다.
@@ -25,56 +26,55 @@ OUT_OF_SCOPE = {"백화점", "쇼핑몰", "대형마트", "면세점"}
 # 순위상관을 낼 최소 표본. 이보다 적으면 수치가 우연에 휘둘려 의미가 없다.
 MIN_PAIRS = 5
 
-# (다운로드 폴더명에 쓰이는 표기, 앱 DATA의 블록 키)
-TARGETS = [("경주", "gyeongju"), ("거제", "geoje"), ("서울", "seoul"),
-           ("부산", "busan"), ("제주", "jeju"), ("영월", "yeongwol")]
+def app_places_by_region():
+    """앱 장소를 지역명으로 묶는다. {지역명: [장소, …]}.
+
+    예전에는 verify 가 HTML을 따로 파싱하면서 **영문 블록키**로 찾았다. 그런데
+    앱 장소의 72%(846곳·109개 지역)는 전용 블록 없이 `nation` 안에 있고 그
+    지역명이 한글(`locKo`)이라, 영문 키로는 영원히 0곳이 나왔다. 전용 블록이
+    있는 6곳 말고는 지역을 아무리 추가해도 조용히 "데이터 부족"으로 넘어갔다.
+
+    이제 places.py 의 추출을 그대로 쓴다. 파싱이 한 곳으로 모이고, 전용 블록과
+    nation 을 구분할 필요도 없어진다.
+    """
+    by = defaultdict(list)
+    for p in extract():
+        if p["region"]:
+            by[p["region"]].append(p)
+    return by
 
 
-def app_places(region_key):
-    """앱의 .dc.html에서 해당 지역 장소를 뽑는다. 줄번호에 의존하지 않는다."""
-    if not os.path.exists(APP_HTML):
-        sys.exit(f"앱 파일을 찾을 수 없습니다: {APP_HTML}\n"
-                 f"APP_REPO 환경변수로 앱 레포 경로를 주세요.")
-    src = open(APP_HTML, encoding="utf-8").read()
-    # 'seoul:' 'geoje:' 같은 키는 ORIGINS·REGION_HUB에도 있어서, DATA 밖에서 먼저
-    # 걸리면 엉뚱한 블록을 읽는다. 반드시 DATA 시작점 뒤에서만 찾는다.
-    data_at = max(src.find("const DATA"), 0)
+def datalab_regions():
+    """받아둔 데이터랩 다운로드에서 검증 대상 지역을 뽑는다.
 
-    def block(key):
-        m = re.search(rf"\b{key}\s*:\s*\{{", src[data_at:])
-        if not m:
-            return []
-        s = src.index("places:[", data_at + m.end()) + len("places:[")
-        depth, i = 1, s
-        while depth and i < len(src):
-            if src[i] == "[":
-                depth += 1
-            elif src[i] == "]":
-                depth -= 1
-            i += 1
-        out = []
-        for rec in re.findall(r"\{[^{}]*\}", src[s:i - 1]):
-            g = lambda k: (re.search(rf"\b{k}:'([^']*)'", rec) or [None, None])[1]
-            if g("id") and g("ko"):
-                out.append(dict(id=g("id"), ko=g("ko"), yt=bool(g("yt")),
-                                off="off:true" in rec, locKo=g("locKo")))
-        return out
-
-    named = block(region_key)
-    nation = [p for p in block("nation") if p.get("locKo") == NFC(region_key)]
-    return named + nation
+    목록을 코드에 박아두면 새 지역 CSV를 넣어도 검증에서 빠진다. 폴더명에서
+    읽어 자동으로 늘어나게 한다.
+    """
+    if not os.path.isdir(RAW):
+        return []
+    table = load_region_map()
+    out = {}
+    for d in sorted(os.listdir(RAW)):
+        if not os.path.isdir(os.path.join(RAW, d)):
+            continue
+        parts = NFC(d).split("_")
+        if len(parts) < 2 or parts[1] == "전국":   # 전국은 지역이 아니라 기준값
+            continue
+        out[norm_region(parts[1], table)] = parts[1]
+    return sorted(out.items())
 
 
-def check(region_raw, block_key):
-    app = app_places(block_key)
+def check(region_ko, region_raw, by_region):
+    app = by_region.get(region_ko, [])
     pop = datalab_rows(region_raw, "인기관광지_전체.csv")
     if not app or not pop:
-        print(f"  {block_key}: 데이터 부족 (앱 {len(app)}곳 / 데이터랩 {len(pop)}행) — 건너뜀")
+        print(f"  {region_ko}: 데이터 부족 "
+              f"(앱 {len(app)}곳 / 데이터랩 {len(pop)}행) — 건너뜀")
         return None
 
     idx = {}
     for p in app:
-        idx.setdefault(norm_name(p["ko"]), p)
+        idx.setdefault(norm_name(p["nameKo"]), p)
 
     # 모수 3단. 데이터랩 TOP100에는 공항·호텔·백화점이 섞여 있어서, 전체를
     # 분모로 쓰면 앱이 애초에 다루지 않는 대상까지 '놓친 것'으로 잡힌다.
@@ -91,17 +91,17 @@ def check(region_raw, block_key):
             continue
         exact += how == "exact"
         partial += how == "partial"
-        matched.setdefault(norm_name(hit["ko"]), int(r["순위"]))
+        matched.setdefault(norm_name(hit["nameKo"]), int(r["순위"]))
     n_hit = exact + partial
 
     # 앱이 영상(yt) 우선으로 정렬한 순서 ↔ 데이터랩 인기 순위.
     # 데이터랩에 없는 장소는 순위를 매길 근거가 없다. 예전처럼 더미 순위
     # (len(pop)+1)를 채워 넣으면 그 더미가 상관계수를 지배해 버리므로,
     # 양쪽에 다 있는 장소만 가지고 잰다.
-    ordered = sorted(app, key=lambda p: (not p["yt"], p["off"]))
+    ordered = sorted(app, key=lambda p: (not p["youtubeId"], p["inactive"]))
     xs, ys = [], []
     for i, p in enumerate(ordered[:20], 1):
-        r = matched.get(norm_name(p["ko"]))
+        r = matched.get(norm_name(p["nameKo"]))
         if r is not None:
             xs.append(i)
             ys.append(r)
@@ -109,9 +109,9 @@ def check(region_raw, block_key):
 
     top5 = sum(1 for r in scope[:5]
                if find_match(r["관광지명"],
-                             {norm_name(p["ko"]): p for p in ordered[:5]})[0])
+                             {norm_name(p["nameKo"]): p for p in ordered[:5]})[0])
 
-    print(f"\n── {block_key} ──")
+    print(f"\n── {region_ko} ──")
     print(f"  앱 장소 {len(app)}곳 / 데이터랩 인기관광지 {len(pop)}곳")
     print(f"     └ 숙박·교통 {len(lodging)}곳, 쇼핑시설 {len(shops)}곳 제외"
           f" → 앱 대상 {len(scope)}곳")
@@ -124,7 +124,7 @@ def check(region_raw, block_key):
         print(f"  ② 앱 순서 ↔ 인기도 순위상관  {rho:+.2f}  (n={len(xs)})"
               f"   {'(음수 = 인기 있는 곳일수록 뒤로 밀림)' if rho < -0.3 else ''}")
     print(f"  ③ 데이터랩 TOP5 중 앱 추천 TOP5 포함  {top5}곳")
-    return dict(region=block_key, match=n_hit, scope=len(scope),
+    return dict(region=region_ko, match=n_hit, scope=len(scope),
                 rho=rho, pairs=len(xs), top5=top5)
 
 
@@ -134,7 +134,9 @@ def main():
     print("=" * 56)
     print("데이터랩 ↔ 앱 연결 검증")
     print("=" * 56)
-    done = [r for t, k in TARGETS if (r := check(t, k))]
+    by_region = app_places_by_region()
+    done = [r for loc, raw in datalab_regions()
+            if (r := check(loc, raw, by_region))]
     if not done:
         print("\n검증할 지역이 없습니다.")
         return
