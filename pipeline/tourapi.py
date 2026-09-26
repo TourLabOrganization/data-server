@@ -21,6 +21,7 @@ import time
 import urllib.error
 import urllib.parse
 import urllib.request
+import re
 from collections import Counter
 from difflib import SequenceMatcher
 
@@ -217,6 +218,24 @@ def best_candidate(place, items):
     return best
 
 
+# 해변은 길어서 TourAPI 좌표와 앱 좌표가 1~2km 떨어지는 일이 흔하다. 그래서
+# 일반 신뢰도 기준(거리 ≤1km)에 걸려 멀쩡한 해변이 보류됐다(김녕·중문색달·하도 등).
+#
+# 이 조합에서는 거리를 안 봐도 안전하다 — 앱 이름에 '해수욕장/해변'이 있고 TourAPI 가
+# NA0209(해변·해수욕장)로 분류했다면, 설령 옆 해변에 잘못 붙었더라도 **분류는 sea 로
+# 같다.** 장소를 틀려도 답이 맞는 드문 경우다.
+BEACH_NAME = re.compile(r"해수욕장|해변")
+BEACH_SUB = "NA0209"
+BEACH_MIN_SIM = 0.70
+
+
+def _beach_override(row):
+    return (row["catOfficial"] == "sea"
+            and row["lclsSystm3"].startswith(BEACH_SUB)
+            and BEACH_NAME.search(NFC(row["nameKo"]))
+            and (row["similarity"] or 0) >= BEACH_MIN_SIM)
+
+
 def apply_decision(row):
     """이 변경을 앱에 그대로 반영해도 되는가. (적용여부, 사유)
 
@@ -225,7 +244,7 @@ def apply_decision(row):
     """
     if not row["catOfficial"] or row["catOfficial"] == row["catApp"]:
         return False, ""
-    if row["confidence"] != "high":
+    if row["confidence"] != "high" and not _beach_override(row):
         return False, "신뢰도 부족 — 사람이 확인"
     # 관광지가 옆 숙박시설에 걸리는 일이 잦다(용봉산→용봉산캠핑장,
     # 합천호→합천호 스마일펜션). stay 로 바꾸면 추천에서 통째로 빠지므로,
@@ -425,7 +444,37 @@ def write_report(rows, codes):
                      applied=len(applied))
 
 
+def redecide():
+    """이미 조회해 둔 categories.json 에 **적용 판정만 다시** 매긴다.
+
+    API 를 한 번도 부르지 않는다. 판정 규칙(apply_decision)만 고쳤을 때 쓴다 —
+    전체 재조회는 일일 한도에 걸려 결과가 부분으로 덮일 위험이 있다. 실제로
+    그렇게 168곳이 115곳으로 줄어든 적이 있다.
+    """
+    codes_path = os.path.join(os.path.dirname(DERIVED), "mapping",
+                              "tourapi_codes.json")
+    codes = json.load(open(codes_path, encoding="utf-8"))
+    dst = os.path.join(DERIVED, "categories.json")
+    if not os.path.exists(dst):
+        sys.exit(f"{dst} 가 없습니다. 먼저 전체 조회를 한 번 돌려야 합니다.")
+    rows = json.load(open(dst, encoding="utf-8"))["places"]
+
+    before = sum(1 for r in rows if r.get("apply"))
+    for r in rows:
+        r["apply"], r["applyNote"] = apply_decision(r)
+    after = sum(1 for r in rows if r.get("apply"))
+
+    json.dump({"count": len(rows), "places": rows},
+              open(dst, "w", encoding="utf-8"), ensure_ascii=False, indent=1)
+    report, _ = write_report(rows, codes)
+    print(f"판정만 다시 매겼습니다 (API 호출 없음)")
+    print(f"  앱 반영 {before}곳 → {after}곳")
+    print(f"\n완료 → {dst}\n       {report}")
+
+
 def main():
+    if "--redecide" in sys.argv:
+        return redecide()
     if not KEY:
         sys.exit("TOURAPI_KEY 가 없습니다. .env 에 공공데이터포털 서비스키를 넣어 주세요.\n"
                  "(키 없이도 나머지 파이프라인은 정상 동작합니다.)")

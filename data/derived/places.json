@@ -18267,9 +18267,9 @@
    "youtubeId": "ps2",
    "sourceKo": "제주시 구좌읍 김녕리 주소 기반 좌표",
    "inactive": false,
-   "catFinal": "heal",
-   "catSource": "app",
-   "catFinalKo": "힐링·생태"
+   "catFinal": "sea",
+   "catSource": "tourapi",
+   "catFinalKo": "해양·자연"
   },
   {
    "id": "jd3",
@@ -18609,9 +18609,9 @@
    "youtubeId": "",
    "sourceKo": "서귀포시 색달동 중문관광로72번길 주소 기반 좌표",
    "inactive": true,
-   "catFinal": "heal",
-   "catSource": "app",
-   "catFinalKo": "힐링·생태"
+   "catFinal": "sea",
+   "catSource": "tourapi",
+   "catFinalKo": "해양·자연"
   },
   {
    "id": "jdx11",
@@ -19293,9 +19293,9 @@
    "youtubeId": "",
    "sourceKo": "제주시 구좌읍 하도리 주소 기반 좌표",
    "inactive": true,
-   "catFinal": "heal",
-   "catSource": "app",
-   "catFinalKo": "힐링·생태"
+   "catFinal": "sea",
+   "catSource": "tourapi",
+   "catFinalKo": "해양·자연"
   },
   {
    "id": "jdx49",
@@ -19311,9 +19311,9 @@
    "youtubeId": "",
    "sourceKo": "제주시 구좌읍 평대리 주소 기반 좌표",
    "inactive": true,
-   "catFinal": "heal",
-   "catSource": "app",
-   "catFinalKo": "힐링·생태"
+   "catFinal": "sea",
+   "catSource": "tourapi",
+   "catFinalKo": "해양·자연"
   },
   {
    "id": "jdx50",
@@ -20013,9 +20013,9 @@
    "youtubeId": "",
    "sourceKo": "서구 송도해변로 주소 기반 좌표",
    "inactive": true,
-   "catFinal": "heal",
-   "catSource": "app",
-   "catFinalKo": "힐링·생태"
+   "catFinal": "sea",
+   "catSource": "tourapi",
+   "catFinalKo": "해양·자연"
   },
   {
    "id": "bcx2",

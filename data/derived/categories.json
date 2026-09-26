@@ -18268,8 +18268,8 @@
    "distanceKm": 1.83,
    "confidence": "medium",
    "note": "",
-   "apply": false,
-   "applyNote": "신뢰도 부족 — 사람이 확인"
+   "apply": true,
+   "applyNote": ""
   },
   {
    "id": "jd3",
@@ -18610,8 +18610,8 @@
    "distanceKm": 0.081,
    "confidence": "medium",
    "note": "",
-   "apply": false,
-   "applyNote": "신뢰도 부족 — 사람이 확인"
+   "apply": true,
+   "applyNote": ""
   },
   {
    "id": "jdx11",
@@ -19294,8 +19294,8 @@
    "distanceKm": 1.458,
    "confidence": "medium",
    "note": "",
-   "apply": false,
-   "applyNote": "신뢰도 부족 — 사람이 확인"
+   "apply": true,
+   "applyNote": ""
   },
   {
    "id": "jdx49",
@@ -19312,8 +19312,8 @@
    "distanceKm": 2.189,
    "confidence": "low",
    "note": "",
-   "apply": false,
-   "applyNote": "신뢰도 부족 — 사람이 확인"
+   "apply": true,
+   "applyNote": ""
   },
   {
    "id": "jdx50",
@@ -20014,8 +20014,8 @@
    "distanceKm": 0.224,
    "confidence": "medium",
    "note": "",
-   "apply": false,
-   "applyNote": "신뢰도 부족 — 사람이 확인"
+   "apply": true,
+   "applyNote": ""
   },
   {
    "id": "bcx2",

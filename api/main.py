@@ -18,7 +18,7 @@ from typing import List, Optional
 from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel, Field
 
-from .scoring import CLUSTERS, rank_themes
+from .scoring import CLUSTERS, rank_themes, region_adjust
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 DERIVED = os.path.join(ROOT, "data", "derived")
@@ -117,7 +117,11 @@ class RecommendRequest(BaseModel):
         description="관심 카테고리 인덱스 (cats 기준 0~4)", examples=[[0, 1]])
     night: bool = Field(False, description="야경 선호")
     region: Optional[str] = Field(
-        None, description="여행 지역. 주면 그 지역 TFI를 지역 보정에 반영한다")
+        None,
+        description="여행 지역명. 주면 그 지역의 데이터랩 TFI를 지역 보정(±0.05)에 "
+                    "반영한다. /v1/tfi 의 regions 에 있는 이름이어야 하고, 없으면 "
+                    "400 을 돌려준다. 생략하면 보정 없이(0) 계산한다.",
+        examples=["경주"])
 
 
 @app.get("/v1/personas", summary="미리 계산해 둔 사용자 유형 8종")
@@ -137,9 +141,27 @@ def recommend(req: RecommendRequest):
     if req.cluster not in CLUSTERS:
         raise HTTPException(400, f"군집은 {CLUSTERS[0]}~{CLUSTERS[-1]} 중 하나여야 합니다.")
 
-    # 지역을 주면 그 지역의 TFI를 지역 보정으로 쓴다. 아직 테마↔TFI 매핑이
-    # 확정되지 않아 지금은 값을 싣지 않는다 (0). 매핑이 정해지면 여기만 채우면 된다.
-    region_adj = None
+    region_adj, coverage = None, None
+    if req.region:
+        tfi_all = _store["datalab"]["tfi"]
+        if req.region not in tfi_all:
+            # 조용히 0으로 넘어가면 호출한 쪽이 "반영됐다"고 오해한다. 명시적으로 막는다.
+            raise HTTPException(
+                400, f"TFI가 없는 지역입니다: {req.region}. "
+                     f"가능한 지역: {', '.join(sorted(tfi_all))}")
+        tfi = tfi_all[req.region]
+        region_adj, coverage = {}, {}
+        for theme, p in c["P"].items():
+            adj, den = region_adjust(c["cats"], p["share"], tfi)
+            region_adj[theme] = adj
+            coverage[theme] = round(den, 4)
+
     themes = rank_themes(c, req.cluster, req.interests, req.night, region_adj)
+    if coverage:
+        for t in themes:
+            # 코스 구성 중 TFI로 덮인 비율. 해양·자연은 TFI 축이 없어 빠진다.
+            t["regionCoverage"] = coverage[t["theme"]]
     return {"cluster": req.cluster, "cats": c["cats"],
-            "regionApplied": bool(region_adj), "themes": themes}
+            "region": req.region,
+            "regionApplied": region_adj is not None,
+            "themes": themes}
