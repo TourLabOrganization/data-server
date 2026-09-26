@@ -37,7 +37,7 @@ jobs:
         run: |
           set -e
           for f in data/derived/places.json data/derived/datalab.json \
-                   data/derived/staytime.json; do
+                   data/derived/staytime.json data/derived/courses.json; do
             [ -s "$f" ] || { echo "산출물 없음: $f — make all 후 커밋하세요"; exit 1; }
           done
 
@@ -53,6 +53,7 @@ jobs:
               assert c.get("/health").json()["status"] == "ok"
               assert c.get("/v1/tfi").status_code == 200
               assert c.get("/v1/places").json()["count"] > 1000
+              assert c.get("/v1/courses").json()["count"] == 5
           print("기동 검증 통과")
           PY
 

@@ -186,3 +186,49 @@
 | `note` | 미매칭 사유 |
 
 사람이 읽을 요약은 `reports/reclassify.md` 에 있다.
+
+## courses.json — 영상 IP 코스와 순서
+
+앱의 핵심 화면("영상 속 장소를 순서대로 따라 걷기")이 쓰는 데이터. 코스별
+`.dc.html` 5개에서 뽑는다 — 장소 마스터(`Tour Planner.dc.html`)에는 **순서가 없다.**
+
+```json
+{
+ "count": 5,
+ "courses": [
+  {
+   "courseId": "jeju-k-drama-route",
+   "title": "제주 K-Drama",
+   "regions": ["제주"],
+   "count": 11,
+   "stayMinSum": 970,
+   "places": [
+    {"seq": 1, "coursePlaceId": "jd1", "placeId": "jd1",
+     "nameKo": "성산일출봉", "region": "제주",
+     "catFinal": "heal", "stayMin": 110,
+     "youtubeId": "ps1", "videoTitle": "폭싹 속았수다 (2025)",
+     "sceneKo": "애순이네 동네"}
+   ]
+  }
+ ]
+}
+```
+
+| 필드 | 설명 |
+|---|---|
+| `courseId` | 코스 식별자. `/v1/courses?courseId=` 와 `/v1/places?course=` 에 쓴다 |
+| `regions` | 그 코스가 지나는 지역. 여러 곳일 수 있다(RESCENE 은 7곳) |
+| `stayMinSum` | 코스 전체 체류시간 합(분). 이동시간은 포함하지 않는다 |
+| `places[].seq` | **코스 안에서의 순번.** 이 순서대로 걷는다 |
+| `places[].placeId` | 장소 마스터(`places.json`)의 `id` |
+| `places[].catFinal` | 마스터의 교정 카테고리를 그대로 쓴다 |
+| `places[].videoTitle` · `sceneKo` | 영상 제목과 장면. **코스 파일에만 있다** |
+
+### 주의
+
+- **한 장소가 여러 코스에 나올 수 있다.** `places.json` 쪽에는 `courses` 배열로
+  붙는다 (`[{courseId, title, seq}, …]`)
+- 순서대로 보여 주는 화면은 `/v1/courses` 를 쓴다. `/v1/places` 는 지역·카테고리
+  기준이라 코스 순서가 없다
+- `stayMinSum` 은 **체류시간만** 더한 값이다. 실제 일정은 이동시간을 더해야 하고,
+  그 계산은 앱(`Tour Planner.dc.html`)과 `Tour-Navigator-App/체류시간 산정/` 에 있다

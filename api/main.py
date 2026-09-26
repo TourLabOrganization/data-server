@@ -43,6 +43,7 @@ async def lifespan(_app):
     _store["places"] = _load(os.path.join(DERIVED, "places.json"))
     _store["datalab"] = _load(os.path.join(DERIVED, "datalab.json"))
     _store["staytime"] = _load(os.path.join(DERIVED, "staytime.json"))
+    _store["courses"] = _load(os.path.join(DERIVED, "courses.json"))
     # 추천은 원자료가 있어야 만들어지므로 없을 수도 있다. 그때는 해당 엔드포인트만 막는다.
     _store["calc2"] = _load(os.path.join(RECOMMEND, "calc2.json"), required=False)
     yield
@@ -62,19 +63,66 @@ app = FastAPI(
 def health():
     """배포 스크립트가 이걸 본다. 산출물이 다 올라왔는지까지 확인한다."""
     loaded = {k: _store.get(k) is not None
-              for k in ("places", "datalab", "staytime", "calc2")}
-    ready = loaded["places"] and loaded["datalab"]
+              for k in ("places", "datalab", "staytime", "courses", "calc2")}
+    ready = loaded["places"] and loaded["datalab"] and loaded["courses"]
     return {"status": "ok" if ready else "degraded", "loaded": loaded}
 
 
 # ── 파이프라인 산출물 ─────────────────────────────────────────────────────
 @app.get("/v1/places", summary="장소 마스터 1,171곳")
-def places(region: Optional[str] = None):
-    """`catApp`(앱 원본) 이 아니라 **`catFinal`** 을 쓴다. docs/contract.md 참고."""
+def places(region: Optional[str] = None, course: Optional[str] = None):
+    """`catApp`(앱 원본) 이 아니라 **`catFinal`** 을 쓴다. docs/contract.md 참고.
+
+    코스에 속한 장소에는 `courses` 가 붙는다 — `[{courseId, title, seq}, …]`.
+    한 장소가 여러 코스에 나올 수 있어 배열이다. **순서대로 걷는 화면을 만들 때는
+    `/v1/courses` 를 쓰는 편이 낫다** — 그쪽이 코스 단위로 정렬돼 있다.
+    """
     rows = _store["places"]["places"]
+    membership = _course_membership()
+    rows = [{**p, "courses": membership.get(p["id"], [])} for p in rows]
     if region:
         rows = [p for p in rows if p["region"] == region]
+    if course:
+        rows = [p for p in rows
+                if any(c["courseId"] == course for c in p["courses"])]
     return {"count": len(rows), "places": rows}
+
+
+def _course_membership():
+    """{장소 마스터 id: [{courseId, title, seq}, …]}. 매 요청 만들기엔 가벼우나
+    코스가 바뀌지 않으므로 한 번만 만들어 둔다."""
+    if "membership" not in _store:
+        m = {}
+        for c in _store["courses"]["courses"]:
+            for p in c["places"]:
+                if p["placeId"]:
+                    m.setdefault(p["placeId"], []).append(
+                        {"courseId": c["courseId"], "title": c["title"],
+                         "seq": p["seq"]})
+        for v in m.values():
+            v.sort(key=lambda x: (x["courseId"], x["seq"]))
+        _store["membership"] = m
+    return _store["membership"]
+
+
+@app.get("/v1/courses", summary="영상 IP 코스와 순서대로의 장소")
+def courses(courseId: Optional[str] = None, withPlaces: bool = True):
+    """앱의 핵심 화면("영상 속 장소를 순서대로 따라 걷기")이 쓰는 데이터.
+
+    장소는 `seq` 오름차순으로 들어 있다. `placeId` 로 장소 마스터와 이어진다
+    (코스 파일과 마스터는 id 체계가 달라서 이름·좌표로 맞춘 것이다).
+    목록만 필요하면 `withPlaces=false`.
+    """
+    rows = _store["courses"]["courses"]
+    if courseId:
+        rows = [c for c in rows if c["courseId"] == courseId]
+        if not rows:
+            raise HTTPException(
+                404, f"없는 코스입니다: {courseId}. 가능한 값: "
+                     f"{', '.join(c['courseId'] for c in _store['courses']['courses'])}")
+    if not withPlaces:
+        rows = [{k: v for k, v in c.items() if k != "places"} for c in rows]
+    return {"count": len(rows), "courses": rows}
 
 
 @app.get("/v1/tfi", summary="지역×테마 강도(TFI)")

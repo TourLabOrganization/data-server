@@ -57,6 +57,7 @@ python -m pipeline.tourapi    # TourAPI 공식 분류로 재분류 (키 필요, 
 | `datalab.json` | 지역×테마 강도 지수(TFI) 5개 지역 | 추천 가중치 |
 | `categories.json` | TourAPI 공식 분류 재분류 결과 | 카테고리 교정 |
 | `staytime.json` | 지역별 체류시간·전국 대비 지수 | 일정 길이 조절 |
+| `courses.json` | 영상 IP 코스 5개와 장소 순서 | 코스 화면 |
 | `recommend/data/derived/calc2.json` | 사용자 유형×테마 추천 순위 | 추천 API |
 
 검증 리포트는 `reports/` 에 마크다운으로 쌓인다.
