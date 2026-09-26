@@ -305,7 +305,7 @@ region = 0.1 × (가중 TFI − 0.5)          범위 ±0.05
 
 ### 계산 근거
 
-`pipeline/schedule.py` — 앱 레포의 `체류시간 산정/stay_schedule.js` 를 옮긴 것이고,
+`api/schedule.py` — 앱 레포의 `체류시간 산정/stay_schedule.js` 를 옮긴 것이고,
 원본과 같은 값이 나오는 것을 14개 항목 대조로 확인했다.
 
 | | 근거 |

@@ -59,7 +59,7 @@ python -m pipeline.tourapi    # TourAPI 공식 분류로 재분류 (키 필요, 
 | `staytime.json` | 지역별 체류시간·전국 대비 지수 | 일정 길이 조절 |
 | `courses.json` | 영상 IP 코스 5개와 장소 순서 | 코스 화면 |
 
-일정 시각 계산(`POST /v1/itinerary`)은 산출물이 아니라 요청마다 도는 계산이다 — `pipeline/schedule.py`.
+일정 시각 계산(`POST /v1/itinerary`)은 산출물이 아니라 요청마다 도는 계산이다 — `api/schedule.py`.
 | `recommend/data/derived/calc2.json` | 사용자 유형×테마 추천 순위 | 추천 API |
 
 검증 리포트는 `reports/` 에 마크다운으로 쌓인다.

@@ -19,8 +19,7 @@ from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel, Field
 
 from .scoring import CLUSTERS, rank_themes, region_adjust
-from pipeline.schedule import (access_min, assign_days, day_windows, leg_info,
-                               stay_min, timeline)
+from .schedule import (assign_days, day_windows, leg_info, stay_min, timeline)
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 DERIVED = os.path.join(ROOT, "data", "derived")
@@ -178,7 +177,7 @@ class ItineraryRequest(BaseModel):
 def itinerary(req: ItineraryRequest):
     """장소 순서 + 여행 조건 → "09:00–10:10" 형태의 일정.
 
-    계산은 `pipeline/schedule.py` 가 한다. 앱 레포의 `체류시간 산정/stay_schedule.js`
+    계산은 `api/schedule.py` 가 한다. 앱 레포의 `체류시간 산정/stay_schedule.js`
     를 옮긴 것이고, 원본과 같은 값이 나오는 것을 대조로 확인했다.
 
     **근거가 있는 것은 이동시간 쪽이다** — 한국도로공사 고속도로 표정속도 92km/h,
