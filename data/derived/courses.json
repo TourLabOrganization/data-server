@@ -28,7 +28,7 @@
      "placeId": "yw1",
      "region": "영월",
      "catFinal": "herit",
-     "catFinalKo": "역사·문화"
+     "catFinalKo": "문화유산·전통체험"
     },
     {
      "seq": 2,
@@ -47,7 +47,7 @@
      "placeId": "yw3",
      "region": "영월",
      "catFinal": "herit",
-     "catFinalKo": "역사·문화"
+     "catFinalKo": "문화유산·전통체험"
     },
     {
      "seq": 3,
@@ -66,7 +66,7 @@
      "placeId": "yw2",
      "region": "영월",
      "catFinal": "herit",
-     "catFinalKo": "역사·문화"
+     "catFinalKo": "문화유산·전통체험"
     },
     {
      "seq": 4,
@@ -85,7 +85,7 @@
      "placeId": "yw4",
      "region": "영월",
      "catFinal": "heal",
-     "catFinalKo": "힐링·생태"
+     "catFinalKo": "힐링·생태·체험"
     },
     {
      "seq": 5,
@@ -104,7 +104,7 @@
      "placeId": "yw5",
      "region": "영월",
      "catFinal": "heal",
-     "catFinalKo": "힐링·생태"
+     "catFinalKo": "힐링·생태·체험"
     }
    ]
   },
@@ -135,7 +135,7 @@
      "placeId": "kd1",
      "region": "서울",
      "catFinal": "herit",
-     "catFinalKo": "역사·문화"
+     "catFinalKo": "문화유산·전통체험"
     },
     {
      "seq": 2,
@@ -154,7 +154,7 @@
      "placeId": "kd2",
      "region": "서울",
      "catFinal": "herit",
-     "catFinalKo": "역사·문화"
+     "catFinalKo": "문화유산·전통체험"
     },
     {
      "seq": 3,
@@ -173,7 +173,7 @@
      "placeId": "kd3",
      "region": "서울",
      "catFinal": "food",
-     "catFinalKo": "로컬·먹거리"
+     "catFinalKo": "로컬상권·먹거리"
     },
     {
      "seq": 4,
@@ -249,7 +249,7 @@
      "placeId": "kd7",
      "region": "서울",
      "catFinal": "heal",
-     "catFinalKo": "힐링·생태"
+     "catFinalKo": "힐링·생태·체험"
     },
     {
      "seq": 8,
@@ -287,7 +287,7 @@
      "placeId": "kd9",
      "region": "서울",
      "catFinal": "herit",
-     "catFinalKo": "역사·문화"
+     "catFinalKo": "문화유산·전통체험"
     },
     {
      "seq": 10,
@@ -306,7 +306,7 @@
      "placeId": "kd10",
      "region": "서울",
      "catFinal": "herit",
-     "catFinalKo": "역사·문화"
+     "catFinalKo": "문화유산·전통체험"
     },
     {
      "seq": 11,
@@ -325,7 +325,7 @@
      "placeId": "kd11",
      "region": "서울",
      "catFinal": "heal",
-     "catFinalKo": "힐링·생태"
+     "catFinalKo": "힐링·생태·체험"
     }
    ]
   },
@@ -381,7 +381,7 @@
      "placeId": "gz1",
      "region": "거제",
      "catFinal": "sea",
-     "catFinalKo": "해양·자연"
+     "catFinalKo": "해양·자연경관"
     },
     {
      "seq": 1,
@@ -400,7 +400,7 @@
      "placeId": "na1",
      "region": "수원",
      "catFinal": "herit",
-     "catFinalKo": "역사·문화"
+     "catFinalKo": "문화유산·전통체험"
     },
     {
      "seq": 2,
@@ -419,7 +419,7 @@
      "placeId": "gj2",
      "region": "경주",
      "catFinal": "herit",
-     "catFinalKo": "역사·문화"
+     "catFinalKo": "문화유산·전통체험"
     },
     {
      "seq": 2,
@@ -438,7 +438,7 @@
      "placeId": "gz2",
      "region": "거제",
      "catFinal": "sea",
-     "catFinalKo": "해양·자연"
+     "catFinalKo": "해양·자연경관"
     },
     {
      "seq": 2,
@@ -476,7 +476,7 @@
      "placeId": "gj3",
      "region": "경주",
      "catFinal": "herit",
-     "catFinalKo": "역사·문화"
+     "catFinalKo": "문화유산·전통체험"
     },
     {
      "seq": 3,
@@ -495,7 +495,7 @@
      "placeId": "gz3",
      "region": "거제",
      "catFinal": "sea",
-     "catFinalKo": "해양·자연"
+     "catFinalKo": "해양·자연경관"
     },
     {
      "seq": 3,
@@ -514,7 +514,7 @@
      "placeId": "na3",
      "region": "수원",
      "catFinal": "food",
-     "catFinalKo": "로컬·먹거리"
+     "catFinalKo": "로컬상권·먹거리"
     },
     {
      "seq": 4,
@@ -533,7 +533,7 @@
      "placeId": "gj4",
      "region": "경주",
      "catFinal": "food",
-     "catFinalKo": "로컬·먹거리"
+     "catFinalKo": "로컬상권·먹거리"
     },
     {
      "seq": 4,
@@ -552,7 +552,7 @@
      "placeId": "gz4",
      "region": "거제",
      "catFinal": "heal",
-     "catFinalKo": "힐링·생태"
+     "catFinalKo": "힐링·생태·체험"
     },
     {
      "seq": 4,
@@ -609,7 +609,7 @@
      "placeId": "gz5",
      "region": "거제",
      "catFinal": "sea",
-     "catFinalKo": "해양·자연"
+     "catFinalKo": "해양·자연경관"
     },
     {
      "seq": 5,
@@ -666,7 +666,7 @@
      "placeId": "gz6",
      "region": "거제",
      "catFinal": "heal",
-     "catFinalKo": "힐링·생태"
+     "catFinalKo": "힐링·생태·체험"
     },
     {
      "seq": 6,
@@ -685,7 +685,7 @@
      "placeId": "na6",
      "region": "대전",
      "catFinal": "food",
-     "catFinalKo": "로컬·먹거리"
+     "catFinalKo": "로컬상권·먹거리"
     },
     {
      "seq": 7,
@@ -723,7 +723,7 @@
      "placeId": "gz7",
      "region": "거제",
      "catFinal": "heal",
-     "catFinalKo": "힐링·생태"
+     "catFinalKo": "힐링·생태·체험"
     },
     {
      "seq": 8,
@@ -742,7 +742,7 @@
      "placeId": "gz8",
      "region": "거제",
      "catFinal": "heal",
-     "catFinalKo": "힐링·생태"
+     "catFinalKo": "힐링·생태·체험"
     },
     {
      "seq": 8,
@@ -761,7 +761,7 @@
      "placeId": "na8",
      "region": "충주",
      "catFinal": "heal",
-     "catFinalKo": "힐링·생태"
+     "catFinalKo": "힐링·생태·체험"
     },
     {
      "seq": 9,
@@ -780,7 +780,7 @@
      "placeId": "gz9",
      "region": "거제",
      "catFinal": "food",
-     "catFinalKo": "로컬·먹거리"
+     "catFinalKo": "로컬상권·먹거리"
     },
     {
      "seq": 9,
@@ -799,7 +799,7 @@
      "placeId": "na9",
      "region": "충주",
      "catFinal": "food",
-     "catFinalKo": "로컬·먹거리"
+     "catFinalKo": "로컬상권·먹거리"
     },
     {
      "seq": 10,
@@ -818,7 +818,7 @@
      "placeId": "gz10",
      "region": "거제",
      "catFinal": "food",
-     "catFinalKo": "로컬·먹거리"
+     "catFinalKo": "로컬상권·먹거리"
     },
     {
      "seq": 10,
@@ -837,7 +837,7 @@
      "placeId": "na10",
      "region": "동해",
      "catFinal": "sea",
-     "catFinalKo": "해양·자연"
+     "catFinalKo": "해양·자연경관"
     },
     {
      "seq": 11,
@@ -856,7 +856,7 @@
      "placeId": "gz11",
      "region": "거제",
      "catFinal": "food",
-     "catFinalKo": "로컬·먹거리"
+     "catFinalKo": "로컬상권·먹거리"
     },
     {
      "seq": 11,
@@ -894,7 +894,7 @@
      "placeId": "gz12",
      "region": "거제",
      "catFinal": "food",
-     "catFinalKo": "로컬·먹거리"
+     "catFinalKo": "로컬상권·먹거리"
     },
     {
      "seq": 13,
@@ -913,7 +913,7 @@
      "placeId": "gz13",
      "region": "거제",
      "catFinal": "food",
-     "catFinalKo": "로컬·먹거리"
+     "catFinalKo": "로컬상권·먹거리"
     },
     {
      "seq": 14,
@@ -932,7 +932,7 @@
      "placeId": "gz14",
      "region": "거제",
      "catFinal": "sea",
-     "catFinalKo": "해양·자연"
+     "catFinalKo": "해양·자연경관"
     },
     {
      "seq": 22,
@@ -951,7 +951,7 @@
      "placeId": "na22",
      "region": "수원",
      "catFinal": "herit",
-     "catFinalKo": "역사·문화"
+     "catFinalKo": "문화유산·전통체험"
     },
     {
      "seq": 23,
@@ -970,7 +970,7 @@
      "placeId": "na23",
      "region": "수원",
      "catFinal": "herit",
-     "catFinalKo": "역사·문화"
+     "catFinalKo": "문화유산·전통체험"
     }
    ]
   },
@@ -1001,7 +1001,7 @@
      "placeId": "jd1",
      "region": "제주",
      "catFinal": "heal",
-     "catFinalKo": "힐링·생태"
+     "catFinalKo": "힐링·생태·체험"
     },
     {
      "seq": 2,
@@ -1020,7 +1020,7 @@
      "placeId": "jd2",
      "region": "제주",
      "catFinal": "sea",
-     "catFinalKo": "해양·자연"
+     "catFinalKo": "해양·자연경관"
     },
     {
      "seq": 3,
@@ -1039,7 +1039,7 @@
      "placeId": "jd3",
      "region": "제주",
      "catFinal": "herit",
-     "catFinalKo": "역사·문화"
+     "catFinalKo": "문화유산·전통체험"
     },
     {
      "seq": 4,
@@ -1058,7 +1058,7 @@
      "placeId": "jd4",
      "region": "제주",
      "catFinal": "heal",
-     "catFinalKo": "힐링·생태"
+     "catFinalKo": "힐링·생태·체험"
     },
     {
      "seq": 5,
@@ -1077,7 +1077,7 @@
      "placeId": "jd5",
      "region": "제주",
      "catFinal": "sea",
-     "catFinalKo": "해양·자연"
+     "catFinalKo": "해양·자연경관"
     },
     {
      "seq": 6,
@@ -1096,7 +1096,7 @@
      "placeId": "jd6",
      "region": "제주",
      "catFinal": "heal",
-     "catFinalKo": "힐링·생태"
+     "catFinalKo": "힐링·생태·체험"
     },
     {
      "seq": 7,
@@ -1115,7 +1115,7 @@
      "placeId": "jd7",
      "region": "제주",
      "catFinal": "food",
-     "catFinalKo": "로컬·먹거리"
+     "catFinalKo": "로컬상권·먹거리"
     },
     {
      "seq": 8,
@@ -1134,7 +1134,7 @@
      "placeId": "jd8",
      "region": "제주",
      "catFinal": "sea",
-     "catFinalKo": "해양·자연"
+     "catFinalKo": "해양·자연경관"
     },
     {
      "seq": 9,
@@ -1153,7 +1153,7 @@
      "placeId": "jd9",
      "region": "제주",
      "catFinal": "heal",
-     "catFinalKo": "힐링·생태"
+     "catFinalKo": "힐링·생태·체험"
     },
     {
      "seq": 10,
@@ -1191,7 +1191,7 @@
      "placeId": "jd11",
      "region": "제주",
      "catFinal": "sea",
-     "catFinalKo": "해양·자연"
+     "catFinalKo": "해양·자연경관"
     }
    ]
   },
@@ -1222,7 +1222,7 @@
      "placeId": "bc1",
      "region": "부산",
      "catFinal": "herit",
-     "catFinalKo": "역사·문화"
+     "catFinalKo": "문화유산·전통체험"
     },
     {
      "seq": 2,
@@ -1241,7 +1241,7 @@
      "placeId": "bc2",
      "region": "부산",
      "catFinal": "food",
-     "catFinalKo": "로컬·먹거리"
+     "catFinalKo": "로컬상권·먹거리"
     },
     {
      "seq": 3,
@@ -1260,7 +1260,7 @@
      "placeId": "bc3",
      "region": "부산",
      "catFinal": "sea",
-     "catFinalKo": "해양·자연"
+     "catFinalKo": "해양·자연경관"
     },
     {
      "seq": 4,
@@ -1279,7 +1279,7 @@
      "placeId": "bc4",
      "region": "부산",
      "catFinal": "heal",
-     "catFinalKo": "힐링·생태"
+     "catFinalKo": "힐링·생태·체험"
     },
     {
      "seq": 5,
@@ -1298,7 +1298,7 @@
      "placeId": "bc5",
      "region": "부산",
      "catFinal": "food",
-     "catFinalKo": "로컬·먹거리"
+     "catFinalKo": "로컬상권·먹거리"
     },
     {
      "seq": 6,
@@ -1393,7 +1393,7 @@
      "placeId": "bc10",
      "region": "부산",
      "catFinal": "food",
-     "catFinalKo": "로컬·먹거리"
+     "catFinalKo": "로컬상권·먹거리"
     },
     {
      "seq": 11,
@@ -1412,7 +1412,7 @@
      "placeId": "bc11",
      "region": "부산",
      "catFinal": "heal",
-     "catFinalKo": "힐링·생태"
+     "catFinalKo": "힐링·생태·체험"
     },
     {
      "seq": 12,
@@ -1431,7 +1431,7 @@
      "placeId": "bc12",
      "region": "부산",
      "catFinal": "sea",
-     "catFinalKo": "해양·자연"
+     "catFinalKo": "해양·자연경관"
     }
    ]
   }

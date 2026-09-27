@@ -19,7 +19,8 @@ from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel, Field
 
 from .scoring import CLUSTERS, rank_themes, region_adjust
-from .schedule import (assign_days, day_windows, leg_info, stay_min, timeline)
+from .schedule import (assign_days, day_windows, leg_info, optimize_order,
+                       stay_min, timeline)
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 DERIVED = os.path.join(ROOT, "data", "derived")
@@ -70,13 +71,22 @@ def health():
 
 
 # ── 파이프라인 산출물 ─────────────────────────────────────────────────────
-@app.get("/v1/places", summary="장소 마스터 1,171곳")
-def places(region: Optional[str] = None, course: Optional[str] = None):
+@app.get("/v1/places", summary="장소 마스터 3,118곳")
+def places(region: Optional[str] = None, course: Optional[str] = None,
+           offset: int = 0, limit: Optional[int] = None):
     """`catApp`(앱 원본) 이 아니라 **`catFinal`** 을 쓴다. docs/contract.md 참고.
 
     코스에 속한 장소에는 `courses` 가 붙는다 — `[{courseId, title, seq}, …]`.
     한 장소가 여러 코스에 나올 수 있어 배열이다. **순서대로 걷는 화면을 만들 때는
     `/v1/courses` 를 쓰는 편이 낫다** — 그쪽이 코스 단위로 정렬돼 있다.
+
+    전체를 거르지 않고 받으면 약 3MB 다. 화면에 뿌릴 때는 `region` 으로 거르거나
+    `offset`·`limit` 으로 나눠 받는 편이 낫다. `count` 는 거른 뒤의 전체 수이고
+    `places` 는 그중 잘라 보낸 조각이다.
+
+    **순서는 언제나 같다** — `order` 오름차순(앱 파일에 적힌 순서)으로 고정이며
+    언어에 따라 달라지지 않는다. 화면에서 이름순으로 다시 정렬하면 한국어와 영어의
+    순서가 갈린다.
     """
     rows = _store["places"]["places"]
     membership = _course_membership()
@@ -86,7 +96,10 @@ def places(region: Optional[str] = None, course: Optional[str] = None):
     if course:
         rows = [p for p in rows
                 if any(c["courseId"] == course for c in p["courses"])]
-    return {"count": len(rows), "places": rows}
+    total = len(rows)
+    offset = max(0, offset)
+    rows = rows[offset:] if limit is None else rows[offset:offset + max(0, limit)]
+    return {"count": total, "offset": offset, "places": rows}
 
 
 def _course_membership():
@@ -171,6 +184,12 @@ class ItineraryRequest(BaseModel):
     retTime: str = Field("19:00", description="여행지 출발(귀가) 시각")
     accessMin: int = Field(
         0, ge=0, description="출발지→지역 관문 광역 이동(분). 첫날 창을 줄인다")
+    optimizeOrder: bool = Field(
+        False,
+        description="장소를 이동시간이 짧은 순서로 다시 이어서 일정을 짠다. "
+                    "코스 순서는 영상 장면 순서라 동선이 아니다 — RESCENE 은 "
+                    "대본대로 3일을 돌면 6곳, 재배열하면 14곳이 들어간다. "
+                    "원래 순서가 더 짧으면 그대로 둔다. 응답의 `reordered` 로 확인한다.")
 
 
 @app.post("/v1/itinerary", summary="코스 → 일자별 도착·출발 시각")
@@ -185,6 +204,9 @@ def itinerary(req: ItineraryRequest):
 
     창(하루 720분)을 넘기는 경유지는 다음 날로 넘어가고, 마지막 날에도 못 들어가면
     잘린다(`dropped`).
+
+    `optimizeOrder` 를 켜면 **일정만** 가까운 순으로 다시 잇는다. 화면에 보여 주는
+    코스 순서(`seq`)는 영상 장면 순서라 그대로 둬야 한다 — 바꾸면 이야기가 깨진다.
     """
     if not req.courseId and not req.placeIds:
         raise HTTPException(400, "courseId 또는 placeIds 중 하나는 있어야 합니다.")
@@ -209,6 +231,13 @@ def itinerary(req: ItineraryRequest):
 
     windows = day_windows(req.days, req.depTime, req.retTime, req.accessMin)
     leg = lambda a, b: leg_info(a, b, req.mode)
+    reordered = False
+    if req.optimizeOrder:
+        best = optimize_order(items, leg)
+        # 코스 장소는 'id' 가 아니라 'placeId'·'coursePlaceId' 를 쓴다.
+        # 같은 dict 를 다시 배열한 것이라 동일성으로 비교한다.
+        reordered = any(a is not b for a, b in zip(best, items))
+        items = best
     buckets, keep = assign_days(items, windows, leg)
     rows = timeline(items, buckets, leg, req.depTime, req.accessMin)
 
@@ -218,6 +247,8 @@ def itinerary(req: ItineraryRequest):
         "courseId": req.courseId,
         "days": req.days, "mode": req.mode,
         "dayWindows": windows,
+        # 순서를 실제로 바꿨는지. 원래 순서가 더 짧으면 켜도 False 다
+        "reordered": reordered,
         "placed": keep, "dropped": len(items) - keep,
         "totals": {"stayMin": stay_sum, "moveMin": move_sum,
                    "waitMin": sum(r["waitMin"] for r in rows),

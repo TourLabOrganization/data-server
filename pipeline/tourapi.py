@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-"""앱 장소 1,171곳을 TourAPI 공식 분류체계로 재분류한다.
+"""앱 장소를 TourAPI 공식 분류체계로 재분류한다.
 
     python -m pipeline.tourapi
 
@@ -48,7 +48,7 @@ LOC_ENDPOINT = "https://apis.data.go.kr/B551011/KorService2/locationBasedList2"
 class QuotaExceeded(Exception):
     """공공데이터포털 일일 호출 한도 초과.
 
-    개발계정은 하루 1,000회다. 장소 1,171곳에 검색어를 여러 개 시도하므로
+    개발계정은 하루 1,000회다. 장소마다 검색어를 여러 개 시도하므로
     한 번에 다 돌지 못한다. 한도에 걸리면 재시도해도 소용없으니 즉시 멈추고,
     캐시된 것까지는 저장한 뒤 다음 날 이어받는다.
     """

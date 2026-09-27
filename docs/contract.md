@@ -7,21 +7,24 @@
 
 ## places.json — 장소 마스터
 
-앱의 `.dc.html` 에 하드코딩된 장소를 추출한 것. 백엔드가 DB에 적재한다.
+앱의 `.dc.html` 에 하드코딩된 장소 3,118곳을 추출한 것. 백엔드가 DB에 적재한다.
 
 ```json
 {
-  "count": 1171,
+  "count": 3118,
   "places": [
     {
       "id": "gj2",
       "block": "gyeongju",
+      "order": 1,
+      "listNo": 2,
       "nameKo": "쪽샘 44호 신라공주묘",
       "nameEn": "Jjoksaem Tomb No. 44",
       "region": "경주",
+      "regionEn": "Gyeongju",
       "catApp": "herit",
       "catFinal": "herit",
-      "catFinalKo": "역사·문화",
+      "catFinalKo": "문화유산·전통체험",
       "catSource": "app",
       "lat": 35.8397,
       "lng": 129.2163,
@@ -29,6 +32,19 @@
       "hours": "09:00–18:00",
       "youtubeId": "4m9eLr-NofA",
       "sourceKo": "쪽샘길 60 지오코딩 확인",
+      "sourceEn": "Geocoded from Jjoksaem-gil 60",
+      "descKo": "발굴 현장을 그대로 덮어 공개한다.",
+      "descEn": "The excavation itself is roofed over and open to visitors.",
+      "imageUrl": null,
+      "imageCredit": null,
+      "kakaoUrl": "https://place.map.kakao.com/...",
+      "popRank": null,
+      "k100": false,
+      "unesco": false,
+      "barrierFree": false,
+      "zone": null,
+      "cityTour": false,
+      "related": false,
       "inactive": false
     }
   ]
@@ -39,18 +55,28 @@
 |---|---|---|
 | `id` | string | 앱이 쓰는 장소 ID. **기본키로 쓸 것** |
 | `block` | string | 앱 DATA의 소속 블록 (`gyeongju`·`jeju`·`nation` 등) |
+| `order` | int | **고정 정렬 키.** 0부터. 언어와 무관하게 언제나 같은 순서 |
+| `listNo` | int \| null | 앱 목록에 붙는 번호. 목록외 장소는 `null` (72곳만 값이 있다) |
 | `nameKo` / `nameEn` | string | 장소명 |
-| `region` | string \| null | 시군 단위 지역명. 109종 |
+| `region` / `regionEn` | string \| null | 시군 단위 지역명. 124종 |
 | `catApp` | string | 앱 HTML의 **원본** 값. 손으로 넣은 값이라 신뢰도가 낮다 |
 | `catFinal` | string | **백엔드는 이 값을 쓴다.** 교정이 있으면 교정본 |
-| `catFinalKo` | string | `catFinal` 의 한글명. 팀원 추천 코드와 맞춘 이름 |
+| `catFinalKo` | string | `catFinal` 의 한글명. 앱 화면 표기와 맞춘 이름 |
 | `catSource` | string | `app`(원본 유지) 또는 `tourapi`(교정됨) |
 | `lat` / `lng` | number | WGS84 좌표 |
 | `stayMin` | int \| null | 권장 체류시간(분) |
 | `hours` | string \| null | 운영시간. 자유 형식 문자열이라 파싱하지 말 것 |
 | `youtubeId` | string \| null | 연결된 영상 ID. 없으면 영상 없는 장소 |
-| `sourceKo` | string \| null | 좌표 근거 |
-| `inactive` | bool | 앱이 목록에서 내려둔 장소. 추천 순서에서 뒤로 민다 |
+| `sourceKo` / `sourceEn` | string \| null | 좌표 근거 |
+| `descKo` / `descEn` | string \| null | 장소 상세 설명. 한국어는 전부, 영어는 1,171곳만 |
+| `imageUrl` / `imageCredit` | string \| null | 대표 사진과 출처. 183곳만 있다 |
+| `kakaoUrl` | string \| null | 카카오맵 장소 페이지. 1,947곳 |
+| `popRank` | int \| null | **데이터랩 인기관광지 순위(1~100). 배지용.** 173곳만 값이 있다 |
+| `k100` / `unesco` / `barrierFree` | bool | 배지 — 한국관광 100선 99곳 · 유네스코 69곳 · 열린관광지 99곳 |
+| `zone` | string \| null | 관광특구·관광단지·지정관광지 문구. 210곳 |
+| `cityTour` | bool | 시티투어 경유지로 들어온 장소. 429곳 |
+| `related` | bool | 한국관광공사 연관 관광지에서 들어온 장소. 1,518곳 |
+| `inactive` | bool | 앱이 목록에서 내려둔 장소(3,043곳). 추천 순서에서 뒤로 민다 |
 
 ### 주의
 
@@ -60,9 +86,24 @@
 - **앱 HTML은 고치지 않는다.** 교정은 이 파이프라인 안에서만 덧씌운다. 그래서
   무엇을 왜 바꿨는지 `categories.json` 과 `reports/reclassify.md` 로 되짚을 수
   있고, 앱 레포와 충돌하지 않는다
-- 교정 규모: 1,171곳 중 918곳 TourAPI 매칭 · 287곳이 변경 대상 · 그중
-  **168곳만 반영**했다. 나머지 119곳은 신뢰도가 낮거나 계통 오류(숙박시설
+- 교정 규모: 재분류를 돌린 시점의 1,171곳 중 918곳 TourAPI 매칭 · 287곳이 변경 대상 · 그중
+  **173곳만 반영**했다. 나머지는 신뢰도가 낮거나 계통 오류(숙박시설
   오매칭·먹자골목)가 있어 보류했다 — `reports/reclassify.md` 참고
+- **앱이 3,118곳으로 늘면서 `catSource` 는 `app` 94% · `tourapi` 6% 가 됐다.**
+  새로 들어온 1,947곳은 아직 TourAPI 로 조회하지 않았다. 일일 호출 한도가
+  1,000회라 하루에 다 못 돌린다. 이 장소들은 앱이 적어 둔 분류를 그대로 쓴다
+- **`order` 로 정렬한다.** 이름순으로 다시 정렬하면 한국어와 영어에서 순서가
+  갈린다(`Intl.Collator` 가 언어별로 다르게 비교한다). 화면 순서를 언어와
+  무관하게 맞추려면 `order` 오름차순을 쓰고, 목록 번호를 보여줘야 하면
+  `listNo` 를 쓴다
+- **`popRank` 로 정렬하지 말 것.** 데이터랩을 받아 둔 6개 지역에만 있어서
+  3,118곳 중 173곳(5.5%)만 값이 있다. 정렬 키로 쓰면 나머지 94%가 "순위 없음"
+  한 덩어리로 뒤에 밀려, 사실상 "데이터랩에 있나 없나"로 목록이 갈린다.
+  **화면에는 `데이터랩 인기 3위` 같은 배지로 붙인다.** 지역 CSV 를 더 받으면
+  한 지역당 18~44곳씩 는다
+- **전체 응답이 약 3MB 다.** `GET /v1/places` 는 `region` 으로 거르거나
+  `offset`·`limit` 으로 나눠 받는다. `count` 는 거른 뒤의 전체 수이고
+  `places` 는 그중 잘라 보낸 조각이다
 - **`stayMin` 은 추정값이다.** 고유값이 21개뿐이고 99.9%가 10분 배수라,
   근거 있는 측정치가 아니다. 일정 길이 계산에 쓰되 정확도를 주장하지 말 것
 - `region` 이 `null` 인 장소가 있을 수 있다. `nation` 블록에서 `locKo` 가
@@ -259,7 +300,10 @@ region = 0.1 × (가중 TFI − 0.5)          범위 ±0.05
  "sources": ["국민여행조사", "외래관광객조사", "한국관광 데이터랩 (지역×테마 강도 TFI)"],
  "themes": [
   {"theme": "왕과 사는 남자", "fit": 0.3133, "interest": 0.3556,
-   "region": 0.0091, "score": 0.678, "regionCoverage": 1.0}
+   "region": 0.0091, "score": 0.678, "regionCoverage": 1.0,
+   "share": {"역사·문화": 0.4, "…": 0},
+   "shareByCode": {"herit": 0.4, "heal": 0.3111, "activity": 0.2333,
+                   "food": 0.0556, "sea": 0.0}}
  ]
 }
 ```
@@ -273,6 +317,11 @@ region = 0.1 × (가중 TFI − 0.5)          범위 ±0.05
   대응 축이 없어**(인기관광지 분류가 중분류까지만이라 NA02 에서 바다를 못 뗌)
   분모에서 빠진다. 해양 비중이 큰 코스는 이 값이 낮다
 - TFI 가 없는 지역을 주면 **400** 이다. 조용히 0으로 넘어가지 않는다
+- **카테고리 한글 표기가 `places.json` 과 다르다.** `share` 의 키는 팀원 추천
+  코드가 쓰는 이름(`역사·문화`)이고, `places.json` 의 `catFinalKo` 는 앱 화면
+  표기(`문화유산·전통체험`)다. 두 응답을 이어 붙일 때는 한글이 아니라
+  **`shareByCode` 의 코드(`herit`·`heal`·`activity`·`food`·`sea`)로 맞춘다** —
+  이 코드가 `places.json` 의 `catFinal` 과 같은 값이다
 
 ## POST /v1/itinerary — 일자별 도착·출발 시각
 
@@ -281,6 +330,7 @@ region = 0.1 × (가중 TFI − 0.5)          범위 ±0.05
 ```
 요청  {"courseId": "jeju-k-drama-route", "days": 2, "mode": "transit"}
       {"placeIds": ["gj1","gj2",…], "days": 1}        ← 준 순서가 곧 동선
+      {"courseId": "rescene-route", "days": 3, "optimizeOrder": true}
 ```
 
 ```json
@@ -302,6 +352,7 @@ region = 0.1 × (가중 TFI − 0.5)          범위 ±0.05
 | `placed` / `dropped` | 일정에 담긴 수 / 창이 모자라 잘린 수 |
 | `moveMin` · `waitMin` | 앞 장소에서의 이동, 개장까지 기다린 시간 |
 | `closesBefore` | 폐장 후까지 머무는 일정인가. **막지는 않고 알리기만 한다** |
+| `reordered` | `optimizeOrder` 가 실제로 순서를 바꿨는가. 원래가 더 짧으면 `false` |
 
 ### 계산 근거
 
@@ -324,5 +375,29 @@ region = 0.1 × (가중 TFI − 0.5)          범위 ±0.05
   `dropped` 가 0보다 크면 일수를 늘리거나 장소를 줄여야 한다
 - 실측 이동시간(구글 길찾기)이 있으면 그쪽이 우선이다. 이 API 는 **추정식만**
   구현한다 — 앱 PoC 와 같은 값이다
+
+### optimizeOrder — 코스 순서는 동선이 아니다
+
+코스의 `seq` 는 **영상 장면 순서**다(`sceneKo`: "애순이네 동네" → "엄마를 기다리던
+바다"). 편집자가 이야기 순으로 매긴 것이라 지리적 동선이 아니다. 대본대로 걸으면
+RESCENE 은 6,255km, 가까운 순으로 이으면 786km 다.
+
+`optimizeOrder: true` 를 주면 **일정 계산에서만** 이동시간이 짧은 순서로 다시
+잇는다. 화면에 보여 주는 코스 순서(`/v1/courses` 의 `seq`)는 그대로다 —
+바꾸면 이야기가 깨진다.
+
+| 코스 | 기본 | `optimizeOrder` |
+|---|---|---|
+| 왕과 사는 남자 | 5곳 · 144분 | 5곳 · 144분 (그대로) |
+| 케이팝 데몬 헌터스 | 11곳 · 368분 | 11곳 · **214분** |
+| 제주 K-Drama | 9곳 · 506분 | **11곳** · **315분** |
+| 부산 영화 기행 | 12곳 · 477분 | 12곳 · **250분** |
+| RESCENE | 6곳 · 656분 | **14곳** · **404분** |
+
+(3일 일정 · 대중교통 기준. 왼쪽이 배치된 장소 수, 오른쪽이 총 이동시간)
+
+가까운 곳부터 잇고(탐욕) 교차 구간을 펴는(2-opt) 방식이다. **최적해를 주장하지
+않으며, 원래 순서가 더 짧으면 원래 순서를 쓴다** — 장소가 적으면 탐욕법이 손해를
+볼 수 있다(왕과 사는 남자 5곳: 144분 → 149분이라 되돌렸다).
 - 자동 코스 생성(`autoCourse`)은 아직 옮기지 않았다. 이 API 는 **순서가 정해진**
   장소를 받아 시각을 매긴다

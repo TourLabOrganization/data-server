@@ -125,6 +125,51 @@ def leg_info(p, q, mode="transit", hubs=None, metro_cities=None):
             "wide": wide}
 
 
+def optimize_order(items, leg):
+    """장소를 이동시간이 짧은 순서로 다시 잇는다. 첫 장소는 그대로 둔다.
+
+    테마 코스의 순서는 **영상 장면 순서**라 동선이 아니다. RESCENE 은 대본대로
+    걸으면 6,255km 인데 가까운 순으로 이으면 786km 다. 일정을 짤 때만 이걸 쓰고,
+    화면에 보여 주는 순서(seq)는 그대로 둔다 — 이야기가 깨지면 안 된다.
+
+    가까운 곳부터 잇고(탐욕), 교차하는 구간을 뒤집어 펴는다(2-opt). 장소가
+    50곳 안쪽이라 이 정도로 충분하고, 최적해를 주장하지 않는다.
+
+    **원래 순서보다 나빠지면 원래 순서를 돌려준다.** 탐욕법은 시작점이 고정이라
+    장소가 적으면 손해를 볼 수 있다(왕과 사는 남자 5곳: 144분 → 149분).
+    """
+    if len(items) < 3:
+        return list(items)
+
+    def cost(a, b):
+        return leg(a, b)["min"]
+
+    def total(ps):
+        return sum(cost(ps[i], ps[i + 1]) for i in range(len(ps) - 1))
+
+    rest, route = list(items[1:]), [items[0]]
+    while rest:
+        nxt = min(rest, key=lambda q: cost(route[-1], q))
+        rest.remove(nxt)
+        route.append(nxt)
+
+    # 2-opt: i..j 구간을 뒤집어 총 이동시간이 줄면 채택한다. 출발점은 고정.
+    improved = True
+    while improved:
+        improved = False
+        for i in range(1, len(route) - 1):
+            for j in range(i + 1, len(route)):
+                a, b = route[i - 1], route[i]
+                c = route[j]
+                d = route[j + 1] if j + 1 < len(route) else None
+                before = cost(a, b) + (cost(c, d) if d else 0)
+                after = cost(a, c) + (cost(b, d) if d else 0)
+                if after < before - 1e-9:
+                    route[i:j + 1] = reversed(route[i:j + 1])
+                    improved = True
+    return route if total(route) < total(items) else list(items)
+
+
 def access_min(origin, hub, mode):
     """출발지(역·터미널·공항) → 지역 관문까지의 광역 접근 시간."""
     if not origin or not hub:

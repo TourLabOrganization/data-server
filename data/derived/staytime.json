@@ -53,10 +53,10 @@
    "stayMinutes": 965.0,
    "lodgingDays": 2.3,
    "index": 0.798,
-   "appPlaces": 7,
-   "appStayMinSum": 540,
-   "appStayMinMean": 77.1,
-   "visitsToSeeAll": 0.56
+   "appPlaces": 26,
+   "appStayMinSum": 1550,
+   "appStayMinMean": 59.6,
+   "visitsToSeeAll": 1.61
   },
   {
    "region": "강릉",
@@ -66,10 +66,10 @@
    "stayMinutes": 1715.0,
    "lodgingDays": 2.54,
    "index": 1.419,
-   "appPlaces": 16,
-   "appStayMinSum": 1100,
-   "appStayMinMean": 68.8,
-   "visitsToSeeAll": 0.64
+   "appPlaces": 38,
+   "appStayMinSum": 1900,
+   "appStayMinMean": 50.0,
+   "visitsToSeeAll": 1.11
   },
   {
    "region": "강진",
@@ -92,10 +92,10 @@
    "stayMinutes": 2407.0,
    "lodgingDays": 2.72,
    "index": 1.992,
-   "appPlaces": 27,
-   "appStayMinSum": 1965,
-   "appStayMinMean": 72.8,
-   "visitsToSeeAll": 0.82
+   "appPlaces": 45,
+   "appStayMinSum": 2725,
+   "appStayMinMean": 60.6,
+   "visitsToSeeAll": 1.13
   },
   {
    "region": "거창",
@@ -105,10 +105,10 @@
    "stayMinutes": 1453.0,
    "lodgingDays": 2.7,
    "index": 1.202,
-   "appPlaces": 10,
-   "appStayMinSum": 640,
-   "appStayMinMean": 64.0,
-   "visitsToSeeAll": 0.44
+   "appPlaces": 21,
+   "appStayMinSum": 1270,
+   "appStayMinMean": 60.5,
+   "visitsToSeeAll": 0.87
   },
   {
    "region": "경산",
@@ -118,10 +118,10 @@
    "stayMinutes": 1693.0,
    "lodgingDays": 3.05,
    "index": 1.401,
-   "appPlaces": 0,
-   "appStayMinSum": null,
-   "appStayMinMean": null,
-   "visitsToSeeAll": null
+   "appPlaces": 7,
+   "appStayMinSum": 450,
+   "appStayMinMean": 64.3,
+   "visitsToSeeAll": 0.27
   },
   {
    "region": "경주",
@@ -131,10 +131,10 @@
    "stayMinutes": 1222.0,
    "lodgingDays": 2.52,
    "index": 1.011,
-   "appPlaces": 45,
-   "appStayMinSum": 3200,
-   "appStayMinMean": 71.1,
-   "visitsToSeeAll": 2.62
+   "appPlaces": 72,
+   "appStayMinSum": 4200,
+   "appStayMinMean": 58.3,
+   "visitsToSeeAll": 3.44
   },
   {
    "region": "계룡",
@@ -157,10 +157,10 @@
    "stayMinutes": 746.0,
    "lodgingDays": 2.69,
    "index": 0.617,
-   "appPlaces": 4,
-   "appStayMinSum": 270,
-   "appStayMinMean": 67.5,
-   "visitsToSeeAll": 0.36
+   "appPlaces": 6,
+   "appStayMinSum": 390,
+   "appStayMinMean": 65.0,
+   "visitsToSeeAll": 0.52
   },
   {
    "region": "고성",
@@ -170,10 +170,10 @@
    "stayMinutes": 849.0,
    "lodgingDays": 2.62,
    "index": 0.702,
-   "appPlaces": 3,
-   "appStayMinSum": 200,
-   "appStayMinMean": 66.7,
-   "visitsToSeeAll": 0.24
+   "appPlaces": 11,
+   "appStayMinSum": 650,
+   "appStayMinMean": 59.1,
+   "visitsToSeeAll": 0.77
   },
   {
    "region": "고성(강원)",
@@ -183,10 +183,10 @@
    "stayMinutes": 1207.0,
    "lodgingDays": 2.48,
    "index": 0.999,
-   "appPlaces": 3,
-   "appStayMinSum": 210,
-   "appStayMinMean": 70.0,
-   "visitsToSeeAll": 0.17
+   "appPlaces": 14,
+   "appStayMinSum": 690,
+   "appStayMinMean": 49.3,
+   "visitsToSeeAll": 0.57
   },
   {
    "region": "고양",
@@ -196,10 +196,10 @@
    "stayMinutes": 1053.0,
    "lodgingDays": 3.04,
    "index": 0.871,
-   "appPlaces": 7,
-   "appStayMinSum": 650,
-   "appStayMinMean": 92.9,
-   "visitsToSeeAll": 0.62
+   "appPlaces": 21,
+   "appStayMinSum": 1380,
+   "appStayMinMean": 65.7,
+   "visitsToSeeAll": 1.31
   },
   {
    "region": "고창",
@@ -209,10 +209,10 @@
    "stayMinutes": 1129.0,
    "lodgingDays": 2.64,
    "index": 0.934,
-   "appPlaces": 4,
-   "appStayMinSum": 280,
-   "appStayMinMean": 70.0,
-   "visitsToSeeAll": 0.25
+   "appPlaces": 14,
+   "appStayMinSum": 740,
+   "appStayMinMean": 52.9,
+   "visitsToSeeAll": 0.66
   },
   {
    "region": "고흥",
@@ -235,10 +235,10 @@
    "stayMinutes": 1024.0,
    "lodgingDays": 2.7,
    "index": 0.847,
-   "appPlaces": 0,
-   "appStayMinSum": null,
-   "appStayMinMean": null,
-   "visitsToSeeAll": null
+   "appPlaces": 7,
+   "appStayMinSum": 480,
+   "appStayMinMean": 68.6,
+   "visitsToSeeAll": 0.47
   },
   {
    "region": "공주",
@@ -248,10 +248,10 @@
    "stayMinutes": 867.0,
    "lodgingDays": 2.58,
    "index": 0.717,
-   "appPlaces": 15,
-   "appStayMinSum": 960,
-   "appStayMinMean": 64.0,
-   "visitsToSeeAll": 1.11
+   "appPlaces": 32,
+   "appStayMinSum": 1900,
+   "appStayMinMean": 59.4,
+   "visitsToSeeAll": 2.19
   },
   {
    "region": "과천",
@@ -300,10 +300,10 @@
    "stayMinutes": 1595.0,
    "lodgingDays": 2.9,
    "index": 1.32,
-   "appPlaces": 1,
-   "appStayMinSum": 70,
-   "appStayMinMean": 70.0,
-   "visitsToSeeAll": 0.04
+   "appPlaces": 14,
+   "appStayMinSum": 880,
+   "appStayMinMean": 62.9,
+   "visitsToSeeAll": 0.55
   },
   {
    "region": "광주",
@@ -365,10 +365,10 @@
    "stayMinutes": 1912.0,
    "lodgingDays": 3.0,
    "index": 1.582,
-   "appPlaces": 4,
-   "appStayMinSum": 310,
-   "appStayMinMean": 77.5,
-   "visitsToSeeAll": 0.16
+   "appPlaces": 10,
+   "appStayMinSum": 590,
+   "appStayMinMean": 59.0,
+   "visitsToSeeAll": 0.31
   },
   {
    "region": "군산",
@@ -378,10 +378,10 @@
    "stayMinutes": 1850.0,
    "lodgingDays": 2.74,
    "index": 1.531,
-   "appPlaces": 9,
-   "appStayMinSum": 560,
-   "appStayMinMean": 62.2,
-   "visitsToSeeAll": 0.3
+   "appPlaces": 28,
+   "appStayMinSum": 1290,
+   "appStayMinMean": 46.1,
+   "visitsToSeeAll": 0.7
   },
   {
    "region": "군포",
@@ -456,10 +456,10 @@
    "stayMinutes": 1481.0,
    "lodgingDays": 3.05,
    "index": 1.225,
-   "appPlaces": 17,
-   "appStayMinSum": 1160,
-   "appStayMinMean": 68.2,
-   "visitsToSeeAll": 0.78
+   "appPlaces": 37,
+   "appStayMinSum": 2220,
+   "appStayMinMean": 60.0,
+   "visitsToSeeAll": 1.5
   },
   {
    "region": "나주",
@@ -469,10 +469,10 @@
    "stayMinutes": 1355.0,
    "lodgingDays": 2.84,
    "index": 1.121,
-   "appPlaces": 0,
-   "appStayMinSum": null,
-   "appStayMinMean": null,
-   "visitsToSeeAll": null
+   "appPlaces": 2,
+   "appStayMinSum": 120,
+   "appStayMinMean": 60.0,
+   "visitsToSeeAll": 0.09
   },
   {
    "region": "남",
@@ -495,10 +495,10 @@
    "stayMinutes": 1238.0,
    "lodgingDays": 2.97,
    "index": 1.024,
-   "appPlaces": 6,
-   "appStayMinSum": 430,
-   "appStayMinMean": 71.7,
-   "visitsToSeeAll": 0.35
+   "appPlaces": 13,
+   "appStayMinSum": 860,
+   "appStayMinMean": 66.2,
+   "visitsToSeeAll": 0.69
   },
   {
    "region": "남원",
@@ -508,10 +508,10 @@
    "stayMinutes": 1290.0,
    "lodgingDays": 2.65,
    "index": 1.067,
-   "appPlaces": 11,
-   "appStayMinSum": 760,
-   "appStayMinMean": 69.1,
-   "visitsToSeeAll": 0.59
+   "appPlaces": 20,
+   "appStayMinSum": 1220,
+   "appStayMinMean": 61.0,
+   "visitsToSeeAll": 0.95
   },
   {
    "region": "남해",
@@ -521,10 +521,10 @@
    "stayMinutes": 1410.0,
    "lodgingDays": 2.51,
    "index": 1.167,
-   "appPlaces": 15,
-   "appStayMinSum": 1080,
-   "appStayMinMean": 72.0,
-   "visitsToSeeAll": 0.77
+   "appPlaces": 30,
+   "appStayMinSum": 1680,
+   "appStayMinMean": 56.0,
+   "visitsToSeeAll": 1.19
   },
   {
    "region": "논산",
@@ -534,10 +534,10 @@
    "stayMinutes": 1513.0,
    "lodgingDays": 2.89,
    "index": 1.252,
-   "appPlaces": 4,
-   "appStayMinSum": 220,
-   "appStayMinMean": 55.0,
-   "visitsToSeeAll": 0.15
+   "appPlaces": 12,
+   "appStayMinSum": 680,
+   "appStayMinMean": 56.7,
+   "visitsToSeeAll": 0.45
   },
   {
    "region": "단양",
@@ -547,10 +547,10 @@
    "stayMinutes": 892.0,
    "lodgingDays": 2.42,
    "index": 0.738,
-   "appPlaces": 7,
-   "appStayMinSum": 440,
-   "appStayMinMean": 62.9,
-   "visitsToSeeAll": 0.49
+   "appPlaces": 17,
+   "appStayMinSum": 1000,
+   "appStayMinMean": 58.8,
+   "visitsToSeeAll": 1.12
   },
   {
    "region": "담양",
@@ -560,10 +560,10 @@
    "stayMinutes": 581.0,
    "lodgingDays": 2.47,
    "index": 0.481,
-   "appPlaces": 5,
-   "appStayMinSum": 340,
-   "appStayMinMean": 68.0,
-   "visitsToSeeAll": 0.59
+   "appPlaces": 16,
+   "appStayMinSum": 880,
+   "appStayMinMean": 55.0,
+   "visitsToSeeAll": 1.51
   },
   {
    "region": "당진",
@@ -573,10 +573,10 @@
    "stayMinutes": 1666.0,
    "lodgingDays": 2.86,
    "index": 1.378,
-   "appPlaces": 4,
-   "appStayMinSum": 240,
-   "appStayMinMean": 60.0,
-   "visitsToSeeAll": 0.14
+   "appPlaces": 13,
+   "appStayMinSum": 670,
+   "appStayMinMean": 51.5,
+   "visitsToSeeAll": 0.4
   },
   {
    "region": "대구",
@@ -586,10 +586,10 @@
    "stayMinutes": 905.6,
    "lodgingDays": 2.84,
    "index": 0.749,
-   "appPlaces": 16,
-   "appStayMinSum": 1530,
-   "appStayMinMean": 95.6,
-   "visitsToSeeAll": 1.69
+   "appPlaces": 64,
+   "appStayMinSum": 4640,
+   "appStayMinMean": 72.5,
+   "visitsToSeeAll": 5.12
   },
   {
    "region": "대전",
@@ -599,10 +599,10 @@
    "stayMinutes": 1008.2,
    "lodgingDays": 2.82,
    "index": 0.834,
-   "appPlaces": 15,
-   "appStayMinSum": 1290,
-   "appStayMinMean": 86.0,
-   "visitsToSeeAll": 1.28
+   "appPlaces": 53,
+   "appStayMinSum": 3420,
+   "appStayMinMean": 64.5,
+   "visitsToSeeAll": 3.39
   },
   {
    "region": "동",
@@ -638,10 +638,10 @@
    "stayMinutes": 1482.0,
    "lodgingDays": 2.65,
    "index": 1.226,
-   "appPlaces": 12,
-   "appStayMinSum": 930,
-   "appStayMinMean": 77.5,
-   "visitsToSeeAll": 0.63
+   "appPlaces": 27,
+   "appStayMinSum": 1590,
+   "appStayMinMean": 58.9,
+   "visitsToSeeAll": 1.07
   },
   {
    "region": "목포",
@@ -651,10 +651,10 @@
    "stayMinutes": 1611.0,
    "lodgingDays": 2.77,
    "index": 1.333,
-   "appPlaces": 10,
-   "appStayMinSum": 650,
-   "appStayMinMean": 65.0,
-   "visitsToSeeAll": 0.4
+   "appPlaces": 31,
+   "appStayMinSum": 1680,
+   "appStayMinMean": 54.2,
+   "visitsToSeeAll": 1.04
   },
   {
    "region": "무안",
@@ -677,10 +677,10 @@
    "stayMinutes": 875.0,
    "lodgingDays": 2.41,
    "index": 0.724,
-   "appPlaces": 4,
-   "appStayMinSum": 470,
-   "appStayMinMean": 117.5,
-   "visitsToSeeAll": 0.54
+   "appPlaces": 8,
+   "appStayMinSum": 690,
+   "appStayMinMean": 86.2,
+   "visitsToSeeAll": 0.79
   },
   {
    "region": "문경",
@@ -690,10 +690,10 @@
    "stayMinutes": 988.0,
    "lodgingDays": 2.54,
    "index": 0.817,
-   "appPlaces": 7,
-   "appStayMinSum": 520,
-   "appStayMinMean": 74.3,
-   "visitsToSeeAll": 0.53
+   "appPlaces": 11,
+   "appStayMinSum": 800,
+   "appStayMinMean": 72.7,
+   "visitsToSeeAll": 0.81
   },
   {
    "region": "밀양",
@@ -703,10 +703,10 @@
    "stayMinutes": 1140.0,
    "lodgingDays": 2.62,
    "index": 0.943,
-   "appPlaces": 6,
-   "appStayMinSum": 350,
-   "appStayMinMean": 58.3,
-   "visitsToSeeAll": 0.31
+   "appPlaces": 22,
+   "appStayMinSum": 1360,
+   "appStayMinMean": 61.8,
+   "visitsToSeeAll": 1.19
   },
   {
    "region": "보령",
@@ -716,10 +716,10 @@
    "stayMinutes": 1518.0,
    "lodgingDays": 2.44,
    "index": 1.256,
-   "appPlaces": 4,
-   "appStayMinSum": 270,
-   "appStayMinMean": 67.5,
-   "visitsToSeeAll": 0.18
+   "appPlaces": 20,
+   "appStayMinSum": 970,
+   "appStayMinMean": 48.5,
+   "visitsToSeeAll": 0.64
   },
   {
    "region": "보성",
@@ -729,10 +729,10 @@
    "stayMinutes": 1010.0,
    "lodgingDays": 2.63,
    "index": 0.836,
-   "appPlaces": 4,
-   "appStayMinSum": 250,
-   "appStayMinMean": 62.5,
-   "visitsToSeeAll": 0.25
+   "appPlaces": 11,
+   "appStayMinSum": 600,
+   "appStayMinMean": 54.5,
+   "visitsToSeeAll": 0.59
   },
   {
    "region": "보은",
@@ -742,10 +742,10 @@
    "stayMinutes": 894.0,
    "lodgingDays": 2.61,
    "index": 0.74,
-   "appPlaces": 3,
-   "appStayMinSum": 260,
-   "appStayMinMean": 86.7,
-   "visitsToSeeAll": 0.29
+   "appPlaces": 8,
+   "appStayMinSum": 640,
+   "appStayMinMean": 80.0,
+   "visitsToSeeAll": 0.72
   },
   {
    "region": "봉화",
@@ -755,10 +755,10 @@
    "stayMinutes": 1309.0,
    "lodgingDays": 2.72,
    "index": 1.083,
-   "appPlaces": 1,
-   "appStayMinSum": 120,
-   "appStayMinMean": 120.0,
-   "visitsToSeeAll": 0.09
+   "appPlaces": 12,
+   "appStayMinSum": 850,
+   "appStayMinMean": 70.8,
+   "visitsToSeeAll": 0.65
   },
   {
    "region": "부산",
@@ -768,10 +768,10 @@
    "stayMinutes": 850.6,
    "lodgingDays": 2.86,
    "index": 0.704,
-   "appPlaces": 82,
-   "appStayMinSum": 6510,
-   "appStayMinMean": 79.4,
-   "visitsToSeeAll": 7.65
+   "appPlaces": 186,
+   "appStayMinSum": 11650,
+   "appStayMinMean": 62.6,
+   "visitsToSeeAll": 13.7
   },
   {
    "region": "부안",
@@ -781,10 +781,10 @@
    "stayMinutes": 1138.0,
    "lodgingDays": 2.45,
    "index": 0.942,
-   "appPlaces": 6,
-   "appStayMinSum": 370,
-   "appStayMinMean": 61.7,
-   "visitsToSeeAll": 0.33
+   "appPlaces": 21,
+   "appStayMinSum": 1000,
+   "appStayMinMean": 47.6,
+   "visitsToSeeAll": 0.88
   },
   {
    "region": "부여",
@@ -794,10 +794,10 @@
    "stayMinutes": 1204.0,
    "lodgingDays": 2.64,
    "index": 0.996,
-   "appPlaces": 14,
-   "appStayMinSum": 760,
-   "appStayMinMean": 54.3,
-   "visitsToSeeAll": 0.63
+   "appPlaces": 28,
+   "appStayMinSum": 1600,
+   "appStayMinMean": 57.1,
+   "visitsToSeeAll": 1.33
   },
   {
    "region": "부천",
@@ -833,10 +833,10 @@
    "stayMinutes": 1199.0,
    "lodgingDays": 2.67,
    "index": 0.992,
-   "appPlaces": 5,
-   "appStayMinSum": 310,
-   "appStayMinMean": 62.0,
-   "visitsToSeeAll": 0.26
+   "appPlaces": 23,
+   "appStayMinSum": 1350,
+   "appStayMinMean": 58.7,
+   "visitsToSeeAll": 1.13
   },
   {
    "region": "산청",
@@ -846,10 +846,10 @@
    "stayMinutes": 982.0,
    "lodgingDays": 2.49,
    "index": 0.813,
-   "appPlaces": 1,
-   "appStayMinSum": 120,
-   "appStayMinMean": 120.0,
-   "visitsToSeeAll": 0.12
+   "appPlaces": 6,
+   "appStayMinSum": 420,
+   "appStayMinMean": 70.0,
+   "visitsToSeeAll": 0.43
   },
   {
    "region": "삼척",
@@ -859,10 +859,10 @@
    "stayMinutes": 1510.0,
    "lodgingDays": 2.63,
    "index": 1.249,
-   "appPlaces": 4,
-   "appStayMinSum": 310,
-   "appStayMinMean": 77.5,
-   "visitsToSeeAll": 0.21
+   "appPlaces": 18,
+   "appStayMinSum": 950,
+   "appStayMinMean": 52.8,
+   "visitsToSeeAll": 0.63
   },
   {
    "region": "상주",
@@ -872,10 +872,10 @@
    "stayMinutes": 1133.0,
    "lodgingDays": 2.72,
    "index": 0.937,
-   "appPlaces": 2,
-   "appStayMinSum": 120,
-   "appStayMinMean": 60.0,
-   "visitsToSeeAll": 0.11
+   "appPlaces": 9,
+   "appStayMinSum": 450,
+   "appStayMinMean": 50.0,
+   "visitsToSeeAll": 0.4
   },
   {
    "region": "서",
@@ -898,10 +898,10 @@
    "stayMinutes": 1826.0,
    "lodgingDays": 2.83,
    "index": 1.511,
-   "appPlaces": 4,
-   "appStayMinSum": 230,
-   "appStayMinMean": 57.5,
-   "visitsToSeeAll": 0.13
+   "appPlaces": 24,
+   "appStayMinSum": 1270,
+   "appStayMinMean": 52.9,
+   "visitsToSeeAll": 0.7
   },
   {
    "region": "서울",
@@ -911,10 +911,10 @@
    "stayMinutes": 877.8,
    "lodgingDays": 2.93,
    "index": 0.726,
-   "appPlaces": 101,
-   "appStayMinSum": 8280,
-   "appStayMinMean": 82.0,
-   "visitsToSeeAll": 9.43
+   "appPlaces": 264,
+   "appStayMinSum": 16350,
+   "appStayMinMean": 61.9,
+   "visitsToSeeAll": 18.63
   },
   {
    "region": "서천",
@@ -924,10 +924,10 @@
    "stayMinutes": 1075.0,
    "lodgingDays": 2.65,
    "index": 0.889,
-   "appPlaces": 4,
-   "appStayMinSum": 290,
-   "appStayMinMean": 72.5,
-   "visitsToSeeAll": 0.27
+   "appPlaces": 27,
+   "appStayMinSum": 1720,
+   "appStayMinMean": 63.7,
+   "visitsToSeeAll": 1.6
   },
   {
    "region": "성남",
@@ -963,10 +963,10 @@
    "stayMinutes": 2202.0,
    "lodgingDays": 3.03,
    "index": 1.822,
-   "appPlaces": 6,
-   "appStayMinSum": 400,
-   "appStayMinMean": 66.7,
-   "visitsToSeeAll": 0.18
+   "appPlaces": 20,
+   "appStayMinSum": 1170,
+   "appStayMinMean": 58.5,
+   "visitsToSeeAll": 0.53
   },
   {
    "region": "속초",
@@ -976,10 +976,10 @@
    "stayMinutes": 1148.0,
    "lodgingDays": 2.46,
    "index": 0.95,
-   "appPlaces": 11,
-   "appStayMinSum": 900,
-   "appStayMinMean": 81.8,
-   "visitsToSeeAll": 0.78
+   "appPlaces": 33,
+   "appStayMinSum": 1640,
+   "appStayMinMean": 49.7,
+   "visitsToSeeAll": 1.43
   },
   {
    "region": "수원",
@@ -989,10 +989,10 @@
    "stayMinutes": 1046.0,
    "lodgingDays": 2.92,
    "index": 0.865,
-   "appPlaces": 17,
-   "appStayMinSum": 1400,
-   "appStayMinMean": 82.4,
-   "visitsToSeeAll": 1.34
+   "appPlaces": 39,
+   "appStayMinSum": 2720,
+   "appStayMinMean": 69.7,
+   "visitsToSeeAll": 2.6
   },
   {
    "region": "순창",
@@ -1015,10 +1015,10 @@
    "stayMinutes": 1568.0,
    "lodgingDays": 2.86,
    "index": 1.297,
-   "appPlaces": 10,
-   "appStayMinSum": 820,
-   "appStayMinMean": 82.0,
-   "visitsToSeeAll": 0.52
+   "appPlaces": 23,
+   "appStayMinSum": 1490,
+   "appStayMinMean": 64.8,
+   "visitsToSeeAll": 0.95
   },
   {
    "region": "시흥",
@@ -1028,10 +1028,10 @@
    "stayMinutes": 1198.0,
    "lodgingDays": 2.93,
    "index": 0.991,
-   "appPlaces": 1,
-   "appStayMinSum": 60,
-   "appStayMinMean": 60.0,
-   "visitsToSeeAll": 0.05
+   "appPlaces": 12,
+   "appStayMinSum": 770,
+   "appStayMinMean": 64.2,
+   "visitsToSeeAll": 0.64
   },
   {
    "region": "신안",
@@ -1054,10 +1054,10 @@
    "stayMinutes": 1757.0,
    "lodgingDays": 2.99,
    "index": 1.454,
-   "appPlaces": 6,
-   "appStayMinSum": 450,
-   "appStayMinMean": 75.0,
-   "visitsToSeeAll": 0.26
+   "appPlaces": 27,
+   "appStayMinSum": 1600,
+   "appStayMinMean": 59.3,
+   "visitsToSeeAll": 0.91
   },
   {
    "region": "안동",
@@ -1067,10 +1067,10 @@
    "stayMinutes": 1778.0,
    "lodgingDays": 2.79,
    "index": 1.471,
-   "appPlaces": 18,
-   "appStayMinSum": 1040,
-   "appStayMinMean": 57.8,
-   "visitsToSeeAll": 0.58
+   "appPlaces": 39,
+   "appStayMinSum": 1990,
+   "appStayMinMean": 51.0,
+   "visitsToSeeAll": 1.12
   },
   {
    "region": "안산",
@@ -1080,10 +1080,10 @@
    "stayMinutes": 1314.0,
    "lodgingDays": 2.83,
    "index": 1.087,
-   "appPlaces": 0,
-   "appStayMinSum": null,
-   "appStayMinMean": null,
-   "visitsToSeeAll": null
+   "appPlaces": 13,
+   "appStayMinSum": 800,
+   "appStayMinMean": 61.5,
+   "visitsToSeeAll": 0.61
   },
   {
    "region": "안성",
@@ -1093,10 +1093,10 @@
    "stayMinutes": 1138.0,
    "lodgingDays": 2.92,
    "index": 0.942,
-   "appPlaces": 0,
-   "appStayMinSum": null,
-   "appStayMinMean": null,
-   "visitsToSeeAll": null
+   "appPlaces": 4,
+   "appStayMinSum": 300,
+   "appStayMinMean": 75.0,
+   "visitsToSeeAll": 0.26
   },
   {
    "region": "안양",
@@ -1119,10 +1119,10 @@
    "stayMinutes": 2065.0,
    "lodgingDays": 2.91,
    "index": 1.709,
-   "appPlaces": 0,
-   "appStayMinSum": null,
-   "appStayMinMean": null,
-   "visitsToSeeAll": null
+   "appPlaces": 6,
+   "appStayMinSum": 370,
+   "appStayMinMean": 61.7,
+   "visitsToSeeAll": 0.18
   },
   {
    "region": "양산",
@@ -1132,10 +1132,10 @@
    "stayMinutes": 1227.0,
    "lodgingDays": 3.01,
    "index": 1.015,
-   "appPlaces": 15,
-   "appStayMinSum": 1540,
-   "appStayMinMean": 102.7,
-   "visitsToSeeAll": 1.26
+   "appPlaces": 25,
+   "appStayMinSum": 2160,
+   "appStayMinMean": 86.4,
+   "visitsToSeeAll": 1.76
   },
   {
    "region": "양양",
@@ -1145,10 +1145,10 @@
    "stayMinutes": 1007.0,
    "lodgingDays": 2.45,
    "index": 0.833,
-   "appPlaces": 6,
-   "appStayMinSum": 400,
-   "appStayMinMean": 66.7,
-   "visitsToSeeAll": 0.4
+   "appPlaces": 28,
+   "appStayMinSum": 1220,
+   "appStayMinMean": 43.6,
+   "visitsToSeeAll": 1.21
   },
   {
    "region": "양주",
@@ -1158,10 +1158,10 @@
    "stayMinutes": 1211.0,
    "lodgingDays": 2.91,
    "index": 1.002,
-   "appPlaces": 8,
-   "appStayMinSum": 640,
-   "appStayMinMean": 80.0,
-   "visitsToSeeAll": 0.53
+   "appPlaces": 20,
+   "appStayMinSum": 1380,
+   "appStayMinMean": 69.0,
+   "visitsToSeeAll": 1.14
   },
   {
    "region": "양평",
@@ -1171,10 +1171,10 @@
    "stayMinutes": 933.0,
    "lodgingDays": 2.48,
    "index": 0.772,
-   "appPlaces": 5,
-   "appStayMinSum": 320,
-   "appStayMinMean": 64.0,
-   "visitsToSeeAll": 0.34
+   "appPlaces": 16,
+   "appStayMinSum": 840,
+   "appStayMinMean": 52.5,
+   "visitsToSeeAll": 0.9
   },
   {
    "region": "여수",
@@ -1184,10 +1184,10 @@
    "stayMinutes": 2026.0,
    "lodgingDays": 2.59,
    "index": 1.676,
-   "appPlaces": 19,
-   "appStayMinSum": 2060,
-   "appStayMinMean": 108.4,
-   "visitsToSeeAll": 1.02
+   "appPlaces": 65,
+   "appStayMinSum": 4180,
+   "appStayMinMean": 64.3,
+   "visitsToSeeAll": 2.06
   },
   {
    "region": "여주",
@@ -1197,10 +1197,10 @@
    "stayMinutes": 971.0,
    "lodgingDays": 2.7,
    "index": 0.803,
-   "appPlaces": 6,
-   "appStayMinSum": 450,
-   "appStayMinMean": 75.0,
-   "visitsToSeeAll": 0.46
+   "appPlaces": 21,
+   "appStayMinSum": 1320,
+   "appStayMinMean": 62.9,
+   "visitsToSeeAll": 1.36
   },
   {
    "region": "연천",
@@ -1210,10 +1210,10 @@
    "stayMinutes": 1271.0,
    "lodgingDays": 2.67,
    "index": 1.052,
-   "appPlaces": 0,
-   "appStayMinSum": null,
-   "appStayMinMean": null,
-   "visitsToSeeAll": null
+   "appPlaces": 10,
+   "appStayMinSum": 630,
+   "appStayMinMean": 63.0,
+   "visitsToSeeAll": 0.5
   },
   {
    "region": "영광",
@@ -1223,10 +1223,10 @@
    "stayMinutes": 1507.0,
    "lodgingDays": 2.82,
    "index": 1.247,
-   "appPlaces": 0,
-   "appStayMinSum": null,
-   "appStayMinMean": null,
-   "visitsToSeeAll": null
+   "appPlaces": 6,
+   "appStayMinSum": 360,
+   "appStayMinMean": 60.0,
+   "visitsToSeeAll": 0.24
   },
   {
    "region": "영덕",
@@ -1236,10 +1236,10 @@
    "stayMinutes": 1042.0,
    "lodgingDays": 2.43,
    "index": 0.862,
-   "appPlaces": 4,
-   "appStayMinSum": 310,
-   "appStayMinMean": 77.5,
-   "visitsToSeeAll": 0.3
+   "appPlaces": 22,
+   "appStayMinSum": 980,
+   "appStayMinMean": 44.5,
+   "visitsToSeeAll": 0.94
   },
   {
    "region": "영동",
@@ -1288,10 +1288,10 @@
    "stayMinutes": 1354.0,
    "lodgingDays": 2.6,
    "index": 1.12,
-   "appPlaces": 19,
-   "appStayMinSum": 1270,
-   "appStayMinMean": 66.8,
-   "visitsToSeeAll": 0.94
+   "appPlaces": 31,
+   "appStayMinSum": 1740,
+   "appStayMinMean": 56.1,
+   "visitsToSeeAll": 1.29
   },
   {
    "region": "영주",
@@ -1301,10 +1301,10 @@
    "stayMinutes": 1973.0,
    "lodgingDays": 2.8,
    "index": 1.632,
-   "appPlaces": 7,
-   "appStayMinSum": 570,
-   "appStayMinMean": 81.4,
-   "visitsToSeeAll": 0.29
+   "appPlaces": 23,
+   "appStayMinSum": 1450,
+   "appStayMinMean": 63.0,
+   "visitsToSeeAll": 0.73
   },
   {
    "region": "영천",
@@ -1327,10 +1327,10 @@
    "stayMinutes": 1083.0,
    "lodgingDays": 2.65,
    "index": 0.896,
-   "appPlaces": 7,
-   "appStayMinSum": 460,
-   "appStayMinMean": 65.7,
-   "visitsToSeeAll": 0.42
+   "appPlaces": 19,
+   "appStayMinSum": 1160,
+   "appStayMinMean": 61.1,
+   "visitsToSeeAll": 1.07
   },
   {
    "region": "예천",
@@ -1379,10 +1379,10 @@
    "stayMinutes": 2082.0,
    "lodgingDays": 2.81,
    "index": 1.723,
-   "appPlaces": 5,
-   "appStayMinSum": 510,
-   "appStayMinMean": 102.0,
-   "visitsToSeeAll": 0.24
+   "appPlaces": 13,
+   "appStayMinSum": 910,
+   "appStayMinMean": 70.0,
+   "visitsToSeeAll": 0.44
   },
   {
    "region": "완주",
@@ -1392,10 +1392,10 @@
    "stayMinutes": 853.0,
    "lodgingDays": 2.68,
    "index": 0.706,
-   "appPlaces": 2,
-   "appStayMinSum": 120,
+   "appPlaces": 11,
+   "appStayMinSum": 660,
    "appStayMinMean": 60.0,
-   "visitsToSeeAll": 0.14
+   "visitsToSeeAll": 0.77
   },
   {
    "region": "용인",
@@ -1405,10 +1405,10 @@
    "stayMinutes": 1259.0,
    "lodgingDays": 3.0,
    "index": 1.042,
-   "appPlaces": 8,
-   "appStayMinSum": 1010,
-   "appStayMinMean": 126.2,
-   "visitsToSeeAll": 0.8
+   "appPlaces": 26,
+   "appStayMinSum": 1950,
+   "appStayMinMean": 75.0,
+   "visitsToSeeAll": 1.55
   },
   {
    "region": "울릉",
@@ -1418,10 +1418,10 @@
    "stayMinutes": 4310.0,
    "lodgingDays": 3.26,
    "index": 3.566,
-   "appPlaces": 16,
-   "appStayMinSum": 1580,
-   "appStayMinMean": 98.8,
-   "visitsToSeeAll": 0.37
+   "appPlaces": 39,
+   "appStayMinSum": 2420,
+   "appStayMinMean": 62.1,
+   "visitsToSeeAll": 0.56
   },
   {
    "region": "울산",
@@ -1431,10 +1431,10 @@
    "stayMinutes": 1164.6,
    "lodgingDays": 2.97,
    "index": 0.964,
-   "appPlaces": 21,
-   "appStayMinSum": 1610,
-   "appStayMinMean": 76.7,
-   "visitsToSeeAll": 1.38
+   "appPlaces": 35,
+   "appStayMinSum": 2420,
+   "appStayMinMean": 69.1,
+   "visitsToSeeAll": 2.08
   },
   {
    "region": "울진",
@@ -1444,10 +1444,10 @@
    "stayMinutes": 1810.0,
    "lodgingDays": 2.64,
    "index": 1.498,
-   "appPlaces": 5,
-   "appStayMinSum": 360,
-   "appStayMinMean": 72.0,
-   "visitsToSeeAll": 0.2
+   "appPlaces": 19,
+   "appStayMinSum": 920,
+   "appStayMinMean": 48.4,
+   "visitsToSeeAll": 0.51
   },
   {
    "region": "원주",
@@ -1457,10 +1457,10 @@
    "stayMinutes": 1967.0,
    "lodgingDays": 2.82,
    "index": 1.628,
-   "appPlaces": 5,
-   "appStayMinSum": 420,
-   "appStayMinMean": 84.0,
-   "visitsToSeeAll": 0.21
+   "appPlaces": 14,
+   "appStayMinSum": 990,
+   "appStayMinMean": 70.7,
+   "visitsToSeeAll": 0.5
   },
   {
    "region": "음성",
@@ -1522,10 +1522,10 @@
    "stayMinutes": 1384.0,
    "lodgingDays": 3.03,
    "index": 1.145,
-   "appPlaces": 0,
-   "appStayMinSum": null,
-   "appStayMinMean": null,
-   "visitsToSeeAll": null
+   "appPlaces": 2,
+   "appStayMinSum": 150,
+   "appStayMinMean": 75.0,
+   "visitsToSeeAll": 0.11
   },
   {
    "region": "이천",
@@ -1535,10 +1535,10 @@
    "stayMinutes": 1246.0,
    "lodgingDays": 2.92,
    "index": 1.031,
-   "appPlaces": 6,
-   "appStayMinSum": 540,
-   "appStayMinMean": 90.0,
-   "visitsToSeeAll": 0.43
+   "appPlaces": 17,
+   "appStayMinSum": 1250,
+   "appStayMinMean": 73.5,
+   "visitsToSeeAll": 1.0
   },
   {
    "region": "익산",
@@ -1548,10 +1548,10 @@
    "stayMinutes": 1724.0,
    "lodgingDays": 2.97,
    "index": 1.426,
-   "appPlaces": 7,
-   "appStayMinSum": 410,
-   "appStayMinMean": 58.6,
-   "visitsToSeeAll": 0.24
+   "appPlaces": 20,
+   "appStayMinSum": 1120,
+   "appStayMinMean": 56.0,
+   "visitsToSeeAll": 0.65
   },
   {
    "region": "인제",
@@ -1561,10 +1561,10 @@
    "stayMinutes": 1052.0,
    "lodgingDays": 2.67,
    "index": 0.87,
-   "appPlaces": 4,
-   "appStayMinSum": 480,
-   "appStayMinMean": 120.0,
-   "visitsToSeeAll": 0.46
+   "appPlaces": 14,
+   "appStayMinSum": 910,
+   "appStayMinMean": 65.0,
+   "visitsToSeeAll": 0.87
   },
   {
    "region": "인천",
@@ -1574,10 +1574,10 @@
    "stayMinutes": 1116.6,
    "lodgingDays": 2.8,
    "index": 0.924,
-   "appPlaces": 26,
-   "appStayMinSum": 1860,
-   "appStayMinMean": 71.5,
-   "visitsToSeeAll": 1.67
+   "appPlaces": 86,
+   "appStayMinSum": 4960,
+   "appStayMinMean": 57.7,
+   "visitsToSeeAll": 4.44
   },
   {
    "region": "임실",
@@ -1587,10 +1587,10 @@
    "stayMinutes": 510.0,
    "lodgingDays": 2.61,
    "index": 0.422,
-   "appPlaces": 2,
-   "appStayMinSum": 150,
-   "appStayMinMean": 75.0,
-   "visitsToSeeAll": 0.29
+   "appPlaces": 3,
+   "appStayMinSum": 210,
+   "appStayMinMean": 70.0,
+   "visitsToSeeAll": 0.41
   },
   {
    "region": "장성",
@@ -1600,10 +1600,10 @@
    "stayMinutes": 1021.0,
    "lodgingDays": 2.78,
    "index": 0.845,
-   "appPlaces": 4,
-   "appStayMinSum": 310,
-   "appStayMinMean": 77.5,
-   "visitsToSeeAll": 0.3
+   "appPlaces": 12,
+   "appStayMinSum": 770,
+   "appStayMinMean": 64.2,
+   "visitsToSeeAll": 0.75
   },
   {
    "region": "장수",
@@ -1626,10 +1626,10 @@
    "stayMinutes": 1378.0,
    "lodgingDays": 2.74,
    "index": 1.14,
-   "appPlaces": 1,
-   "appStayMinSum": 120,
-   "appStayMinMean": 120.0,
-   "visitsToSeeAll": 0.09
+   "appPlaces": 4,
+   "appStayMinSum": 320,
+   "appStayMinMean": 80.0,
+   "visitsToSeeAll": 0.23
   },
   {
    "region": "전주",
@@ -1639,10 +1639,10 @@
    "stayMinutes": 1516.0,
    "lodgingDays": 2.84,
    "index": 1.254,
-   "appPlaces": 14,
-   "appStayMinSum": 860,
-   "appStayMinMean": 61.4,
-   "visitsToSeeAll": 0.57
+   "appPlaces": 35,
+   "appStayMinSum": 2080,
+   "appStayMinMean": 59.4,
+   "visitsToSeeAll": 1.37
   },
   {
    "region": "정선",
@@ -1652,10 +1652,10 @@
    "stayMinutes": 1621.0,
    "lodgingDays": 2.53,
    "index": 1.341,
-   "appPlaces": 12,
-   "appStayMinSum": 1260,
-   "appStayMinMean": 105.0,
-   "visitsToSeeAll": 0.78
+   "appPlaces": 38,
+   "appStayMinSum": 2550,
+   "appStayMinMean": 67.1,
+   "visitsToSeeAll": 1.57
   },
   {
    "region": "정읍",
@@ -1665,10 +1665,10 @@
    "stayMinutes": 1364.0,
    "lodgingDays": 2.76,
    "index": 1.129,
-   "appPlaces": 4,
-   "appStayMinSum": 310,
-   "appStayMinMean": 77.5,
-   "visitsToSeeAll": 0.23
+   "appPlaces": 12,
+   "appStayMinSum": 770,
+   "appStayMinMean": 64.2,
+   "visitsToSeeAll": 0.56
   },
   {
    "region": "제주",
@@ -1678,10 +1678,10 @@
    "stayMinutes": 2168.5,
    "lodgingDays": 3.1,
    "index": 1.794,
-   "appPlaces": 101,
-   "appStayMinSum": 8310,
-   "appStayMinMean": 82.3,
-   "visitsToSeeAll": 3.83
+   "appPlaces": 173,
+   "appStayMinSum": 10840,
+   "appStayMinMean": 62.7,
+   "visitsToSeeAll": 5.0
   },
   {
    "region": "제천",
@@ -1691,10 +1691,10 @@
    "stayMinutes": 1663.0,
    "lodgingDays": 2.59,
    "index": 1.376,
-   "appPlaces": 6,
-   "appStayMinSum": 370,
-   "appStayMinMean": 61.7,
-   "visitsToSeeAll": 0.22
+   "appPlaces": 20,
+   "appStayMinSum": 1070,
+   "appStayMinMean": 53.5,
+   "visitsToSeeAll": 0.64
   },
   {
    "region": "증평",
@@ -1717,10 +1717,10 @@
    "stayMinutes": 1645.0,
    "lodgingDays": 2.67,
    "index": 1.361,
-   "appPlaces": 0,
-   "appStayMinSum": null,
-   "appStayMinMean": null,
-   "visitsToSeeAll": null
+   "appPlaces": 5,
+   "appStayMinSum": 390,
+   "appStayMinMean": 78.0,
+   "visitsToSeeAll": 0.24
   },
   {
    "region": "진안",
@@ -1730,10 +1730,10 @@
    "stayMinutes": 896.0,
    "lodgingDays": 2.54,
    "index": 0.741,
-   "appPlaces": 1,
-   "appStayMinSum": 120,
-   "appStayMinMean": 120.0,
-   "visitsToSeeAll": 0.13
+   "appPlaces": 4,
+   "appStayMinSum": 260,
+   "appStayMinMean": 65.0,
+   "visitsToSeeAll": 0.29
   },
   {
    "region": "진주",
@@ -1743,10 +1743,10 @@
    "stayMinutes": 2072.0,
    "lodgingDays": 2.97,
    "index": 1.714,
-   "appPlaces": 13,
-   "appStayMinSum": 750,
-   "appStayMinMean": 57.7,
-   "visitsToSeeAll": 0.36
+   "appPlaces": 25,
+   "appStayMinSum": 1310,
+   "appStayMinMean": 52.4,
+   "visitsToSeeAll": 0.63
   },
   {
    "region": "진천",
@@ -1769,10 +1769,10 @@
    "stayMinutes": 1027.0,
    "lodgingDays": 2.6,
    "index": 0.85,
-   "appPlaces": 3,
-   "appStayMinSum": 300,
-   "appStayMinMean": 100.0,
-   "visitsToSeeAll": 0.29
+   "appPlaces": 11,
+   "appStayMinSum": 760,
+   "appStayMinMean": 69.1,
+   "visitsToSeeAll": 0.74
   },
   {
    "region": "창원",
@@ -1782,10 +1782,10 @@
    "stayMinutes": 1291.0,
    "lodgingDays": 3.02,
    "index": 1.068,
-   "appPlaces": 21,
-   "appStayMinSum": 1290,
-   "appStayMinMean": 61.4,
-   "visitsToSeeAll": 1.0
+   "appPlaces": 63,
+   "appStayMinSum": 3690,
+   "appStayMinMean": 58.6,
+   "visitsToSeeAll": 2.86
   },
   {
    "region": "천안",
@@ -1795,10 +1795,10 @@
    "stayMinutes": 1501.0,
    "lodgingDays": 2.88,
    "index": 1.242,
-   "appPlaces": 6,
-   "appStayMinSum": 410,
-   "appStayMinMean": 68.3,
-   "visitsToSeeAll": 0.27
+   "appPlaces": 22,
+   "appStayMinSum": 1390,
+   "appStayMinMean": 63.2,
+   "visitsToSeeAll": 0.93
   },
   {
    "region": "철원",
@@ -1808,10 +1808,10 @@
    "stayMinutes": 1633.0,
    "lodgingDays": 2.72,
    "index": 1.351,
-   "appPlaces": 16,
-   "appStayMinSum": 950,
-   "appStayMinMean": 59.4,
-   "visitsToSeeAll": 0.58
+   "appPlaces": 25,
+   "appStayMinSum": 1500,
+   "appStayMinMean": 60.0,
+   "visitsToSeeAll": 0.92
   },
   {
    "region": "청도",
@@ -1821,10 +1821,10 @@
    "stayMinutes": 800.0,
    "lodgingDays": 2.4,
    "index": 0.662,
-   "appPlaces": 0,
-   "appStayMinSum": null,
-   "appStayMinMean": null,
-   "visitsToSeeAll": null
+   "appPlaces": 3,
+   "appStayMinSum": 210,
+   "appStayMinMean": 70.0,
+   "visitsToSeeAll": 0.26
   },
   {
    "region": "청송",
@@ -1834,10 +1834,10 @@
    "stayMinutes": 1267.0,
    "lodgingDays": 2.56,
    "index": 1.048,
-   "appPlaces": 4,
-   "appStayMinSum": 320,
-   "appStayMinMean": 80.0,
-   "visitsToSeeAll": 0.25
+   "appPlaces": 14,
+   "appStayMinSum": 780,
+   "appStayMinMean": 55.7,
+   "visitsToSeeAll": 0.62
   },
   {
    "region": "청양",
@@ -1860,10 +1860,10 @@
    "stayMinutes": 1392.0,
    "lodgingDays": 2.93,
    "index": 1.152,
-   "appPlaces": 8,
-   "appStayMinSum": 610,
-   "appStayMinMean": 76.2,
-   "visitsToSeeAll": 0.44
+   "appPlaces": 27,
+   "appStayMinSum": 1710,
+   "appStayMinMean": 63.3,
+   "visitsToSeeAll": 1.23
   },
   {
    "region": "춘천",
@@ -1873,10 +1873,10 @@
    "stayMinutes": 1983.0,
    "lodgingDays": 2.7,
    "index": 1.641,
-   "appPlaces": 12,
-   "appStayMinSum": 1090,
-   "appStayMinMean": 90.8,
-   "visitsToSeeAll": 0.55
+   "appPlaces": 33,
+   "appStayMinSum": 2350,
+   "appStayMinMean": 71.2,
+   "visitsToSeeAll": 1.19
   },
   {
    "region": "충주",
@@ -1886,10 +1886,10 @@
    "stayMinutes": 1554.0,
    "lodgingDays": 2.75,
    "index": 1.286,
-   "appPlaces": 14,
-   "appStayMinSum": 910,
-   "appStayMinMean": 65.0,
-   "visitsToSeeAll": 0.59
+   "appPlaces": 27,
+   "appStayMinSum": 1510,
+   "appStayMinMean": 55.9,
+   "visitsToSeeAll": 0.97
   },
   {
    "region": "칠곡",
@@ -1912,10 +1912,10 @@
    "stayMinutes": 1732.0,
    "lodgingDays": 2.79,
    "index": 1.433,
-   "appPlaces": 4,
-   "appStayMinSum": 370,
-   "appStayMinMean": 92.5,
-   "visitsToSeeAll": 0.21
+   "appPlaces": 18,
+   "appStayMinSum": 1050,
+   "appStayMinMean": 58.3,
+   "visitsToSeeAll": 0.61
   },
   {
    "region": "태안",
@@ -1925,10 +1925,10 @@
    "stayMinutes": 1438.0,
    "lodgingDays": 2.46,
    "index": 1.19,
-   "appPlaces": 5,
-   "appStayMinSum": 390,
-   "appStayMinMean": 78.0,
-   "visitsToSeeAll": 0.27
+   "appPlaces": 28,
+   "appStayMinSum": 1440,
+   "appStayMinMean": 51.4,
+   "visitsToSeeAll": 1.0
   },
   {
    "region": "통영",
@@ -1938,10 +1938,10 @@
    "stayMinutes": 1574.0,
    "lodgingDays": 2.55,
    "index": 1.302,
-   "appPlaces": 22,
-   "appStayMinSum": 2650,
-   "appStayMinMean": 120.5,
-   "visitsToSeeAll": 1.68
+   "appPlaces": 44,
+   "appStayMinSum": 3510,
+   "appStayMinMean": 79.8,
+   "visitsToSeeAll": 2.23
   },
   {
    "region": "파주",
@@ -1951,10 +1951,10 @@
    "stayMinutes": 1393.0,
    "lodgingDays": 2.99,
    "index": 1.153,
-   "appPlaces": 8,
-   "appStayMinSum": 680,
-   "appStayMinMean": 85.0,
-   "visitsToSeeAll": 0.49
+   "appPlaces": 26,
+   "appStayMinSum": 1830,
+   "appStayMinMean": 70.4,
+   "visitsToSeeAll": 1.31
   },
   {
    "region": "평창",
@@ -1964,10 +1964,10 @@
    "stayMinutes": 1366.0,
    "lodgingDays": 2.61,
    "index": 1.13,
-   "appPlaces": 8,
-   "appStayMinSum": 710,
-   "appStayMinMean": 88.8,
-   "visitsToSeeAll": 0.52
+   "appPlaces": 25,
+   "appStayMinSum": 1520,
+   "appStayMinMean": 60.8,
+   "visitsToSeeAll": 1.11
   },
   {
    "region": "평택",
@@ -1977,10 +1977,10 @@
    "stayMinutes": 1861.0,
    "lodgingDays": 3.04,
    "index": 1.54,
-   "appPlaces": 0,
-   "appStayMinSum": null,
-   "appStayMinMean": null,
-   "visitsToSeeAll": null
+   "appPlaces": 19,
+   "appStayMinSum": 1230,
+   "appStayMinMean": 64.7,
+   "visitsToSeeAll": 0.66
   },
   {
    "region": "포천",
@@ -1990,10 +1990,10 @@
    "stayMinutes": 1266.0,
    "lodgingDays": 2.68,
    "index": 1.047,
-   "appPlaces": 7,
-   "appStayMinSum": 560,
-   "appStayMinMean": 80.0,
-   "visitsToSeeAll": 0.44
+   "appPlaces": 17,
+   "appStayMinSum": 1050,
+   "appStayMinMean": 61.8,
+   "visitsToSeeAll": 0.83
   },
   {
    "region": "포항",
@@ -2029,10 +2029,10 @@
    "stayMinutes": 1001.0,
    "lodgingDays": 2.53,
    "index": 0.828,
-   "appPlaces": 9,
-   "appStayMinSum": 530,
-   "appStayMinMean": 58.9,
-   "visitsToSeeAll": 0.53
+   "appPlaces": 20,
+   "appStayMinSum": 1090,
+   "appStayMinMean": 54.5,
+   "visitsToSeeAll": 1.09
   },
   {
    "region": "함안",
@@ -2042,10 +2042,10 @@
    "stayMinutes": 918.0,
    "lodgingDays": 2.84,
    "index": 0.76,
-   "appPlaces": 3,
-   "appStayMinSum": 150,
-   "appStayMinMean": 50.0,
-   "visitsToSeeAll": 0.16
+   "appPlaces": 11,
+   "appStayMinSum": 640,
+   "appStayMinMean": 58.2,
+   "visitsToSeeAll": 0.7
   },
   {
    "region": "함양",
@@ -2055,10 +2055,10 @@
    "stayMinutes": 842.0,
    "lodgingDays": 2.61,
    "index": 0.697,
-   "appPlaces": 3,
-   "appStayMinSum": 180,
-   "appStayMinMean": 60.0,
-   "visitsToSeeAll": 0.21
+   "appPlaces": 11,
+   "appStayMinSum": 620,
+   "appStayMinMean": 56.4,
+   "visitsToSeeAll": 0.74
   },
   {
    "region": "함평",
@@ -2081,10 +2081,10 @@
    "stayMinutes": 1201.0,
    "lodgingDays": 2.57,
    "index": 0.994,
-   "appPlaces": 5,
-   "appStayMinSum": 430,
-   "appStayMinMean": 86.0,
-   "visitsToSeeAll": 0.36
+   "appPlaces": 15,
+   "appStayMinSum": 1010,
+   "appStayMinMean": 67.3,
+   "visitsToSeeAll": 0.84
   },
   {
    "region": "해남",
@@ -2094,10 +2094,10 @@
    "stayMinutes": 1447.0,
    "lodgingDays": 2.79,
    "index": 1.197,
-   "appPlaces": 4,
-   "appStayMinSum": 280,
-   "appStayMinMean": 70.0,
-   "visitsToSeeAll": 0.19
+   "appPlaces": 14,
+   "appStayMinSum": 870,
+   "appStayMinMean": 62.1,
+   "visitsToSeeAll": 0.6
   },
   {
    "region": "홍성",
@@ -2107,10 +2107,10 @@
    "stayMinutes": 1506.0,
    "lodgingDays": 2.82,
    "index": 1.246,
-   "appPlaces": 4,
-   "appStayMinSum": 300,
-   "appStayMinMean": 75.0,
-   "visitsToSeeAll": 0.2
+   "appPlaces": 17,
+   "appStayMinSum": 1110,
+   "appStayMinMean": 65.3,
+   "visitsToSeeAll": 0.74
   },
   {
    "region": "홍천",
@@ -2120,10 +2120,10 @@
    "stayMinutes": 953.0,
    "lodgingDays": 2.47,
    "index": 0.789,
-   "appPlaces": 0,
-   "appStayMinSum": null,
-   "appStayMinMean": null,
-   "visitsToSeeAll": null
+   "appPlaces": 4,
+   "appStayMinSum": 240,
+   "appStayMinMean": 60.0,
+   "visitsToSeeAll": 0.25
   },
   {
    "region": "화성",
@@ -2133,10 +2133,10 @@
    "stayMinutes": 1451.0,
    "lodgingDays": 2.96,
    "index": 1.201,
-   "appPlaces": 0,
-   "appStayMinSum": null,
-   "appStayMinMean": null,
-   "visitsToSeeAll": null
+   "appPlaces": 23,
+   "appStayMinSum": 1540,
+   "appStayMinMean": 67.0,
+   "visitsToSeeAll": 1.06
   },
   {
    "region": "화순",
@@ -2146,10 +2146,10 @@
    "stayMinutes": 992.0,
    "lodgingDays": 2.76,
    "index": 0.821,
-   "appPlaces": 4,
-   "appStayMinSum": 240,
-   "appStayMinMean": 60.0,
-   "visitsToSeeAll": 0.24
+   "appPlaces": 14,
+   "appStayMinSum": 800,
+   "appStayMinMean": 57.1,
+   "visitsToSeeAll": 0.81
   },
   {
    "region": "화천",
@@ -2159,10 +2159,10 @@
    "stayMinutes": 1625.0,
    "lodgingDays": 2.72,
    "index": 1.345,
-   "appPlaces": 0,
-   "appStayMinSum": null,
-   "appStayMinMean": null,
-   "visitsToSeeAll": null
+   "appPlaces": 3,
+   "appStayMinSum": 210,
+   "appStayMinMean": 70.0,
+   "visitsToSeeAll": 0.13
   },
   {
    "region": "횡성",
@@ -2172,10 +2172,10 @@
    "stayMinutes": 1009.0,
    "lodgingDays": 2.55,
    "index": 0.835,
-   "appPlaces": 1,
-   "appStayMinSum": 70,
-   "appStayMinMean": 70.0,
-   "visitsToSeeAll": 0.07
+   "appPlaces": 3,
+   "appStayMinSum": 220,
+   "appStayMinMean": 73.3,
+   "visitsToSeeAll": 0.22
   }
  ]
 }
