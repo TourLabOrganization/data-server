@@ -77,6 +77,18 @@ def corrections():
     return {r["id"]: r["catOfficial"] for r in rows if r.get("apply")}
 
 
+def pop_ranks():
+    """데이터랩 인기관광지 순위 {장소id: 순위}. `make popularity` 가 만든다.
+
+    **배지용이다.** 받아 둔 지역만 순위가 있어서 5% 남짓에만 값이 붙는다.
+    목록 정렬에 쓰면 나머지가 전부 한 덩어리로 뒤에 밀린다 — popularity.py 주석 참고.
+    """
+    path = os.path.join(DERIVED, "popularity.json")
+    if not os.path.exists(path):
+        return {}
+    return json.load(open(path, encoding="utf-8"))["ranks"]
+
+
 def extract():
     if not os.path.exists(APP_HTML):
         sys.exit(f"앱 파일을 찾을 수 없습니다: {APP_HTML}\n"
@@ -150,7 +162,10 @@ def main():
     places = extract()
 
     fix = corrections()
+    pop = pop_ranks()
     for p in places:
+        # 데이터랩 인기관광지 순위. 없으면 None — 0 으로 채우지 않는다
+        p["popRank"] = pop.get(p["id"])
         official = fix.get(p["id"])
         # catApp   앱 HTML 원본값 (손으로 넣은 값)
         # catFinal 백엔드가 써야 할 값 — 교정이 있으면 교정본
@@ -176,6 +191,12 @@ def main():
             cats[p[field]] = cats.get(p[field], 0) + 1
         print(f"  {label}: " + str(dict(sorted(cats.items(), key=lambda x: -x[1]))))
     print(f"  TourAPI 교정 적용 {n_fix}곳")
+    n_pop = sum(1 for p in places if p["popRank"])
+    print(f"  데이터랩 인기관광지 순위 {n_pop}곳 (배지용)")
+    if not pop:
+        print("  ⚠️ data/derived/popularity.json 이 없습니다. popRank 가 전부"
+              " 비어 배지가 사라집니다.\n"
+              "     `make popularity` 를 먼저 돌리세요 (데이터랩 다운로드 필요).")
     if not fix:
         print("  ⚠️ data/derived/categories.json 이 없습니다. catFinal 이 앱 원본값"
               " 그대로입니다.\n"

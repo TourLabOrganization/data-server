@@ -8,13 +8,17 @@ endif
 
 PY ?= python3
 
-.PHONY: all places datalab staytime verify tourapi clean
+.PHONY: all places popularity datalab staytime verify tourapi clean
 
 # tourapi 는 API 키와 호출 한도가 필요해서 all 에 넣지 않는다. 따로 돌린다.
-all: places courses datalab staytime verify
+# popularity 는 places 보다 먼저 돈다 — places 가 그 결과를 popRank 로 붙인다.
+all: popularity places courses datalab staytime verify
 
 places:   ## 앱 HTML → 장소 마스터
 	$(PY) -m pipeline.places
+
+popularity: ## 데이터랩 인기관광지 순위 → 장소 배지 (정렬 키 아님)
+	$(PY) -m pipeline.popularity
 
 courses:  ## 코스 .dc.html → 순서가 있는 장소 목록
 	$(PY) -m pipeline.courses
