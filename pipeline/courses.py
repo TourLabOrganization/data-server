@@ -108,6 +108,7 @@ def link_to_master(course_places, master):
 
     코스 파일과 장소 마스터는 id 체계가 다르다(jd1 vs js1). 이름을 정규화해
     맞추고, 같은 이름이 여러 지역에 있을 수 있으니 좌표가 5km 안인지 본다.
+    같은 장소가 마스터에 두 번 있을 수 있어(장릉·영월 장릉) 가장 가까운 것을 고른다.
     """
     idx = {}
     for m in master:
@@ -117,19 +118,21 @@ def link_to_master(course_places, master):
     for p in course_places:
         p["placeId"] = None
         p["region"] = None
+        best, best_km = None, 5.0
         for m in idx.get(norm_name(p["nameKo"]), []):
             if p["lat"] is None or m["lat"] is None:
                 continue
             km = (((p["lng"] - m["lng"]) * 88.9) ** 2
                   + ((p["lat"] - m["lat"]) * 111.0) ** 2) ** .5
-            if km <= 5.0:
-                p["placeId"] = m["id"]
-                p["region"] = m["region"]
-                # 마스터 쪽 교정 카테고리를 그대로 쓴다. 코스 파일의 cat 은 원본이다
-                p["catFinal"] = m.get("catFinal") or m["catApp"]
-                p["catFinalKo"] = m.get("catFinalKo")
-                linked += 1
-                break
+            if km <= best_km:
+                best, best_km = m, km
+        if best:
+            p["placeId"] = best["id"]
+            p["region"] = best["region"]
+            # 마스터 쪽 교정 카테고리를 그대로 쓴다. 코스 파일의 cat 은 원본이다
+            p["catFinal"] = best.get("catFinal") or best["catApp"]
+            p["catFinalKo"] = best.get("catFinalKo")
+            linked += 1
         p.setdefault("catFinal", p["catApp"])
         p.setdefault("catFinalKo", None)
     return linked
