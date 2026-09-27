@@ -70,13 +70,22 @@ def health():
 
 
 # ── 파이프라인 산출물 ─────────────────────────────────────────────────────
-@app.get("/v1/places", summary="장소 마스터 1,171곳")
-def places(region: Optional[str] = None, course: Optional[str] = None):
+@app.get("/v1/places", summary="장소 마스터 3,118곳")
+def places(region: Optional[str] = None, course: Optional[str] = None,
+           offset: int = 0, limit: Optional[int] = None):
     """`catApp`(앱 원본) 이 아니라 **`catFinal`** 을 쓴다. docs/contract.md 참고.
 
     코스에 속한 장소에는 `courses` 가 붙는다 — `[{courseId, title, seq}, …]`.
     한 장소가 여러 코스에 나올 수 있어 배열이다. **순서대로 걷는 화면을 만들 때는
     `/v1/courses` 를 쓰는 편이 낫다** — 그쪽이 코스 단위로 정렬돼 있다.
+
+    전체를 거르지 않고 받으면 약 3MB 다. 화면에 뿌릴 때는 `region` 으로 거르거나
+    `offset`·`limit` 으로 나눠 받는 편이 낫다. `count` 는 거른 뒤의 전체 수이고
+    `places` 는 그중 잘라 보낸 조각이다.
+
+    **순서는 언제나 같다** — `order` 오름차순(앱 파일에 적힌 순서)으로 고정이며
+    언어에 따라 달라지지 않는다. 화면에서 이름순으로 다시 정렬하면 한국어와 영어의
+    순서가 갈린다.
     """
     rows = _store["places"]["places"]
     membership = _course_membership()
@@ -86,7 +95,10 @@ def places(region: Optional[str] = None, course: Optional[str] = None):
     if course:
         rows = [p for p in rows
                 if any(c["courseId"] == course for c in p["courses"])]
-    return {"count": len(rows), "places": rows}
+    total = len(rows)
+    offset = max(0, offset)
+    rows = rows[offset:] if limit is None else rows[offset:offset + max(0, limit)]
+    return {"count": total, "offset": offset, "places": rows}
 
 
 def _course_membership():

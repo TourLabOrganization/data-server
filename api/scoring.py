@@ -24,6 +24,18 @@ CAT_TO_TFI = {
     "해양·자연": None,          # TFI 축 없음
 }
 
+# 팀원 추천 코드의 카테고리(한글) ↔ 앱·places.json 의 카테고리 코드.
+# 두 쪽의 한글 표기가 다르다 — 앱 화면은 '문화유산·전통체험', 추천 코드는
+# '역사·문화' 로 적는다. 화면이 두 응답을 이어 붙이려면 한글이 아니라 이 코드로
+# 맞춰야 해서, share 를 코드로도 한 벌 실어 보낸다.
+CAT_TO_CODE = {
+    "역사·문화": "herit",
+    "힐링·생태": "heal",
+    "테마파크·액티비티": "activity",
+    "로컬·먹거리": "food",
+    "해양·자연": "sea",
+}
+
 # 지역 보정의 폭. 기존 국민여행조사 보정(reg·freg)과 같은 ±0.05 로 맞춘다.
 REGION_SPAN = 0.05
 
@@ -80,6 +92,9 @@ def rank_themes(data, cluster, interests=(), night=False, region_adj=None):
             "region": round(adj, 4),
             "score": round(fit + bonus + adj, 4),
             "share": {c: round(v, 4) for c, v in zip(cats, p["share"])},
+            # 같은 값을 places.json 의 카테고리 코드로도 준다 (위 CAT_TO_CODE 주석)
+            "shareByCode": {CAT_TO_CODE[c]: round(v, 4)
+                            for c, v in zip(cats, p["share"]) if c in CAT_TO_CODE},
         })
     out.sort(key=lambda x: -x["score"])
     return out
