@@ -617,7 +617,7 @@
      "coursePlaceId": "na5",
      "nameKo": "하이원 리조트 (동물농장 / 알파인코스터)",
      "nameEn": "High1 Resort (Animal Farm & Alpine Coaster)",
-     "catApp": "activity",
+     "catApp": "stay",
      "lat": 37.2053,
      "lng": 128.8402,
      "stayMin": 180,
@@ -627,8 +627,8 @@
      "sceneKo": "1화보다 더 재밌을걸?😆 리센느의 스릴 넘치는 여름휴가 보러 오이데~⭐️",
      "placeId": "na5",
      "region": "정선",
-     "catFinal": "activity",
-     "catFinalKo": "테마파크·액티비티"
+     "catFinal": "stay",
+     "catFinalKo": "숙박"
     },
     {
      "seq": 6,
