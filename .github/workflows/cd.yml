@@ -52,7 +52,7 @@ jobs:
           with TestClient(app) as c:
               assert c.get("/health").json()["status"] == "ok"
               assert c.get("/v1/tfi").status_code == 200
-              assert c.get("/v1/places").json()["count"] > 1000
+              assert c.get("/v1/places").json()["count"] > 3000
               assert c.get("/v1/courses").json()["count"] == 5
               it = c.post("/v1/itinerary",
                           json={"courseId": "jeju-k-drama-route", "days": 2})

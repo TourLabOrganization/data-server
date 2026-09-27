@@ -7,21 +7,24 @@
 
 ## places.json — 장소 마스터
 
-앱의 `.dc.html` 에 하드코딩된 장소를 추출한 것. 백엔드가 DB에 적재한다.
+앱의 `.dc.html` 에 하드코딩된 장소 3,118곳을 추출한 것. 백엔드가 DB에 적재한다.
 
 ```json
 {
-  "count": 1171,
+  "count": 3118,
   "places": [
     {
       "id": "gj2",
       "block": "gyeongju",
+      "order": 1,
+      "listNo": 2,
       "nameKo": "쪽샘 44호 신라공주묘",
       "nameEn": "Jjoksaem Tomb No. 44",
       "region": "경주",
+      "regionEn": "Gyeongju",
       "catApp": "herit",
       "catFinal": "herit",
-      "catFinalKo": "역사·문화",
+      "catFinalKo": "문화유산·전통체험",
       "catSource": "app",
       "lat": 35.8397,
       "lng": 129.2163,
@@ -29,6 +32,18 @@
       "hours": "09:00–18:00",
       "youtubeId": "4m9eLr-NofA",
       "sourceKo": "쪽샘길 60 지오코딩 확인",
+      "sourceEn": "Geocoded from Jjoksaem-gil 60",
+      "descKo": "발굴 현장을 그대로 덮어 공개한다.",
+      "descEn": "The excavation itself is roofed over and open to visitors.",
+      "imageUrl": null,
+      "imageCredit": null,
+      "kakaoUrl": "https://place.map.kakao.com/...",
+      "k100": false,
+      "unesco": false,
+      "barrierFree": false,
+      "zone": null,
+      "cityTour": false,
+      "related": false,
       "inactive": false
     }
   ]
@@ -39,18 +54,27 @@
 |---|---|---|
 | `id` | string | 앱이 쓰는 장소 ID. **기본키로 쓸 것** |
 | `block` | string | 앱 DATA의 소속 블록 (`gyeongju`·`jeju`·`nation` 등) |
+| `order` | int | **고정 정렬 키.** 0부터. 언어와 무관하게 언제나 같은 순서 |
+| `listNo` | int \| null | 앱 목록에 붙는 번호. 목록외 장소는 `null` (72곳만 값이 있다) |
 | `nameKo` / `nameEn` | string | 장소명 |
-| `region` | string \| null | 시군 단위 지역명. 109종 |
+| `region` / `regionEn` | string \| null | 시군 단위 지역명. 124종 |
 | `catApp` | string | 앱 HTML의 **원본** 값. 손으로 넣은 값이라 신뢰도가 낮다 |
 | `catFinal` | string | **백엔드는 이 값을 쓴다.** 교정이 있으면 교정본 |
-| `catFinalKo` | string | `catFinal` 의 한글명. 팀원 추천 코드와 맞춘 이름 |
+| `catFinalKo` | string | `catFinal` 의 한글명. 앱 화면 표기와 맞춘 이름 |
 | `catSource` | string | `app`(원본 유지) 또는 `tourapi`(교정됨) |
 | `lat` / `lng` | number | WGS84 좌표 |
 | `stayMin` | int \| null | 권장 체류시간(분) |
 | `hours` | string \| null | 운영시간. 자유 형식 문자열이라 파싱하지 말 것 |
 | `youtubeId` | string \| null | 연결된 영상 ID. 없으면 영상 없는 장소 |
-| `sourceKo` | string \| null | 좌표 근거 |
-| `inactive` | bool | 앱이 목록에서 내려둔 장소. 추천 순서에서 뒤로 민다 |
+| `sourceKo` / `sourceEn` | string \| null | 좌표 근거 |
+| `descKo` / `descEn` | string \| null | 장소 상세 설명. 한국어는 전부, 영어는 1,171곳만 |
+| `imageUrl` / `imageCredit` | string \| null | 대표 사진과 출처. 183곳만 있다 |
+| `kakaoUrl` | string \| null | 카카오맵 장소 페이지. 1,947곳 |
+| `k100` / `unesco` / `barrierFree` | bool | 배지 — 한국관광 100선 99곳 · 유네스코 69곳 · 열린관광지 99곳 |
+| `zone` | string \| null | 관광특구·관광단지·지정관광지 문구. 210곳 |
+| `cityTour` | bool | 시티투어 경유지로 들어온 장소. 429곳 |
+| `related` | bool | 한국관광공사 연관 관광지에서 들어온 장소. 1,518곳 |
+| `inactive` | bool | 앱이 목록에서 내려둔 장소(3,043곳). 추천 순서에서 뒤로 민다 |
 
 ### 주의
 
@@ -60,9 +84,19 @@
 - **앱 HTML은 고치지 않는다.** 교정은 이 파이프라인 안에서만 덧씌운다. 그래서
   무엇을 왜 바꿨는지 `categories.json` 과 `reports/reclassify.md` 로 되짚을 수
   있고, 앱 레포와 충돌하지 않는다
-- 교정 규모: 1,171곳 중 918곳 TourAPI 매칭 · 287곳이 변경 대상 · 그중
-  **168곳만 반영**했다. 나머지 119곳은 신뢰도가 낮거나 계통 오류(숙박시설
+- 교정 규모: 재분류를 돌린 시점의 1,171곳 중 918곳 TourAPI 매칭 · 287곳이 변경 대상 · 그중
+  **173곳만 반영**했다. 나머지는 신뢰도가 낮거나 계통 오류(숙박시설
   오매칭·먹자골목)가 있어 보류했다 — `reports/reclassify.md` 참고
+- **앱이 3,118곳으로 늘면서 `catSource` 는 `app` 94% · `tourapi` 6% 가 됐다.**
+  새로 들어온 1,947곳은 아직 TourAPI 로 조회하지 않았다. 일일 호출 한도가
+  1,000회라 하루에 다 못 돌린다. 이 장소들은 앱이 적어 둔 분류를 그대로 쓴다
+- **`order` 로 정렬한다.** 이름순으로 다시 정렬하면 한국어와 영어에서 순서가
+  갈린다(`Intl.Collator` 가 언어별로 다르게 비교한다). 화면 순서를 언어와
+  무관하게 맞추려면 `order` 오름차순을 쓰고, 목록 번호를 보여줘야 하면
+  `listNo` 를 쓴다
+- **전체 응답이 약 3MB 다.** `GET /v1/places` 는 `region` 으로 거르거나
+  `offset`·`limit` 으로 나눠 받는다. `count` 는 거른 뒤의 전체 수이고
+  `places` 는 그중 잘라 보낸 조각이다
 - **`stayMin` 은 추정값이다.** 고유값이 21개뿐이고 99.9%가 10분 배수라,
   근거 있는 측정치가 아니다. 일정 길이 계산에 쓰되 정확도를 주장하지 말 것
 - `region` 이 `null` 인 장소가 있을 수 있다. `nation` 블록에서 `locKo` 가
@@ -259,7 +293,10 @@ region = 0.1 × (가중 TFI − 0.5)          범위 ±0.05
  "sources": ["국민여행조사", "외래관광객조사", "한국관광 데이터랩 (지역×테마 강도 TFI)"],
  "themes": [
   {"theme": "왕과 사는 남자", "fit": 0.3133, "interest": 0.3556,
-   "region": 0.0091, "score": 0.678, "regionCoverage": 1.0}
+   "region": 0.0091, "score": 0.678, "regionCoverage": 1.0,
+   "share": {"역사·문화": 0.4, "…": 0},
+   "shareByCode": {"herit": 0.4, "heal": 0.3111, "activity": 0.2333,
+                   "food": 0.0556, "sea": 0.0}}
  ]
 }
 ```
@@ -273,6 +310,11 @@ region = 0.1 × (가중 TFI − 0.5)          범위 ±0.05
   대응 축이 없어**(인기관광지 분류가 중분류까지만이라 NA02 에서 바다를 못 뗌)
   분모에서 빠진다. 해양 비중이 큰 코스는 이 값이 낮다
 - TFI 가 없는 지역을 주면 **400** 이다. 조용히 0으로 넘어가지 않는다
+- **카테고리 한글 표기가 `places.json` 과 다르다.** `share` 의 키는 팀원 추천
+  코드가 쓰는 이름(`역사·문화`)이고, `places.json` 의 `catFinalKo` 는 앱 화면
+  표기(`문화유산·전통체험`)다. 두 응답을 이어 붙일 때는 한글이 아니라
+  **`shareByCode` 의 코드(`herit`·`heal`·`activity`·`food`·`sea`)로 맞춘다** —
+  이 코드가 `places.json` 의 `catFinal` 과 같은 값이다
 
 ## POST /v1/itinerary — 일자별 도착·출발 시각
 
