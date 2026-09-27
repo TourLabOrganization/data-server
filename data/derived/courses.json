@@ -63,7 +63,7 @@
      "youtubeId": "sc4",
      "videoTitle": "왕과 사는 남자 (2026)",
      "sceneKo": "거두어 묻다",
-     "placeId": "yw2",
+     "placeId": "ro188",
      "region": "영월",
      "catFinal": "herit",
      "catFinalKo": "역사·문화"
@@ -617,7 +617,7 @@
      "coursePlaceId": "na5",
      "nameKo": "하이원 리조트 (동물농장 / 알파인코스터)",
      "nameEn": "High1 Resort (Animal Farm & Alpine Coaster)",
-     "catApp": "activity",
+     "catApp": "stay",
      "lat": 37.2053,
      "lng": 128.8402,
      "stayMin": 180,
@@ -627,8 +627,8 @@
      "sceneKo": "1화보다 더 재밌을걸?😆 리센느의 스릴 넘치는 여름휴가 보러 오이데~⭐️",
      "placeId": "na5",
      "region": "정선",
-     "catFinal": "activity",
-     "catFinalKo": "테마파크·액티비티"
+     "catFinal": "stay",
+     "catFinalKo": "숙박"
     },
     {
      "seq": 6,
@@ -1390,7 +1390,7 @@
      "youtubeId": "bf10",
      "videoTitle": "부산국제영화제",
      "sceneKo": "배우의 핸드프린팅 거리",
-     "placeId": "bc10",
+     "placeId": "ctt7",
      "region": "부산",
      "catFinal": "food",
      "catFinalKo": "로컬·먹거리"
