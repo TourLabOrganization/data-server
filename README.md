@@ -56,6 +56,7 @@ python -m pipeline.tourapi    # TourAPI 공식 분류로 재분류 (키 필요, 
 | `places.json` | 장소 3,118곳 (좌표·카테고리·체류시간·설명·배지) | 백엔드 DB 적재 |
 | `datalab.json` | 지역×테마 강도 지수(TFI) 5개 지역 | 추천 가중치 |
 | `categories.json` | TourAPI 공식 분류 재분류 결과 | 카테고리 교정 |
+| `popularity.json` | 데이터랩 인기관광지 순위 173곳 | 장소 배지 (정렬 키 아님) |
 | `staytime.json` | 지역별 체류시간·전국 대비 지수 | 일정 길이 조절 |
 | `courses.json` | 영상 IP 코스 5개와 장소 순서 | 코스 화면 |
 
