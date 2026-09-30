@@ -71,7 +71,7 @@ def health():
 
 
 # ── 파이프라인 산출물 ─────────────────────────────────────────────────────
-@app.get("/v1/places", summary="장소 마스터 3,118곳")
+@app.get("/v1/places", summary="장소 마스터 3,109곳")
 def places(region: Optional[str] = None, course: Optional[str] = None,
            offset: int = 0, limit: Optional[int] = None):
     """`catApp`(앱 원본) 이 아니라 **`catFinal`** 을 쓴다. docs/contract.md 참고.

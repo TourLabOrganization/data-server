@@ -10,7 +10,7 @@ Tour Navigator의 데이터 파이프라인. 한국관광 데이터랩과 TourAP
 ```
 한국관광 데이터랩 CSV  (사람이 내려받아 data/datalab_raw/ 에 둔다)
 TourAPI              (공공데이터포털)
-앱의 장소 3,118곳     (Tour-Navigator-App 의 .dc.html)
+앱의 장소 3,109곳     (Tour-Navigator-App 의 .dc.html)
         │
         ▼  pipeline/ — 가끔 손으로 돌리는 배치 작업
 data/derived/*.json  ← 백엔드와의 계약. 이것만 커밋된다
@@ -53,7 +53,7 @@ python -m pipeline.tourapi    # TourAPI 공식 분류로 재분류 (키 필요, 
 
 | 파일 | 내용 | 쓰는 곳 |
 |---|---|---|
-| `places.json` | 장소 3,118곳 (좌표·카테고리·체류시간·설명·배지) | 백엔드 DB 적재 |
+| `places.json` | 장소 3,109곳 (좌표·카테고리·체류시간·설명·배지) | 백엔드 DB 적재 |
 | `datalab.json` | 지역×테마 강도 지수(TFI) 5개 지역 | 추천 가중치 |
 | `categories.json` | TourAPI 공식 분류 재분류 결과 | 카테고리 교정 |
 | `popularity.json` | 데이터랩 인기관광지 순위 173곳 | 장소 배지 (정렬 키 아님) |
@@ -77,7 +77,7 @@ python -m pipeline.tourapi    # TourAPI 공식 분류로 재분류 (키 필요, 
 
 | | 상태 |
 |---|---|
-| 장소 마스터 추출 | 3,118곳 / 124개 지역 |
+| 장소 마스터 추출 | 3,109곳 / 124개 지역 |
 | 데이터랩 TFI | 경주·거제·서울·제주·부산·영월 6개 지역 |
 | 앱 ↔ 데이터랩 검증 | 매칭률 47%, 순위상관 평균 +0.37 |
 | 체류시간 검증 | 123개 지역 |
